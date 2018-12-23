@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="14460.31" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc">
+    <device id="watch40" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
+        <deployment identifier="watchOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="14460.16"/>
     </dependencies>
@@ -8,7 +12,7 @@
         <!--Lizzie-->
         <scene sceneID="aou-V4-d1y">
             <objects>
-                <controller title="Lizzie" id="AgC-eL-Hgc" customClass="InterfaceController" customModule="Heart_Control_WatchKit_App" customModuleProvider="target">
+                <controller title="Lizzie" id="AgC-eL-Hgc" customClass="InterfaceController" customModule="Lizzie_WatchKit_Extension">
                     <items>
                         <group width="1" alignment="right" spacing="5" id="Omy-g0-taR">
                             <items>
