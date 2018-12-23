@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		17E5281C62D31E883EC70454 /* Pods_Lizzie.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A231769E61B0E68BF2E44C4C /* Pods_Lizzie.framework */; };
+		1FD61320C6EB25C7ECA82551 /* Pods_Lizzie_WatchKit_Extension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 541683A8F3B7B20733B7C94B /* Pods_Lizzie_WatchKit_Extension.framework */; };
 		BE25AFEB1D4F33B100DAF094 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE25AFEA1D4F33B100DAF094 /* AppDelegate.swift */; };
 		BE25AFED1D4F33B100DAF094 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE25AFEC1D4F33B100DAF094 /* ViewController.swift */; };
 		BE25AFF01D4F33B100DAF094 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BE25AFEE1D4F33B100DAF094 /* Main.storyboard */; };
@@ -25,6 +27,8 @@
 		BE7070091D57A13D00E41B95 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE7070081D57A13D00E41B95 /* HealthKit.framework */; };
 		BE70700D1D57A29500E41B95 /* AuthorizationManger.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE70700C1D57A29500E41B95 /* AuthorizationManger.swift */; };
 		BEB5C5BB1D4F656D00BBF490 /* HeartRateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB5C5BA1D4F656D00BBF490 /* HeartRateManager.swift */; };
+		BF7B3D8538CA396EB3585705 /* Pods_Lizzie_WatchKit_App.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F3E209A9B3ADEA685359A2F /* Pods_Lizzie_WatchKit_App.framework */; };
+		E919691F21CF3F1A00E3D1BF /* EmotionSelectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E919691E21CF3F1A00E3D1BF /* EmotionSelectionController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,6 +74,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0C20EB2FD83690478EF6867C /* Pods-Lizzie WatchKit Extension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lizzie WatchKit Extension.release.xcconfig"; path = "Pods/Target Support Files/Pods-Lizzie WatchKit Extension/Pods-Lizzie WatchKit Extension.release.xcconfig"; sourceTree = "<group>"; };
+		1AF0A5BD450DD1B5EF7CF9D0 /* Pods-Lizzie WatchKit App.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lizzie WatchKit App.release.xcconfig"; path = "Pods/Target Support Files/Pods-Lizzie WatchKit App/Pods-Lizzie WatchKit App.release.xcconfig"; sourceTree = "<group>"; };
+		2F3E209A9B3ADEA685359A2F /* Pods_Lizzie_WatchKit_App.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Lizzie_WatchKit_App.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		541683A8F3B7B20733B7C94B /* Pods_Lizzie_WatchKit_Extension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Lizzie_WatchKit_Extension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6A4744A81213B3ED05417373 /* Pods-Lizzie WatchKit App.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lizzie WatchKit App.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Lizzie WatchKit App/Pods-Lizzie WatchKit App.debug.xcconfig"; sourceTree = "<group>"; };
+		A231769E61B0E68BF2E44C4C /* Pods_Lizzie.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Lizzie.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE25AFE71D4F33B100DAF094 /* Lizzie.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lizzie.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE25AFEA1D4F33B100DAF094 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BE25AFEC1D4F33B100DAF094 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -94,14 +104,27 @@
 		BE7070081D57A13D00E41B95 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		BE70700C1D57A29500E41B95 /* AuthorizationManger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthorizationManger.swift; sourceTree = "<group>"; };
 		BEB5C5BA1D4F656D00BBF490 /* HeartRateManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeartRateManager.swift; sourceTree = "<group>"; };
+		D30E5E4D7CB82428D89F6B8D /* Pods-Lizzie.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lizzie.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Lizzie/Pods-Lizzie.debug.xcconfig"; sourceTree = "<group>"; };
+		E919691E21CF3F1A00E3D1BF /* EmotionSelectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmotionSelectionController.swift; sourceTree = "<group>"; };
+		EA66E66CEE61B8D7980AD7BD /* Pods-Lizzie WatchKit Extension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lizzie WatchKit Extension.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Lizzie WatchKit Extension/Pods-Lizzie WatchKit Extension.debug.xcconfig"; sourceTree = "<group>"; };
+		FC70F0B612DAB175CAE4DD72 /* Pods-Lizzie.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lizzie.release.xcconfig"; path = "Pods/Target Support Files/Pods-Lizzie/Pods-Lizzie.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		9E209784BAF1E2BBF48AC57E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BF7B3D8538CA396EB3585705 /* Pods_Lizzie_WatchKit_App.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		BE25AFE41D4F33B000DAF094 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				BE7070091D57A13D00E41B95 /* HealthKit.framework in Frameworks */,
+				17E5281C62D31E883EC70454 /* Pods_Lizzie.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -109,12 +132,26 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FD61320C6EB25C7ECA82551 /* Pods_Lizzie_WatchKit_Extension.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6084732B17766436F190255B /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				D30E5E4D7CB82428D89F6B8D /* Pods-Lizzie.debug.xcconfig */,
+				FC70F0B612DAB175CAE4DD72 /* Pods-Lizzie.release.xcconfig */,
+				6A4744A81213B3ED05417373 /* Pods-Lizzie WatchKit App.debug.xcconfig */,
+				1AF0A5BD450DD1B5EF7CF9D0 /* Pods-Lizzie WatchKit App.release.xcconfig */,
+				EA66E66CEE61B8D7980AD7BD /* Pods-Lizzie WatchKit Extension.debug.xcconfig */,
+				0C20EB2FD83690478EF6867C /* Pods-Lizzie WatchKit Extension.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		BE25AFDE1D4F33B000DAF094 = {
 			isa = PBXGroup;
 			children = (
@@ -123,6 +160,7 @@
 				BE25B00C1D4F33B100DAF094 /* Lizzie WatchKit Extension */,
 				BE25AFE81D4F33B100DAF094 /* Products */,
 				BE496A191D4F467100C82C4F /* Frameworks */,
+				6084732B17766436F190255B /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -142,6 +180,7 @@
 				BE3FDBDE1D576BC1009165A8 /* Supporting Files */,
 				BE25AFEA1D4F33B100DAF094 /* AppDelegate.swift */,
 				BE25AFEC1D4F33B100DAF094 /* ViewController.swift */,
+				E919691E21CF3F1A00E3D1BF /* EmotionSelectionController.swift */,
 				BE25AFEE1D4F33B100DAF094 /* Main.storyboard */,
 				BE25AFF31D4F33B100DAF094 /* LaunchScreen.storyboard */,
 			);
@@ -205,6 +244,9 @@
 			isa = PBXGroup;
 			children = (
 				BE7070081D57A13D00E41B95 /* HealthKit.framework */,
+				A231769E61B0E68BF2E44C4C /* Pods_Lizzie.framework */,
+				2F3E209A9B3ADEA685359A2F /* Pods_Lizzie_WatchKit_App.framework */,
+				541683A8F3B7B20733B7C94B /* Pods_Lizzie_WatchKit_Extension.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -216,10 +258,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = BE25B01E1D4F33B100DAF094 /* Build configuration list for PBXNativeTarget "Lizzie" */;
 			buildPhases = (
+				32FD72A4C3C1559503D284D4 /* [CP] Check Pods Manifest.lock */,
 				BE25AFE31D4F33B000DAF094 /* Sources */,
 				BE25AFE41D4F33B000DAF094 /* Frameworks */,
 				BE25AFE51D4F33B000DAF094 /* Resources */,
 				BE25B01D1D4F33B100DAF094 /* Embed Watch Content */,
+				737B8434F546EBD6E76D8B0E /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -235,8 +279,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = BE25B01A1D4F33B100DAF094 /* Build configuration list for PBXNativeTarget "Lizzie WatchKit App" */;
 			buildPhases = (
+				5105884833760DEE1998F816 /* [CP] Check Pods Manifest.lock */,
 				BE25AFF71D4F33B100DAF094 /* Resources */,
 				BE25B0191D4F33B100DAF094 /* Embed App Extensions */,
+				9E209784BAF1E2BBF48AC57E /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -252,6 +298,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = BE25B0161D4F33B100DAF094 /* Build configuration list for PBXNativeTarget "Lizzie WatchKit Extension" */;
 			buildPhases = (
+				E0BC653A0890BF0320166DA0 /* [CP] Check Pods Manifest.lock */,
 				BE25B0041D4F33B100DAF094 /* Sources */,
 				BE25B0051D4F33B100DAF094 /* Frameworks */,
 				BE25B0061D4F33B100DAF094 /* Resources */,
@@ -272,7 +319,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0800;
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 1010;
 				ORGANIZATIONNAME = "Thomas Paul Mann";
 				TargetAttributes = {
 					BE25AFE61D4F33B000DAF094 = {
@@ -360,12 +407,104 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		32FD72A4C3C1559503D284D4 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Lizzie-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5105884833760DEE1998F816 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Lizzie WatchKit App-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		737B8434F546EBD6E76D8B0E /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Lizzie/Pods-Lizzie-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Charts/Charts.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Charts.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Lizzie/Pods-Lizzie-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E0BC653A0890BF0320166DA0 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Lizzie WatchKit Extension-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		BE25AFE31D4F33B000DAF094 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				BE25AFED1D4F33B100DAF094 /* ViewController.swift in Sources */,
+				E919691F21CF3F1A00E3D1BF /* EmotionSelectionController.swift in Sources */,
 				BE25AFEB1D4F33B100DAF094 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -436,14 +575,24 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -483,14 +632,24 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -516,6 +675,7 @@
 		};
 		BE25B0171D4F33B100DAF094 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = EA66E66CEE61B8D7980AD7BD /* Pods-Lizzie WatchKit Extension.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CODE_SIGN_ENTITLEMENTS = "Lizzie WatchKit Extension/Lizzie WatchKit Extension.entitlements";
@@ -535,6 +695,7 @@
 		};
 		BE25B0181D4F33B100DAF094 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0C20EB2FD83690478EF6867C /* Pods-Lizzie WatchKit Extension.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CODE_SIGN_ENTITLEMENTS = "Lizzie WatchKit Extension/Lizzie WatchKit Extension.entitlements";
@@ -554,6 +715,7 @@
 		};
 		BE25B01B1D4F33B100DAF094 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6A4744A81213B3ED05417373 /* Pods-Lizzie WatchKit App.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -572,6 +734,7 @@
 		};
 		BE25B01C1D4F33B100DAF094 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1AF0A5BD450DD1B5EF7CF9D0 /* Pods-Lizzie WatchKit App.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -590,6 +753,7 @@
 		};
 		BE25B01F1D4F33B100DAF094 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D30E5E4D7CB82428D89F6B8D /* Pods-Lizzie.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Lizzie/Lizzie.entitlements;
@@ -598,13 +762,14 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.curtischong.Lizzie;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
 		};
 		BE25B0201D4F33B100DAF094 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = FC70F0B612DAB175CAE4DD72 /* Pods-Lizzie.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Lizzie/Lizzie.entitlements;
@@ -613,7 +778,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.curtischong.Lizzie;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.2;
 			};
 			name = Release;
