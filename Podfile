@@ -7,6 +7,8 @@ target 'Lizzie' do
 
   # Pods for Lizzie
   pod 'Charts'
+  pod 'Alamofire', '~> 5.0.0.beta.1'
+  pod 'SwiftyJSON', '~> 4.0'
 
 end
 
