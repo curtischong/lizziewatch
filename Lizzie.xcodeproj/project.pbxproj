@@ -21,7 +21,6 @@
 		BE25B00E1D4F33B100DAF094 /* InterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE25B00D1D4F33B100DAF094 /* InterfaceController.swift */; };
 		BE25B0101D4F33B100DAF094 /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE25B00F1D4F33B100DAF094 /* ExtensionDelegate.swift */; };
 		BE25B0121D4F33B100DAF094 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BE25B0111D4F33B100DAF094 /* Assets.xcassets */; };
-		BE3FDBDC1D576B8D009165A8 /* HeartRate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE3FDBDB1D576B8D009165A8 /* HeartRate.swift */; };
 		BE496A231D4F4D9A00C82C4F /* WorkoutManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE496A221D4F4D9A00C82C4F /* WorkoutManager.swift */; };
 		BE5AEE171D4F7CED0027C49C /* HKUnit+BeatsPerMinute.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE5AEE161D4F7CED0027C49C /* HKUnit+BeatsPerMinute.swift */; };
 		BE7070091D57A13D00E41B95 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE7070081D57A13D00E41B95 /* HealthKit.framework */; };
@@ -100,7 +99,6 @@
 		BE25B00F1D4F33B100DAF094 /* ExtensionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionDelegate.swift; sourceTree = "<group>"; };
 		BE25B0111D4F33B100DAF094 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BE25B0131D4F33B100DAF094 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		BE3FDBDB1D576B8D009165A8 /* HeartRate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeartRate.swift; sourceTree = "<group>"; };
 		BE496A1C1D4F467100C82C4F /* Lizzie WatchKit Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Lizzie WatchKit Extension.entitlements"; sourceTree = "<group>"; };
 		BE496A1D1D4F467900C82C4F /* Lizzie.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Lizzie.entitlements; sourceTree = "<group>"; };
 		BE496A221D4F4D9A00C82C4F /* WorkoutManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkoutManager.swift; sourceTree = "<group>"; };
@@ -217,7 +215,6 @@
 				E97008C221D321B1009E4463 /* HealthKitDataPoint.swift */,
 				E97008BE21D2D03E009E4463 /* RequestManager.swift */,
 				BE70700C1D57A29500E41B95 /* AuthorizationManger.swift */,
-				BE3FDBDB1D576B8D009165A8 /* HeartRate.swift */,
 				BE5AEE161D4F7CED0027C49C /* HKUnit+BeatsPerMinute.swift */,
 			);
 			path = "Lizzie WatchKit Extension";
@@ -536,7 +533,6 @@
 				BE5AEE171D4F7CED0027C49C /* HKUnit+BeatsPerMinute.swift in Sources */,
 				BE25B00E1D4F33B100DAF094 /* InterfaceController.swift in Sources */,
 				E97008C321D321B1009E4463 /* HealthKitDataPoint.swift in Sources */,
-				BE3FDBDC1D576B8D009165A8 /* HeartRate.swift in Sources */,
 				E97008BF21D2D03E009E4463 /* RequestManager.swift in Sources */,
 				BE70700D1D57A29500E41B95 /* AuthorizationManger.swift in Sources */,
 				BEB5C5BB1D4F656D00BBF490 /* HeartRateManager.swift in Sources */,

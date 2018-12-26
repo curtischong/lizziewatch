@@ -27,13 +27,15 @@ extension WorkoutState {
     
 }
 
+@available(watchOSApplicationExtension 4.0, *)
 protocol WorkoutManagerDelegate: class {
 
     func workoutManager(_ manager: WorkoutManager, didChangeStateTo newState: WorkoutState)
-    func workoutManager(_ manager: WorkoutManager, didChangeHeartRateTo newHeartRate: HeartRate)
+    func workoutManager(_ manager: WorkoutManager, didChangeHeartRateTo newHeartRate: Double)
 
 }
 
+@available(watchOSApplicationExtension 4.0, *)
 class WorkoutManager: NSObject {
 
     // MARK: - Properties
@@ -112,6 +114,7 @@ class WorkoutManager: NSObject {
 
 // MARK: - Workout Session Delegate
 
+@available(watchOSApplicationExtension 4.0, *)
 extension WorkoutManager: HKWorkoutSessionDelegate {
 
     func workoutSession(_ workoutSession: HKWorkoutSession, didChangeTo toState: HKWorkoutSessionState, from fromState: HKWorkoutSessionState, date: Date) {
@@ -138,9 +141,10 @@ extension WorkoutManager: HKWorkoutSessionDelegate {
 
 // MARK: - Heart Rate Delegate
 
+@available(watchOSApplicationExtension 4.0, *)
 extension WorkoutManager: HeartRateManagerDelegate {
 
-    func heartRate(didChangeTo newHeartRate: HeartRate) {
+    func heartRate(didChangeTo newHeartRate: Double) {
         delegate?.workoutManager(self, didChangeHeartRateTo: newHeartRate)
     }
 

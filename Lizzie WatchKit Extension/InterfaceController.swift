@@ -9,6 +9,7 @@
 import WatchKit
 import WatchConnectivity
 
+@available(watchOSApplicationExtension 4.0, *)
 class InterfaceController: WKInterfaceController, WCSessionDelegate {
 
     // MARK: - Outlets
@@ -94,6 +95,7 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
 
 // MARK: - Workout Manager Delegate
 
+@available(watchOSApplicationExtension 4.0, *)
 extension InterfaceController: WorkoutManagerDelegate {
 
     func workoutManager(_ manager: WorkoutManager, didChangeStateTo newState: WorkoutState) {
@@ -101,9 +103,9 @@ extension InterfaceController: WorkoutManagerDelegate {
         controlButton.setTitle(newState.actionText())
     }
 
-    func workoutManager(_ manager: WorkoutManager, didChangeHeartRateTo newHeartRate: HeartRate) {
+    func workoutManager(_ manager: WorkoutManager, didChangeHeartRateTo newHeartRate: Double) {
         // Update heart rate label.
-        heartRateLabel.setText(String(format: "%.0f", newHeartRate.bpm))
+        heartRateLabel.setText(String(format: "%.0f", newHeartRate))
     }
 
 }

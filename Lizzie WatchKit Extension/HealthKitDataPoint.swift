@@ -7,10 +7,23 @@
 //
 
 import Foundation
+import HealthKit
 
 struct HealthKitDataPoint {
     var dataPointName: String
-    var startTime: NSDate
-    var endTime: NSDate
+    var startTime: Date
+    var endTime: Date
     var measurement: Double
+    
+    var dictionaryRepresentation: [String: Any] {
+        return [
+            "dataPointName" : self.dataPointName,
+            "startTime" : self.startTime,
+            "endTime" : self.endTime,
+            "measurement" : self.measurement
+        ]
+    }
+    func printVals(){
+        NSLog("This is the HealthKitDataPoint object: \(self.dictionaryRepresentation as AnyObject)")
+    }
 }
