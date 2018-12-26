@@ -8,6 +8,7 @@
 
 import UIKit
 import HealthKit
+import CoreData
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -30,6 +31,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             print(success)
         }
     }
+    
+    lazy var persistentContainer: NSPersistentContainer = {
+        
+        let container = NSPersistentContainer(name: "biosamples")
+        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+            if let error = error {
+                
+                fatalError("Unresolved error, \((error as NSError).userInfo)")
+            }
+        })
+        return container
+    }()
 
 }
 

@@ -8,6 +8,7 @@
 
 import WatchKit
 import WatchConnectivity
+import CoreData
 
 @available(watchOSApplicationExtension 4.0, *)
 class InterfaceController: WKInterfaceController, WCSessionDelegate {
@@ -26,6 +27,8 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
     private let dataStore = DataStore()
     private var dataStoreUrl: URL!
     let session = WCSession.default
+    
+    var context = (WKExtension.shared().delegate as! ExtensionDelegate).persistentContainer.viewContext
 
     // MARK: - Lifecycle
 
@@ -34,6 +37,16 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
 
         // Configure workout manager.
         workoutManager.delegate = self
+        
+        // testing the watch's DataCore
+        
+        let curSample = HealthKitDataPoint(
+            dataPointName: "random name",
+            startTime: Date(),
+            endTime: Date() + 5,
+            measurement: 5.0
+        )
+        self.storeBioSampleWatch(bioSample : curSample)
     }
     
     override func awake(withContext context: Any?) {
@@ -60,17 +73,28 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
             break
         }
     }
-    @IBAction func sendTheFile() {
-        NSLog("Saving to File")
-        dataStoreUrl = dataStore.saveToFile()
-        NSLog("File saved!")
-    }
-    @IBAction func readFile() {
-        NSLog("Reading File")
-        dataStore.readFromFile(dataStoreUrl: dataStoreUrl)
-        NSLog("File Read!")
+
+    // DataCore
+    
+    // TODO: add a test for this function
+    // Saves the bioSamples to the watch's DataCore
+    private func storeBioSampleWatch(bioSample : HealthKitDataPoint){
+        let entity = NSEntityDescription.entity(forEntityName: "watchbiosamples", in: context)
+        let healthSample = NSManagedObject(entity: entity!, insertInto: context)
+        healthSample.setValue(bioSample.dataPointName, forKey: "dataPointName")
+        healthSample.setValue(bioSample.startTime, forKey: "startTime")
+        healthSample.setValue(bioSample.endTime, forKey: "endTime")
+        healthSample.setValue(bioSample.measurement, forKey: "measurement")
+        
+        do {
+            try context.save()
+            NSLog("Saved sample to CoreData!")
+        } catch let error{
+            NSLog("Couldn't save: \(bioSample.printVals()) with error: \(error)")
+        }
     }
     
+    // Connectivity
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) { }
     
     func processApplicationContext() {

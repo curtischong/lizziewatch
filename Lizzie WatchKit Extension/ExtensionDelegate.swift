@@ -7,6 +7,7 @@
 //
 
 import WatchKit
+import CoreData
 
 class ExtensionDelegate: NSObject, WKExtensionDelegate {
 
@@ -32,5 +33,17 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate {
             task.setTaskCompleted()
         }
     }
+    
+    lazy var persistentContainer: NSPersistentContainer = {
+        
+        let container = NSPersistentContainer(name: "watchbiosamples")
+        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+            if let error = error {
+                
+                fatalError("Unresolved error, \((error as NSError).userInfo)")
+            }
+        })
+        return container
+    }()
 
 }

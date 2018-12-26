@@ -121,7 +121,7 @@ class HeartRateManager {
         default:
             NSLog("Can't find a quantity type for: %@", sample.quantityType.identifier)
         
-        var curSample = HealthKitDataPoint(
+        let curSample = HealthKitDataPoint(
             dataPointName: sample.quantityType.identifier,
             startTime: sample.startDate,
             endTime: sample.endDate,

@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:/Users/curtis/Desktop/Lizzie/Lizzie/MainViewController.swift">
+   </FileRef>
+   <FileRef
       location = "group:Lizzie.xcodeproj">
    </FileRef>
    <FileRef

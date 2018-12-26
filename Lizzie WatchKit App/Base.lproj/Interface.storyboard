@@ -16,11 +16,6 @@
                     <items>
                         <group width="1" alignment="right" spacing="5" id="Omy-g0-taR">
                             <items>
-                                <button width="66" alignment="left" title="Test" id="9GF-tc-3ck">
-                                    <connections>
-                                        <action selector="sendTheFile" destination="AgC-eL-Hgc" id="l2y-sk-t87"/>
-                                    </connections>
-                                </button>
                                 <label alignment="right" text="--" textAlignment="center" id="q60-id-Pm7">
                                     <accessibilityTraits key="accessibilityTraits" staticText="YES" notEnabled="YES"/>
                                     <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -37,17 +32,10 @@
                             </connections>
                         </button>
                         <label alignment="left" text="Label" id="dbN-gv-Kix"/>
-                        <button width="1" height="16" alignment="left" title="Read File" id="s7e-PG-OsM">
-                            <connections>
-                                <action selector="readFile" destination="AgC-eL-Hgc" id="wRO-sC-Wjh"/>
-                            </connections>
-                        </button>
                     </items>
                     <connections>
                         <outlet property="aLabel" destination="dbN-gv-Kix" id="sF6-Nr-ZhV"/>
                         <outlet property="controlButton" destination="iNm-FD-Dqu" id="eMe-9U-iM4"/>
-                        <outlet property="fileReader" destination="s7e-PG-OsM" id="KdQ-fq-if4"/>
-                        <outlet property="fileSender" destination="9GF-tc-3ck" id="k9A-Fc-Zx2"/>
                         <outlet property="heartRateLabel" destination="q60-id-Pm7" id="gxC-k9-Omc"/>
                     </connections>
                 </controller>

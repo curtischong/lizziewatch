@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="K4m-UN-kIQ">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -10,6 +10,38 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+        <!--Main View Controller-->
+        <scene sceneID="fu5-Vo-ivZ">
+            <objects>
+                <viewController id="K4m-UN-kIQ" customClass="MainViewController" customModule="Lizzie" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="QMd-Jv-EMC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="n items not synced" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="klI-Be-2vp">
+                                <rect key="frame" x="0.0" y="30" width="375" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="klI-Be-2vp" firstAttribute="top" secondItem="3Fh-20-ZWG" secondAttribute="top" constant="10" id="htP-YO-WBa"/>
+                            <constraint firstItem="3Fh-20-ZWG" firstAttribute="trailing" secondItem="klI-Be-2vp" secondAttribute="trailing" id="iLq-4j-kfK"/>
+                            <constraint firstItem="klI-Be-2vp" firstAttribute="leading" secondItem="3Fh-20-ZWG" secondAttribute="leading" id="n0z-CU-KhE"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="3Fh-20-ZWG"/>
+                    </view>
+                    <connections>
+                        <outlet property="numItemsNotSynced" destination="klI-Be-2vp" id="HLK-Lk-45G"/>
+                        <outlet property="phoneDataStoreCnt" destination="klI-Be-2vp" id="DqW-Dg-nNd"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="TbP-Gt-apH" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-977" y="36"/>
+        </scene>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
