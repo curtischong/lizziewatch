@@ -13,7 +13,6 @@ typealias HKQueryUpdateHandler = ((HKAnchoredObjectQuery, [HKSample]?, [HKDelete
 protocol HeartRateManagerDelegate: class {
 
     func heartRate(didChangeTo newHeartRate: Double)
-    func sendHealthKitDataPoint(_ HKDatapoint: HealthKitDataPoint)
 
 }
 
@@ -134,7 +133,6 @@ class HeartRateManager {
         // Delegate new heart rate.
         //let newHeartRate = HeartRate(timestamp: timestamp, bpm: count)
         delegate?.heartRate(didChangeTo: measurementValue)
-            delegate?.sendHealthKitDataPoint(curSample)
     }
 
 }

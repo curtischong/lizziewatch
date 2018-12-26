@@ -8,7 +8,7 @@
 
 import Foundation
 
-class DataStore: NSObject, HeartRateManagerDelegate {
+class DataStore: NSObject{
     let unsynced = "dataStore.txt"
     let syncData = "stuff"
 
@@ -16,7 +16,6 @@ class DataStore: NSObject, HeartRateManagerDelegate {
         super.init()
         
         // Configure heart rate manager.
-        HeartRateManager.delegate = self
     }
 
     func saveToFile() -> (URL){
@@ -51,10 +50,5 @@ class DataStore: NSObject, HeartRateManagerDelegate {
         }else{
             NSLog("DataStore file doesn't exist")
         }
-    }
-    
-    func sendHealthKitDataPoint(_ curSample: HealthKitDataPoint) {
-        curSample.printVals()
-        //view.backgroundColor = color
     }
 }
