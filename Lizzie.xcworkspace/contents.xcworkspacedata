@@ -2,7 +2,7 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:/Users/curtis/Desktop/Lizzie/Lizzie/MainViewController.swift">
+      location = "group:BioSamplesPhone.xcdatamodeld">
    </FileRef>
    <FileRef
       location = "group:Lizzie.xcodeproj">

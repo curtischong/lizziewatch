@@ -34,7 +34,6 @@
                         <viewLayoutGuide key="safeArea" id="3Fh-20-ZWG"/>
                     </view>
                     <connections>
-                        <outlet property="numItemsNotSynced" destination="klI-Be-2vp" id="HLK-Lk-45G"/>
                         <outlet property="phoneDataStoreCnt" destination="klI-Be-2vp" id="DqW-Dg-nNd"/>
                     </connections>
                 </viewController>

@@ -28,7 +28,7 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
     private var dataStoreUrl: URL!
     let session = WCSession.default
     
-    var context = (WKExtension.shared().delegate as! ExtensionDelegate).persistentContainer.viewContext
+    
 
     // MARK: - Lifecycle
 
@@ -79,9 +79,15 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
     // TODO: add a test for this function
     // Saves the bioSamples to the watch's DataCore
     private func storeBioSampleWatch(bioSample : HealthKitDataPoint){
-        let entity = NSEntityDescription.entity(forEntityName: "watchbiosamples", in: context)
+        //let entity = NSEntityDescription.entityForName("OneItemCD", inManagedObjectContext: self.managedObjectContext)
+
+        guard let appDelegate = WKExtension.shared().delegate as? ExtensionDelegate else { return }
+        let context = appDelegate.persistentContainer!.viewContext
+
+        
+        let entity = NSEntityDescription.entity(forEntityName: "BioSample", in: context)
         let healthSample = NSManagedObject(entity: entity!, insertInto: context)
-        healthSample.setValue(bioSample.dataPointName, forKey: "dataPointName")
+        /*healthSample.setValue(bioSample.dataPointName, forKey: "dataPointName")
         healthSample.setValue(bioSample.startTime, forKey: "startTime")
         healthSample.setValue(bioSample.endTime, forKey: "endTime")
         healthSample.setValue(bioSample.measurement, forKey: "measurement")
@@ -91,7 +97,7 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
             NSLog("Saved sample to CoreData!")
         } catch let error{
             NSLog("Couldn't save: \(bioSample.printVals()) with error: \(error)")
-        }
+        }*/
     }
     
     // Connectivity

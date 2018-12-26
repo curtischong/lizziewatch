@@ -29,7 +29,7 @@ class MainViewController: UIViewController {
         //let request:NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "Level")
         // update the number of items not synced:
         
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "biosamples")
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSamples")
         do{
             let result = try context.fetch(request)
             phoneDataStoreCnt.text = String(result.count)
@@ -42,7 +42,7 @@ class MainViewController: UIViewController {
     
     // Saves the bioSamples from the watch to the phone's DataCore
     private func storeBioSamplePhone(bioSample : HealthKitDataPoint){
-        let entity = NSEntityDescription.entity(forEntityName: "biosamples", in: context)
+        let entity = NSEntityDescription.entity(forEntityName: "BioSamples", in: context)
         let healthSample = NSManagedObject(entity: entity!, insertInto: context)
         healthSample.setValue(bioSample.dataPointName, forKey: "dataPointName")
         healthSample.setValue(bioSample.startTime, forKey: "startTime")

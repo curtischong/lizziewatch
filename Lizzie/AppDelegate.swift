@@ -34,7 +34,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     lazy var persistentContainer: NSPersistentContainer = {
         
-        let container = NSPersistentContainer(name: "biosamples")
+        let container = NSPersistentContainer(name: "BioSamplesPhone")
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error {
                 

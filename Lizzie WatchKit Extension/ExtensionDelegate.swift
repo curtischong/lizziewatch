@@ -34,16 +34,56 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate {
         }
     }
     
+    lazy var persistentContainer: NSPersistentContainer? = {
+        objc_sync_enter(self)
+        let container = NSPersistentContainer( name: "BioSamplesWatch" )
+        container.loadPersistentStores { _, error in
+            if error != nil { fatalError( " Core Data error: \( error! )" ) }
+        }
+        objc_sync_exit(self)
+        return container
+    }()
+    
+    /*
     lazy var persistentContainer: NSPersistentContainer = {
+     objc_sync_enter(self)
         
-        let container = NSPersistentContainer(name: "watchbiosamples")
+        let container = NSPersistentContainer(name: "BioSamplesWatch")
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error {
                 
-                fatalError("Unresolved error, \((error as NSError).userInfo)")
+                fatalError("Unresolved error, \((error as NSError))")
             }
         })
+     objc_sync_exit(self)
         return container
-    }()
+    }()*/
+    /*
+    lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator = {
+        objc_sync_enter(self)
+        
+        let coordinator = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
+        let url = self.applicationDocumentsDirectory.appendingPathComponent("moduleName.sqlite")
+        var failureReason = "There was an error creating or loading the application's saved data."
+        do {
+        try coordinator.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: url, options: [NSMigratePersistentStoresAutomaticallyOption: true, NSInferMappingModelAutomaticallyOption: true]) // maybe change after pre - production
+        } catch {
+        // Report any error we got.
+        var dict = [String: AnyObject]()
+        dict[NSLocalizedDescriptionKey] = "Failed to initialize the application's saved data" as AnyObject
+        dict[NSLocalizedFailureReasonErrorKey] = failureReason as AnyObject
+        dict[NSUnderlyingErrorKey] = error as NSError
+        let wrappedError = NSError(domain: "ERROR_DOMAIN", code: 9999, userInfo: dict)
+        
+        #if DEBUG
+        NSLog("Unresolved error \(wrappedError), \(wrappedError.userInfo)")
+        #endif
+        abort()
+        }
+        
+        objc_sync_exit(self)
+        
+        return coordinator
+    }()*/
 
 }
