@@ -7,17 +7,24 @@
 //
 
 import WatchKit
+import WatchConnectivity
 
-class InterfaceController: WKInterfaceController {
+class InterfaceController: WKInterfaceController, WCSessionDelegate {
 
     // MARK: - Outlets
 
     @IBOutlet var heartRateLabel: WKInterfaceLabel!
     @IBOutlet var controlButton: WKInterfaceButton!
-
+    @IBOutlet var aLabel: WKInterfaceLabel!
+    @IBOutlet var fileSender: WKInterfaceButton!
+    @IBOutlet var fileReader: WKInterfaceButton!
+    
     // MARK: - Properties
 
     private let workoutManager = WorkoutManager()
+    private let dataStore = DataStore()
+    private var dataStoreUrl: URL!
+    let session = WCSession.default
 
     // MARK: - Lifecycle
 
@@ -26,6 +33,15 @@ class InterfaceController: WKInterfaceController {
 
         // Configure workout manager.
         workoutManager.delegate = self
+    }
+    
+    override func awake(withContext context: Any?) {
+        super.awake(withContext: context)
+        
+        processApplicationContext()
+        
+        session.delegate = self
+        session.activate()
     }
 
     // MARK: - Actions
@@ -41,6 +57,36 @@ class InterfaceController: WKInterfaceController {
             // Start new workout.
             workoutManager.start()
             break
+        }
+    }
+    @IBAction func sendTheFile() {
+        NSLog("Saving to File")
+        dataStoreUrl = dataStore.saveToFile()
+        NSLog("File saved!")
+    }
+    @IBAction func readFile() {
+        NSLog("Reading File")
+        dataStore.readFromFile(dataStoreUrl: dataStoreUrl)
+        NSLog("File Read!")
+    }
+    
+    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) { }
+    
+    func processApplicationContext() {
+        let iPhoneContext = session.receivedApplicationContext as? [String : Bool]
+        if(iPhoneContext != nil){
+            
+            
+            if iPhoneContext!["switchStatus"] == true {
+                aLabel.setText("Switch On")
+            } else {
+                aLabel.setText("Switch Off")
+            }
+        }
+    }
+    func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
+        DispatchQueue.main.async() {
+            self.processApplicationContext()
         }
     }
 

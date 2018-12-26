@@ -29,6 +29,10 @@
 		BEB5C5BB1D4F656D00BBF490 /* HeartRateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB5C5BA1D4F656D00BBF490 /* HeartRateManager.swift */; };
 		BF7B3D8538CA396EB3585705 /* Pods_Lizzie_WatchKit_App.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F3E209A9B3ADEA685359A2F /* Pods_Lizzie_WatchKit_App.framework */; };
 		E919691F21CF3F1A00E3D1BF /* EmotionSelectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E919691E21CF3F1A00E3D1BF /* EmotionSelectionController.swift */; };
+		E97008BD21D2CDD4009E4463 /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97008BC21D2CDD4009E4463 /* DataStore.swift */; };
+		E97008BF21D2D03E009E4463 /* RequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97008BE21D2D03E009E4463 /* RequestManager.swift */; };
+		E97008C121D2F5D2009E4463 /* WatchSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97008C021D2F5D2009E4463 /* WatchSessionManager.swift */; };
+		E97008C321D321B1009E4463 /* HealthKitDataPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97008C221D321B1009E4463 /* HealthKitDataPoint.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -106,6 +110,10 @@
 		BEB5C5BA1D4F656D00BBF490 /* HeartRateManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeartRateManager.swift; sourceTree = "<group>"; };
 		D30E5E4D7CB82428D89F6B8D /* Pods-Lizzie.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lizzie.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Lizzie/Pods-Lizzie.debug.xcconfig"; sourceTree = "<group>"; };
 		E919691E21CF3F1A00E3D1BF /* EmotionSelectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmotionSelectionController.swift; sourceTree = "<group>"; };
+		E97008BC21D2CDD4009E4463 /* DataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStore.swift; sourceTree = "<group>"; };
+		E97008BE21D2D03E009E4463 /* RequestManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestManager.swift; sourceTree = "<group>"; };
+		E97008C021D2F5D2009E4463 /* WatchSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchSessionManager.swift; sourceTree = "<group>"; };
+		E97008C221D321B1009E4463 /* HealthKitDataPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitDataPoint.swift; sourceTree = "<group>"; };
 		EA66E66CEE61B8D7980AD7BD /* Pods-Lizzie WatchKit Extension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lizzie WatchKit Extension.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Lizzie WatchKit Extension/Pods-Lizzie WatchKit Extension.debug.xcconfig"; sourceTree = "<group>"; };
 		FC70F0B612DAB175CAE4DD72 /* Pods-Lizzie.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lizzie.release.xcconfig"; path = "Pods/Target Support Files/Pods-Lizzie/Pods-Lizzie.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -192,6 +200,7 @@
 			children = (
 				BE3FDBDF1D578CFE009165A8 /* Supporting Files */,
 				BE25AFFE1D4F33B100DAF094 /* Interface.storyboard */,
+				E97008C021D2F5D2009E4463 /* WatchSessionManager.swift */,
 			);
 			path = "Lizzie WatchKit App";
 			sourceTree = "<group>";
@@ -204,6 +213,9 @@
 				BE25B00F1D4F33B100DAF094 /* ExtensionDelegate.swift */,
 				BE496A221D4F4D9A00C82C4F /* WorkoutManager.swift */,
 				BEB5C5BA1D4F656D00BBF490 /* HeartRateManager.swift */,
+				E97008BC21D2CDD4009E4463 /* DataStore.swift */,
+				E97008C221D321B1009E4463 /* HealthKitDataPoint.swift */,
+				E97008BE21D2D03E009E4463 /* RequestManager.swift */,
 				BE70700C1D57A29500E41B95 /* AuthorizationManger.swift */,
 				BE3FDBDB1D576B8D009165A8 /* HeartRate.swift */,
 				BE5AEE161D4F7CED0027C49C /* HKUnit+BeatsPerMinute.swift */,
@@ -509,6 +521,7 @@
 			files = (
 				BE25AFED1D4F33B100DAF094 /* ViewController.swift in Sources */,
 				E919691F21CF3F1A00E3D1BF /* EmotionSelectionController.swift in Sources */,
+				E97008C121D2F5D2009E4463 /* WatchSessionManager.swift in Sources */,
 				BE25AFEB1D4F33B100DAF094 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -518,10 +531,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				BE25B0101D4F33B100DAF094 /* ExtensionDelegate.swift in Sources */,
+				E97008BD21D2CDD4009E4463 /* DataStore.swift in Sources */,
 				BE496A231D4F4D9A00C82C4F /* WorkoutManager.swift in Sources */,
 				BE5AEE171D4F7CED0027C49C /* HKUnit+BeatsPerMinute.swift in Sources */,
 				BE25B00E1D4F33B100DAF094 /* InterfaceController.swift in Sources */,
+				E97008C321D321B1009E4463 /* HealthKitDataPoint.swift in Sources */,
 				BE3FDBDC1D576B8D009165A8 /* HeartRate.swift in Sources */,
+				E97008BF21D2D03E009E4463 /* RequestManager.swift in Sources */,
 				BE70700D1D57A29500E41B95 /* AuthorizationManger.swift in Sources */,
 				BEB5C5BB1D4F656D00BBF490 /* HeartRateManager.swift in Sources */,
 			);

@@ -10,6 +10,7 @@ import HealthKit
 
 class AuthorizationManager {
 
+    @available(watchOSApplicationExtension 4.0, *)
     static func requestAuthorization(completionHandler: @escaping ((_ success: Bool) -> Void)) {
         // Create health store.
         let healthStore = HKHealthStore()
@@ -27,12 +28,19 @@ class AuthorizationManager {
             completionHandler(false)
             return
         }
+        
+        // Create quantity type for heart rate.
+        guard let vo2MaxQuantityType = HKQuantityType.quantityType(forIdentifier: .vo2Max) else {
+            print("Unable to create quantity type for vo2Max.")
+            completionHandler(false)
+            return
+        }
 
         // Request authorization to read heart rate data.
-        healthStore.requestAuthorization(toShare: nil, read: [heartRateQuantityType]) { (success, error) -> Void in
+        healthStore.requestAuthorization(toShare: nil, read: [heartRateQuantityType, vo2MaxQuantityType]) { (success, error) -> Void in
             // If there is an error, do nothing.
             guard error == nil else {
-                print(error)
+                print(error ?? "failed during healthkit auth")
                 completionHandler(false)
                 return
             }

@@ -30,9 +30,14 @@ class HeartRateManager {
 
     init() {
         // Request authorization to read heart rate data.
-        AuthorizationManager.requestAuthorization { (success) in
-            // TODO: Export error.
-            print(success)
+        if #available(watchOSApplicationExtension 4.0, *) {
+            AuthorizationManager.requestAuthorization { (success) in
+                // TODO: Export error.
+                NSLog("Successfully authorized app: %d", success)
+            }
+        } else {
+            // Fallback on earlier versions
+            print("app needs watchos 4+ to run")
         }
     }
 
@@ -60,6 +65,7 @@ class HeartRateManager {
 
         // Execute the heart rate query.
         healthStore.execute(query)
+        NSLog("Executed the heart rate query")
 
         // Remember all active Queries to stop them later.
         activeQueries.append(query)
@@ -69,6 +75,7 @@ class HeartRateManager {
         // Stop all active queries.
         activeQueries.forEach { healthStore.stop($0) }
         activeQueries.removeAll()
+        NSLog("Removed all queries")
     }
 
     // MARK: - Process
@@ -80,7 +87,9 @@ class HeartRateManager {
 
     private func process(sample: HKQuantitySample) {
         // If sample is not a heart rate sample, then do nothing.
+        NSLog("sample received");
         if (sample.quantityType != HKObjectType.quantityType(forIdentifier: .heartRate)) {
+            NSLog("Found non heartrate sample %@",sample.quantityType);
             return
         }
 

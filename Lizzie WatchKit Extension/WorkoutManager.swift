@@ -64,6 +64,7 @@ class WorkoutManager: NSObject {
             // Another workout is running.
             return
         }
+        NSLog("Started Tracking")
 
         // Configure the workout session.
         let workoutConfiguration = HKWorkoutConfiguration()
@@ -91,6 +92,7 @@ class WorkoutManager: NSObject {
         if (session == nil) {
             return
         }
+        NSLog("Stopped Tracking")
 
         // Stop querying heart rate.
         heartRateManager.stop()
