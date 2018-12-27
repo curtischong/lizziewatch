@@ -45,6 +45,8 @@ class HeartRateManager {
         // Configure heart rate quantity type.
         buildQuery(HKIdentifier: HKQuantityTypeIdentifier.heartRate)
         buildQuery(HKIdentifier: HKQuantityTypeIdentifier.vo2Max)
+        
+        
     }
     
     func buildQuery(HKIdentifier : HKQuantityTypeIdentifier){
@@ -69,7 +71,7 @@ class HeartRateManager {
         
         // Execute the heart rate query.
         healthStore.execute(query)
-        NSLog("Executed the \(HKIdentifier) query")
+        NSLog("Executed the \(quantityType) query")
         
         // Remember all active Queries to stop them later.
         activeQueries.append(query)
@@ -90,6 +92,8 @@ class HeartRateManager {
 
     private func process(samples: [HKQuantitySample]) {
         // Process every single sample.
+        NSLog("received \(samples.count) samples")
+        //NSLog("received sample \(samples[0].quantity) and \(samples[0].quantityType)")
         samples.forEach { process(sample: $0) }
     }
 
@@ -111,23 +115,24 @@ class HeartRateManager {
     
     private func process(sample: HKQuantitySample) {
         // If sample is not a heart rate sample, then do nothing.
-        
         var measurementValue = -1.0
         switch sample.quantityType.identifier{
             case "HKQuantityTypeIdentifierHeartRate":
                 measurementValue = castHKUnitToDouble(theSample : sample, theUnit: HKUnit.beatsPerMinute())
             case "HKQuantityTypeIdentifierVO2Max":
                 measurementValue = castHKUnitToDouble(theSample : sample, theUnit: HKUnit(from: "ml/kg*min"))
-        default:
-            NSLog("Can't find a quantity type for: %@", sample.quantityType.identifier)
+            default:
+                NSLog("Can't find a quantity type for: %@", sample.quantityType.identifier)
+        }
         
+        /*
         let curSample = HealthKitDataPoint(
             dataPointName: sample.quantityType.identifier,
             startTime: sample.startDate,
             endTime: sample.endDate,
             measurement: measurementValue
         )
-        curSample.printVals()
+        curSample.printVals()*/
         
 
         // Delegate new heart rate.
@@ -135,5 +140,4 @@ class HeartRateManager {
         delegate?.heartRate(didChangeTo: measurementValue)
     }
 
-}
 }

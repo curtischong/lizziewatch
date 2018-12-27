@@ -147,12 +147,14 @@ class MainViewController: UIViewController , WCSessionDelegate{
         
         // in the future I might want to cast each event into a specific struct
         if(String(describing: userInfo["event"]) == "dataStorePackage"){
-            let numItems = String(describing: userInfo["numItems"])
+            let numItems = userInfo["numItems"] as! Int
             NSLog("Number of items received: \(numItems)")
-            //let numSamples = userInfo["numSamples"]
-            let samples = userInfo["samples"] as! Array<HealthKitDataPoint>
-            for (index, sample) in samples.enumerated() {
-                print("Item \(index): \(sample.printVals())")
+            if(numItems > 0){
+                //let numSamples = userInfo["numSamples"]
+                let samples = userInfo["samples"] as! Array<HealthKitDataPoint>
+                for (index, sample) in samples.enumerated() {
+                    print("Item \(index): \(sample.printVals())")
+                }
             }
         }
         /*DispatchQueue.main.async {
