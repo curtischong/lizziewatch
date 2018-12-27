@@ -2,6 +2,21 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:BioSample2+CoreDataClass.swift">
+   </FileRef>
+   <FileRef
+      location = "group:BioSample2+CoreDataProperties.swift">
+   </FileRef>
+   <FileRef
+      location = "group:BioSample+CoreDataClass.swift">
+   </FileRef>
+   <FileRef
+      location = "group:BioSample+CoreDataProperties.swift">
+   </FileRef>
+   <FileRef
+      location = "group:BioSample+CoreDataProperties.swift">
+   </FileRef>
+   <FileRef
       location = "group:BioSamplesPhone.xcdatamodeld">
    </FileRef>
    <FileRef

@@ -27,6 +27,8 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
     private let dataStore = DataStore()
     private var dataStoreUrl: URL!
     let session = WCSession.default
+    let context = (WKExtension.shared().delegate as! ExtensionDelegate).persistentContainer.viewContext
+
     
     
 
@@ -76,9 +78,32 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
 
     // DataCore
     
+    
+    
+    
+    private func storeBioSampleWatch(bioSample : HealthKitDataPoint){
+        let entity = NSEntityDescription.entity(forEntityName: "BioSample2", in: context)
+        let healthSample = NSManagedObject(entity: entity!, insertInto: context)
+        healthSample.setValue(bioSample.dataPointName, forKey: "dataPointName")
+        healthSample.setValue(bioSample.startTime, forKey: "startTime")
+        healthSample.setValue(bioSample.endTime, forKey: "endTime")
+        healthSample.setValue(bioSample.measurement, forKey: "measurement")
+        
+        do {
+            try context.save()
+        } catch let error{
+            NSLog("Couldn't save: \(bioSample.printVals()) with  error: \(error)")
+        }
+    }
+    
+    
+    
+    
+    
+    
     // TODO: add a test for this function
     // Saves the bioSamples to the watch's DataCore
-    private func storeBioSampleWatch(bioSample : HealthKitDataPoint){
+    /*private func storeBioSampleWatch(bioSample : HealthKitDataPoint){
         //let entity = NSEntityDescription.entityForName("OneItemCD", inManagedObjectContext: self.managedObjectContext)
 
         guard let appDelegate = WKExtension.shared().delegate as? ExtensionDelegate else { return }
@@ -86,7 +111,7 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
 
         
         let entity = NSEntityDescription.entity(forEntityName: "BioSample", in: context)
-        let healthSample = NSManagedObject(entity: entity!, insertInto: context)
+        let healthSample = NSManagedObject(entity: entity!, insertInto: context)*/
         /*healthSample.setValue(bioSample.dataPointName, forKey: "dataPointName")
         healthSample.setValue(bioSample.startTime, forKey: "startTime")
         healthSample.setValue(bioSample.endTime, forKey: "endTime")
@@ -98,7 +123,7 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
         } catch let error{
             NSLog("Couldn't save: \(bioSample.printVals()) with error: \(error)")
         }*/
-    }
+    //}
     
     // Connectivity
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) { }

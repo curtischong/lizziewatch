@@ -29,20 +29,30 @@ class MainViewController: UIViewController {
         //let request:NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "Level")
         // update the number of items not synced:
         
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSamples")
+        
+        let curSample = HealthKitDataPoint(
+            dataPointName: "random name",
+            startTime: Date(),
+            endTime: Date() + 5,
+            measurement: 5.0
+        )
+        self.storeBioSamplePhone(bioSample : curSample)
+        
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSample")
         do{
             let result = try context.fetch(request)
             phoneDataStoreCnt.text = String(result.count)
         } catch let error{
             NSLog("Couldn't access CoreData: \(error)")
         }
+        
     }
     
     //MARK: Actions
     
     // Saves the bioSamples from the watch to the phone's DataCore
     private func storeBioSamplePhone(bioSample : HealthKitDataPoint){
-        let entity = NSEntityDescription.entity(forEntityName: "BioSamples", in: context)
+        let entity = NSEntityDescription.entity(forEntityName: "BioSample", in: context)
         let healthSample = NSManagedObject(entity: entity!, insertInto: context)
         healthSample.setValue(bioSample.dataPointName, forKey: "dataPointName")
         healthSample.setValue(bioSample.startTime, forKey: "startTime")
@@ -63,7 +73,7 @@ class MainViewController: UIViewController {
     
     
     private func fetchHeartrate(){
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "biosamples")
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSample")
         //request.predicate = NSPredicate(format: "age = %@", "12")
         request.returnsObjectsAsFaults = false
         do {

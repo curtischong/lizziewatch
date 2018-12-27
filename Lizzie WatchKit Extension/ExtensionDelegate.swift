@@ -34,7 +34,19 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate {
         }
     }
     
-    lazy var persistentContainer: NSPersistentContainer? = {
+    lazy var persistentContainer: NSPersistentContainer = {
+        
+        let container = NSPersistentContainer(name: "BioSamplesWatch")
+        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+            if let error = error {
+                
+                fatalError("Unresolved error, \((error as NSError).userInfo)")
+            }
+        })
+        return container
+    }()
+    
+    /*lazy var persistentContainer: NSPersistentContainer? = {
         objc_sync_enter(self)
         let container = NSPersistentContainer( name: "BioSamplesWatch" )
         container.loadPersistentStores { _, error in
@@ -42,7 +54,7 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate {
         }
         objc_sync_exit(self)
         return container
-    }()
+    }()*/
     
     /*
     lazy var persistentContainer: NSPersistentContainer = {
