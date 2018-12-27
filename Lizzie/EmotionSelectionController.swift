@@ -13,9 +13,8 @@ import UIKit
     private var buttonEmotions = ["Fear","Joy","Anger","Sad","Disgust","Suprise","Contempt","Interest"]
     lazy var numEmotions = 8
     private var ratingButtons = [UIButton]()
-    private var selectedEmotions = Array(repeating: false, count: 8) // TODO: use numEmotions instead of 8
-    private var unselectedColor = UIColor.cyan
-    private var selectedColor = UIColor.blue
+    private var selectedEmotions = Array(repeating: 0, count: 8) // TODO: use numEmotions instead of 8
+    private var selectedColors = [UIColor.cyan, UIColor.blue, UIColor.green, UIColor.red]
     //TODO: add the tripple emotion state code
     //TODO: remove the useless slider pod
     //MARK: Initialization
@@ -37,13 +36,12 @@ import UIKit
             fatalError("The button, \(button), is not in the ratingButtons array: \(ratingButtons)")
         }
         
-        if(selectedEmotions[index]){
-            selectedEmotions[index] = false
-            ratingButtons[index].setTitleColor(unselectedColor, for: .normal)
-        }else{
-            selectedEmotions[index] = true
-            ratingButtons[index].setTitleColor(selectedColor, for: .normal)
+        selectedEmotions[index] = selectedEmotions[index] + 1
+        if(selectedEmotions[index] == 4){
+            selectedEmotions[index] = 0
         }
+        ratingButtons[index].setTitleColor(selectedColors[selectedEmotions[index]], for: .normal)
+        
     }
     
     private func setupButtons() {
@@ -59,7 +57,7 @@ import UIKit
         for index in 0..<numEmotions {
             // Create the button
             let button = UIButton()
-            button.setTitleColor(unselectedColor, for: .normal)
+            button.setTitleColor(selectedColors[selectedEmotions[index]], for: .normal)
             button.titleLabel?.font =  .systemFont(ofSize: 10)
             
             
