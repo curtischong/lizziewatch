@@ -11,22 +11,20 @@ import WatchConnectivity
 import CoreData
 
 @available(watchOSApplicationExtension 4.0, *)
-class InterfaceController: WKInterfaceController, WCSessionDelegate {
+class InterfaceController: WKInterfaceController , WCSessionDelegate{
 
     // MARK: - Outlets
 
     @IBOutlet var heartRateLabel: WKInterfaceLabel!
     @IBOutlet var controlButton: WKInterfaceButton!
-    @IBOutlet var aLabel: WKInterfaceLabel!
-    @IBOutlet var fileSender: WKInterfaceButton!
-    @IBOutlet var fileReader: WKInterfaceButton!
-    
+    @IBOutlet var markEventButton: WKInterfaceButton!
     // MARK: - Properties
 
     private let workoutManager = WorkoutManager()
     private let dataStore = DataStore()
     private var dataStoreUrl: URL!
-    let session = WCSession.default
+
+    var session: WCSession?
     let context = (WKExtension.shared().delegate as! ExtensionDelegate).persistentContainer.viewContext
 
     
@@ -54,10 +52,12 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
     override func awake(withContext context: Any?) {
         super.awake(withContext: context)
         
-        processApplicationContext()
-        
-        session.delegate = self
-        session.activate()
+        if(session != nil){
+            session!.delegate = self
+            session!.activate()
+        }else{
+            NSLog("Session isn't on")
+        }
     }
 
     // MARK: - Actions
@@ -78,9 +78,8 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
 
     // DataCore
     
-    
-    
-    
+    // TODO: add a test for this function
+    // Saves the bioSamples to the watch's DataCore
     private func storeBioSampleWatch(bioSample : HealthKitDataPoint){
         let entity = NSEntityDescription.entity(forEntityName: "BioSampleWatch", in: context)
         let healthSample = NSManagedObject(entity: entity!, insertInto: context)
@@ -96,47 +95,20 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
         }
     }
     
-    
-    
-    
-    
-    
-    // TODO: add a test for this function
-    // Saves the bioSamples to the watch's DataCore
-    /*private func storeBioSampleWatch(bioSample : HealthKitDataPoint){
-        //let entity = NSEntityDescription.entityForName("OneItemCD", inManagedObjectContext: self.managedObjectContext)
-
-        guard let appDelegate = WKExtension.shared().delegate as? ExtensionDelegate else { return }
-        let context = appDelegate.persistentContainer!.viewContext
-
-        
-        let entity = NSEntityDescription.entity(forEntityName: "BioSample", in: context)
-        let healthSample = NSManagedObject(entity: entity!, insertInto: context)*/
-        /*healthSample.setValue(bioSample.dataPointName, forKey: "dataPointName")
-        healthSample.setValue(bioSample.startTime, forKey: "startTime")
-        healthSample.setValue(bioSample.endTime, forKey: "endTime")
-        healthSample.setValue(bioSample.measurement, forKey: "measurement")
-        
-        do {
-            try context.save()
-            NSLog("Saved sample to CoreData!")
-        } catch let error{
-            NSLog("Couldn't save: \(bioSample.printVals()) with error: \(error)")
-        }*/
-    //}
-    
     // Connectivity
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) { }
     
     func processApplicationContext() {
-        let iPhoneContext = session.receivedApplicationContext as? [String : Bool]
+        //TODO: FIX THE SESSION IMPLIMENTATION THIS IS HORRIBLE BC IT IS OPTIONAL
+        let iPhoneContext = session!.receivedApplicationContext as? [String : String]
         if(iPhoneContext != nil){
             
             
-            if iPhoneContext!["switchStatus"] == true {
-                aLabel.setText("Switch On")
+            if (iPhoneContext!["event"] == "syncData") {
+                NSLog("Syncing Data")
+                sendDataStore()
             } else {
-                aLabel.setText("Switch Off")
+                NSLog("Invalid iPhoneContext event received: \(String(describing: iPhoneContext!["event"]))")
             }
         }
     }
@@ -145,7 +117,58 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
             self.processApplicationContext()
         }
     }
+    
 
+    
+    
+    private func sendDataStore(){
+        if let validSession = session {
+            
+            let request = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSamplePhone")
+            do{
+                let result = try context.fetch(request)
+                
+                var samples = Array<HealthKitDataPoint>()
+
+            
+                for sample in result as! [NSManagedObject] {
+                    let curSample = HealthKitDataPoint(
+                        dataPointName: sample.value(forKey: "dataPointName") as! String,
+                        startTime: sample.value(forKey: "startTime") as! Date,
+                        endTime: sample.value(forKey: "endTime") as! Date,
+                        measurement: sample.value(forKey: "measurement") as! Double
+                    )
+                    samples.append(curSample)
+                }
+                
+                let dataStorePackage = ["event" : "dataStorePackage", "samples": samples, "numItems" : samples.count] as [String : Any]
+                
+                NSLog("Told watch to sync data")
+                let transfer = validSession.transferUserInfo(dataStorePackage)
+                
+                
+            } catch let error{
+                NSLog("Couldn't access CoreData: \(error)")
+            }
+            
+        }
+    }
+    
+    
+    // Stores a mark event to the datastore
+    @IBAction func markEventButtonPress() {
+        let entity = NSEntityDescription.entity(forEntityName: "MarkEventWatch", in: context)
+        let curMark = NSManagedObject(entity: entity!, insertInto: context)
+        curMark.setValue(Date(), forKey: "timeOfMark")
+        
+        do {
+            try context.save()
+            NSLog("Successfully saved the current EventMark")
+        } catch let error{
+            NSLog("Couldn't save: the current EventMark with  error: \(error)")
+        }
+    }
+    
 }
 
 // MARK: - Workout Manager Delegate

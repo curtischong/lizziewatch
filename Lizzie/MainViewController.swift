@@ -7,9 +7,10 @@
 
 import UIKit
 import CoreData
+import WatchConnectivity
 
 //TODO: find a way to show the shared folder and move the healthKitDataPoint to it
-class MainViewController: UIViewController {
+class MainViewController: UIViewController , WCSessionDelegate{
     
 
     @IBOutlet weak var phoneDataStoreCnt: UILabel!
@@ -18,7 +19,10 @@ class MainViewController: UIViewController {
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
-    
+    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) { }
+    func sessionDidBecomeInactive(_ session: WCSession) { }
+    func sessionDidDeactivate(_ session: WCSession) { }
+    var session: WCSession?
     
     // MARK: Lifecycle
     
@@ -28,6 +32,13 @@ class MainViewController: UIViewController {
         //https://stackoverflow.com/questions/37810967/how-to-apply-the-type-to-a-nsfetchrequest-instance/37811827
         //let request:NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "Level")
         // update the number of items not synced:
+        if WCSession.isSupported() {
+            session = WCSession.default
+            session?.delegate = self
+            session?.activate()
+        }
+
+
         
         
         let curSample = HealthKitDataPoint(
@@ -88,6 +99,64 @@ class MainViewController: UIViewController {
         }
     }
     
+    private func alertUser(message: String){
+        let alertController = UIAlertController(title: "Action Required", message:
+            "Hello, world!", preferredStyle: UIAlertController.Style.alert)
+        alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertAction.Style.default,handler: nil))
+        
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
+    @IBAction func syncWatchData(_ sender: Any) {
+        if let validSession = session {
+            let iPhoneAppContext = ["event": "syncData"]
+            
+            do {
+                try validSession.updateApplicationContext(iPhoneAppContext)
+                NSLog("Told watch to sync data")
+            } catch {
+                //TODO: update a ui element when this happens
+                alertUser(message : "Please Turn on Watch to Pair")
+            }
+        }
+    }
+    
+    
+    
+    func processApplicationContext() {
+        let watchContext = session!.receivedApplicationContext as? [String : String]
+        if(watchContext != nil){
+            
+            if (watchContext!["event"] == "dataStoreData") {
+                NSLog("Syncing Data")
+            } else {
+                NSLog("Invalid iPhoneContext event received: \(String(describing: watchContext!["event"]))")
+            }
+        }
+    }
+    func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
+        DispatchQueue.main.async() {
+            self.processApplicationContext()
+        }
+    }
+    
+    // this recieves a dictionary of objects from the watch
+    func session(_ session: WCSession, didReceiveUserInfo userInfo: [String : Any]) {
+        
+        // in the future I might want to cast each event into a specific struct
+        if(String(describing: userInfo["event"]) == "dataStorePackage"){
+            let numItems = String(describing: userInfo["numItems"])
+            NSLog("Number of items received: \(numItems)")
+            //let numSamples = userInfo["numSamples"]
+            let samples = userInfo["samples"] as! Array<HealthKitDataPoint>
+            for (index, sample) in samples.enumerated() {
+                print("Item \(index): \(sample.printVals())")
+            }
+        }
+        /*DispatchQueue.main.async {
+         // make sure to put on the main queue to update UI!
+         }*/
+    }
     
     
     /*
