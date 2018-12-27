@@ -21,11 +21,13 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
     
     @IBOutlet var watchBioSampleCnt: WKInterfaceLabel!
     @IBOutlet var watchMarkEventCnt: WKInterfaceLabel!
+    @IBOutlet var syncingStateLabel: WKInterfaceLabel!
     // MARK: - Properties
 
     private let workoutManager = WorkoutManager()
     private let dataStore = DataStore()
     private var dataStoreUrl: URL!
+    private var syncingStateBool = false
 
     var session = WCSession.default
     let context = (WKExtension.shared().delegate as! ExtensionDelegate).persistentContainer.viewContext
@@ -82,9 +84,24 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
     // DataCore
     
     // Connectivity
-    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) { }
+    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
+        if activationState == .activated {
+            // Update application context here
+            NSLog("Currently syncing data to app bc the session is connected")
+            self.sendDataStore()
+        }else{
+            NSLog("ERROR the activation state is not activated")
+        }
+    }
+    
+    func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
+        DispatchQueue.main.async() {
+            self.processApplicationContext()
+        }
+    }
     
     func processApplicationContext() {
+        setSyncingState(newSyncState : true)
         //TODO: FIX THE SESSION IMPLIMENTATION THIS IS HORRIBLE BC IT IS OPTIONAL
         let iPhoneContext = session.receivedApplicationContext as? [String : String]
         if(iPhoneContext != nil){
@@ -98,12 +115,6 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
             }
         }
     }
-    func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
-        DispatchQueue.main.async() {
-            self.processApplicationContext()
-        }
-    }
-    
 
     
     
@@ -130,8 +141,8 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
                 
                 let dataStorePackage1 = ["event" : "dataStoreBioSamples", "samples": samples1, "numItems" : samples1.count] as [String : Any]
                 
-                NSLog("Told watch to sync data")
-                let transfer1 = session.transferUserInfo(dataStorePackage1)
+                NSLog("Syncing \(samples1.count)")
+                let transfer1 = WCSession.default.transferUserInfo(dataStorePackage1)
                 
                 
                 
@@ -184,6 +195,15 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
         }
     }
     
+    private func setSyncingState(newSyncState : Bool){
+        syncingStateBool = newSyncState
+        if(syncingStateBool){
+            syncingStateLabel.setText("Syncing")
+        }else{
+            syncingStateLabel.setText("Not Syncing")
+        }
+    }
+    
     
     // Stores a mark event to the datastore
     @IBAction func markEventButtonPress() {
@@ -210,7 +230,6 @@ extension InterfaceController: WorkoutManagerDelegate {
         updateBioSampleCnt()
     }
     
-
     func workoutManager(_ manager: WorkoutManager, didChangeStateTo newState: WorkoutState) {
         // Update title of control button.
         controlButton.setTitle(newState.actionText())

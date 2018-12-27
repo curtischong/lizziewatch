@@ -8,12 +8,17 @@
 import UIKit
 import CoreData
 import WatchConnectivity
+import Alamofire
 
 //TODO: find a way to show the shared folder and move the healthKitDataPoint to it
 class MainViewController: UIViewController , WCSessionDelegate{
     
 
     @IBOutlet weak var phoneDataStoreCnt: UILabel!
+
+    @IBOutlet weak var syncToPhoneStateLabel: UILabel!
+    
+    var syncToPhoneState = false
     
     //MARK: Properties
     
@@ -114,15 +119,17 @@ class MainViewController: UIViewController , WCSessionDelegate{
             do {
                 try validSession.updateApplicationContext(iPhoneAppContext)
                 NSLog("Told watch to sync data")
-            } catch {
+                syncToPhoneStateLabel.text = "told watch sync"
+            } catch{
                 //TODO: update a ui element when this happens
-                alertUser(message : "Please Turn on Watch to Pair")
+                //alertUser(message : "Please Turn on Watch to Pair")
+                syncToPhoneStateLabel.text = "fail tell watch sync"
             }
         }
     }
     
     
-    
+    /*
     func processApplicationContext() {
         let watchContext = session!.receivedApplicationContext as? [String : String]
         if(watchContext != nil){
@@ -135,16 +142,17 @@ class MainViewController: UIViewController , WCSessionDelegate{
                 NSLog("Invalid iPhoneContext event received: \(String(describing: watchContext!["event"]))")
             }
         }
-    }
+    }*/
+    /*
     func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
         DispatchQueue.main.async() {
             self.processApplicationContext()
         }
-    }
+    }*/
     
     // this recieves a dictionary of objects from the watch
     func session(_ session: WCSession, didReceiveUserInfo userInfo: [String : Any]) {
-        
+        syncToPhoneStateLabel.text = "syncing"
         // in the future I might want to cast each event into a specific struct
         if(String(describing: userInfo["event"]) == "dataStorePackage"){
             let numItems = userInfo["numItems"] as! Int
@@ -172,5 +180,44 @@ class MainViewController: UIViewController , WCSessionDelegate{
         // Pass the selected object to the new view controller.
     }
     */
-
+    
+    
+    // THESE FUNCTIONS ARE ALL WRONG WE NEED TO SEND MORE THAN ONE SAMPLE AT ONCE
+    // ANOTHER THING, we don't send markEvents. we send the handeled version of those
+    private func sendBioSampleSnapshot(bioSample: HealthKitDataPoint) {
+        
+        let parameters: Parameters = [
+            "dataPointName": bioSample.dataPointName,
+            "startTime": bioSample.startTime,
+            "endTime": bioSample.endTime,
+            "measurement": bioSample.measurement
+        ]
+        //let config = readConfig()
+        //print(config["ip"])
+        
+        // NOTE: I AM SENDING THIS TO MY LOCAL SERVER ATM
+        // IF THIS REQUEST DOESN'T WORK MAKE SURE YOU ARE CONNECTED TO THE VPN
+        AF.request("http://10.8.0.2:9000/watch_bio_snapshot",
+                   method: .post,
+                   parameters: parameters,
+                   encoding: JSONEncoding()
+            ).responseJSON { response in
+                
+                print("Request: \(String(describing: response.request))")   // original url request
+                print("Response: \(String(describing: response.response))") // http url response
+                print("Result: \(response.result)")                         // response serialization result
+                
+                /*if let json = response.result.value {
+                 print("JSON: \(json)") // serialized json response
+                 }
+                 
+                 if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
+                 print("Data: \(utf8Text)") // original server data as UTF8 string
+                 }*/
+        }
+    }
+    
+    private func sendMarkEventSnapshot(markEvent: HealthKitDataPoint) {
+        
+    }
 }
