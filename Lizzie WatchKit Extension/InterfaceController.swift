@@ -145,7 +145,7 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
                 let dataStorePackage1 = ["event" : "dataStoreBioSamples", "samples": samples1, "numItems" : samples1.count] as [String : Any]
                 
                 NSLog("Told watch to sync data")
-                
+                let transfer1 = session.transferUserInfo(dataStorePackage1)
                 
                 
                 
@@ -153,7 +153,7 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
                 
                 
                 /*
-                let transfer = validSession.transferUserInfo(dataStorePackage1)
+                
                 
                 let result2 = try context.fetch(request2)
                 
@@ -170,7 +170,8 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
                 
 
                 let dataStorePackage2 = ["event" : "dataStoreMarkEvents", "samples": samples2, "numItems" : samples2.count] as [String : Any]
-                */
+                let transfer2 = session.transferUserInfo(dataStorePackage2)
+                 */
             } catch let error{
                 NSLog("Couldn't access CoreData: \(error)")
             }

@@ -36,8 +36,11 @@ class AuthorizationManager {
             return
         }
 
+        let allTypes = Set([heartRateQuantityType,
+                            vo2MaxQuantityType])
+        
         // Request authorization to read heart rate data.
-        healthStore.requestAuthorization(toShare: nil, read: [heartRateQuantityType, vo2MaxQuantityType]) { (success, error) -> Void in
+        healthStore.requestAuthorization(toShare: nil, read: allTypes) { (success, error) -> Void in
             // If there is an error, do nothing.
             guard error == nil else {
                 print(error ?? "failed during healthkit auth")

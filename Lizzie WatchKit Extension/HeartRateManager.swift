@@ -69,7 +69,7 @@ class HeartRateManager {
         
         // Execute the heart rate query.
         healthStore.execute(query)
-        NSLog("Executed the heart rate query")
+        NSLog("Executed the \(HKIdentifier) query")
         
         // Remember all active Queries to stop them later.
         activeQueries.append(query)
