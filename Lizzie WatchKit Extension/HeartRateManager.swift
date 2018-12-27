@@ -7,18 +7,19 @@
 //
 
 import HealthKit
+import WatchKit
+import CoreData
 
 typealias HKQueryUpdateHandler = ((HKAnchoredObjectQuery, [HKSample]?, [HKDeletedObject]?, HKQueryAnchor?, Error?) -> Swift.Void)
 
 protocol HeartRateManagerDelegate: class {
-
     func heartRate(didChangeTo newHeartRate: Double)
-
+    func notifyUpdateBioSampleCnt()
 }
 
 @available(watchOSApplicationExtension 4.0, *)
 class HeartRateManager {
-
+    
     // MARK: - Properties
 
     private let healthStore = HKHealthStore()
@@ -26,6 +27,7 @@ class HeartRateManager {
     weak var delegate: HeartRateManagerDelegate?
 
     private var activeQueries = [HKQuery]()
+    let context = (WKExtension.shared().delegate as! ExtensionDelegate).persistentContainer.viewContext
 
     // MARK: - Initialization
 
@@ -119,25 +121,47 @@ class HeartRateManager {
         switch sample.quantityType.identifier{
             case "HKQuantityTypeIdentifierHeartRate":
                 measurementValue = castHKUnitToDouble(theSample : sample, theUnit: HKUnit.beatsPerMinute())
+                delegate?.heartRate(didChangeTo: measurementValue)
             case "HKQuantityTypeIdentifierVO2Max":
                 measurementValue = castHKUnitToDouble(theSample : sample, theUnit: HKUnit(from: "ml/kg*min"))
             default:
                 NSLog("Can't find a quantity type for: %@", sample.quantityType.identifier)
         }
         
-        /*
+        
         let curSample = HealthKitDataPoint(
             dataPointName: sample.quantityType.identifier,
             startTime: sample.startDate,
             endTime: sample.endDate,
             measurement: measurementValue
         )
-        curSample.printVals()*/
+        //curSample.printVals()
         
 
         // Delegate new heart rate.
         //let newHeartRate = HeartRate(timestamp: timestamp, bpm: count)
-        delegate?.heartRate(didChangeTo: measurementValue)
+        self.storeBioSampleWatch(bioSample : curSample)
+    }
+    
+    
+    
+    // TODO: add a test for this function
+    // Saves the bioSamples to the watch's DataCore
+    // mght want to move this somewhere else
+    private func storeBioSampleWatch(bioSample : HealthKitDataPoint){
+        let entity = NSEntityDescription.entity(forEntityName: "BioSampleWatch", in: context)
+        let healthSample = NSManagedObject(entity: entity!, insertInto: context)
+        healthSample.setValue(bioSample.dataPointName, forKey: "dataPointName")
+        healthSample.setValue(bioSample.startTime, forKey: "startTime")
+        healthSample.setValue(bioSample.endTime, forKey: "endTime")
+        healthSample.setValue(bioSample.measurement, forKey: "measurement")
+        
+        do {
+            try context.save()
+            delegate?.notifyUpdateBioSampleCnt()
+        } catch let error{
+            NSLog("Couldn't save: \(bioSample.printVals()) with  error: \(error)")
+        }
     }
 
 }

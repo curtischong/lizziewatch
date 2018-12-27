@@ -32,6 +32,7 @@ protocol WorkoutManagerDelegate: class {
 
     func workoutManager(_ manager: WorkoutManager, didChangeStateTo newState: WorkoutState)
     func workoutManager(_ manager: WorkoutManager, didChangeHeartRateTo newHeartRate: Double)
+    func notifyUpdateBioSampleCnt()
 
 }
 
@@ -146,6 +147,10 @@ extension WorkoutManager: HeartRateManagerDelegate {
 
     func heartRate(didChangeTo newHeartRate: Double) {
         delegate?.workoutManager(self, didChangeHeartRateTo: newHeartRate)
+    }
+    
+    func notifyUpdateBioSampleCnt() {
+        delegate?.notifyUpdateBioSampleCnt()
     }
 
 }

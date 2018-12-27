@@ -18,6 +18,9 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
     @IBOutlet var heartRateLabel: WKInterfaceLabel!
     @IBOutlet var controlButton: WKInterfaceButton!
     @IBOutlet var markEventButton: WKInterfaceButton!
+    
+    @IBOutlet var watchBioSampleCnt: WKInterfaceLabel!
+    @IBOutlet var watchMarkEventCnt: WKInterfaceLabel!
     // MARK: - Properties
 
     private let workoutManager = WorkoutManager()
@@ -28,10 +31,11 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
     let context = (WKExtension.shared().delegate as! ExtensionDelegate).persistentContainer.viewContext
 
     
-    
+    weak var delegate: InterfaceController?
 
     // MARK: - Lifecycle
 
+    //I think this gets called twice. might want to look into this
     override func willActivate() {
         super.willActivate()
 
@@ -40,28 +44,27 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
         
         // testing the watch's DataCore
         
-        let curSample = HealthKitDataPoint(
+        /*let curSample = HealthKitDataPoint(
             dataPointName: "random name",
             startTime: Date(),
             endTime: Date() + 5,
             measurement: 5.0
-        )
-        self.storeBioSampleWatch(bioSample : curSample)
+        )*/
+        self.updateBioSampleCnt()
+        self.updateMarkEventCnt()
     }
     
     override func awake(withContext context: Any?) {
         super.awake(withContext: context)
         
-        if(session != nil){
-            session.delegate = self
-            session.activate()
-        }else{
-            NSLog("Session isn't on")
-        }
+        session.delegate = self
+        session.activate()
     }
+    
 
     // MARK: - Actions
 
+    //TODO: rename this method
     @IBAction func didTapButton() {
         print("tapped button")
         switch workoutManager.state {
@@ -77,23 +80,6 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
     }
 
     // DataCore
-    
-    // TODO: add a test for this function
-    // Saves the bioSamples to the watch's DataCore
-    private func storeBioSampleWatch(bioSample : HealthKitDataPoint){
-        let entity = NSEntityDescription.entity(forEntityName: "BioSampleWatch", in: context)
-        let healthSample = NSManagedObject(entity: entity!, insertInto: context)
-        healthSample.setValue(bioSample.dataPointName, forKey: "dataPointName")
-        healthSample.setValue(bioSample.startTime, forKey: "startTime")
-        healthSample.setValue(bioSample.endTime, forKey: "endTime")
-        healthSample.setValue(bioSample.measurement, forKey: "measurement")
-        
-        do {
-            try context.save()
-        } catch let error{
-            NSLog("Couldn't save: \(bioSample.printVals()) with  error: \(error)")
-        }
-    }
     
     // Connectivity
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) { }
@@ -179,6 +165,25 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
         //}
     }
     
+    private func updateBioSampleCnt(){
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSampleWatch")
+        do{
+            let result = try context.fetch(request)
+            watchBioSampleCnt.setText(String(result.count))
+        } catch let error{
+            NSLog("Couldn't access CoreDataWatch: \(error)")
+        }
+    }
+    private func updateMarkEventCnt(){
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "MarkEventWatch")
+        do{
+            let result = try context.fetch(request)
+            watchMarkEventCnt.setText(String(result.count))
+        } catch let error{
+            NSLog("Couldn't access CoreDataWatch: \(error)")
+        }
+    }
+    
     
     // Stores a mark event to the datastore
     @IBAction func markEventButtonPress() {
@@ -188,6 +193,7 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
         
         do {
             try context.save()
+            self.updateMarkEventCnt()
             NSLog("Successfully saved the current EventMark")
         } catch let error{
             NSLog("Couldn't save: the current EventMark with  error: \(error)")
@@ -200,6 +206,10 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
 
 @available(watchOSApplicationExtension 4.0, *)
 extension InterfaceController: WorkoutManagerDelegate {
+    func notifyUpdateBioSampleCnt() {
+        updateBioSampleCnt()
+    }
+    
 
     func workoutManager(_ manager: WorkoutManager, didChangeStateTo newState: WorkoutState) {
         // Update title of control button.

@@ -16,6 +16,8 @@
                     <items>
                         <group width="1" alignment="right" spacing="5" id="Omy-g0-taR">
                             <items>
+                                <label alignment="left" text="Label" id="8Qo-wJ-bjj"/>
+                                <label alignment="left" text="Label" id="ndt-c8-eZv"/>
                                 <label alignment="right" text="--" textAlignment="center" id="q60-id-Pm7">
                                     <accessibilityTraits key="accessibilityTraits" staticText="YES" notEnabled="YES"/>
                                     <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -41,6 +43,8 @@
                         <outlet property="controlButton" destination="iNm-FD-Dqu" id="eMe-9U-iM4"/>
                         <outlet property="heartRateLabel" destination="q60-id-Pm7" id="gxC-k9-Omc"/>
                         <outlet property="markEventButton" destination="JRJ-Z8-l9b" id="39a-kK-UpM"/>
+                        <outlet property="watchBioSampleCnt" destination="8Qo-wJ-bjj" id="kcB-NH-p3s"/>
+                        <outlet property="watchMarkEventCnt" destination="ndt-c8-eZv" id="p9E-Hw-r9z"/>
                     </connections>
                 </controller>
             </objects>
