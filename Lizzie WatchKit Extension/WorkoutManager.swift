@@ -42,7 +42,7 @@ class WorkoutManager: NSObject {
     // MARK: - Properties
 
     private let healthStore = HKHealthStore()
-    fileprivate let heartRateManager = HeartRateManager()
+    fileprivate let bioSampleManager = BioSampleManager()
 
     weak var delegate: WorkoutManagerDelegate?
 
@@ -56,7 +56,7 @@ class WorkoutManager: NSObject {
         super.init()
 
         // Configure heart rate manager.
-        heartRateManager.delegate = self
+        bioSampleManager.delegate = self
     }
 
     // MARK: - Public API
@@ -98,7 +98,7 @@ class WorkoutManager: NSObject {
         NSLog("Stopped Tracking")
 
         // Stop querying heart rate.
-        heartRateManager.stop()
+        bioSampleManager.stop()
 
         // Stop the workout session.
         healthStore.end(session!)
@@ -122,7 +122,7 @@ extension WorkoutManager: HKWorkoutSessionDelegate {
         switch toState {
         case .running:
             if fromState == .notStarted {
-                heartRateManager.start()
+                bioSampleManager.start()
             }
 
         default:
@@ -140,12 +140,12 @@ extension WorkoutManager: HKWorkoutSessionDelegate {
     
 }
 
-// MARK: - Heart Rate Delegate
+// MARK: BioSample Delegate
 
 @available(watchOSApplicationExtension 4.0, *)
-extension WorkoutManager: HeartRateManagerDelegate {
+extension WorkoutManager: BioSampleManagerDelegate {
 
-    func heartRate(didChangeTo newHeartRate: Double) {
+    func updateHeartRate(didChangeTo newHeartRate: Double) {
         delegate?.workoutManager(self, didChangeHeartRateTo: newHeartRate)
     }
     

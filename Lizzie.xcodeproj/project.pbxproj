@@ -25,7 +25,7 @@
 		BE5AEE171D4F7CED0027C49C /* HKUnit+BeatsPerMinute.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE5AEE161D4F7CED0027C49C /* HKUnit+BeatsPerMinute.swift */; };
 		BE7070091D57A13D00E41B95 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE7070081D57A13D00E41B95 /* HealthKit.framework */; };
 		BE70700D1D57A29500E41B95 /* AuthorizationManger.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE70700C1D57A29500E41B95 /* AuthorizationManger.swift */; };
-		BEB5C5BB1D4F656D00BBF490 /* HeartRateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB5C5BA1D4F656D00BBF490 /* HeartRateManager.swift */; };
+		BEB5C5BB1D4F656D00BBF490 /* BioSampleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB5C5BA1D4F656D00BBF490 /* BioSampleManager.swift */; };
 		BF7B3D8538CA396EB3585705 /* Pods_Lizzie_WatchKit_App.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F3E209A9B3ADEA685359A2F /* Pods_Lizzie_WatchKit_App.framework */; };
 		E919691F21CF3F1A00E3D1BF /* EmotionSelectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E919691E21CF3F1A00E3D1BF /* EmotionSelectionController.swift */; };
 		E97008BD21D2CDD4009E4463 /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97008BC21D2CDD4009E4463 /* DataStore.swift */; };
@@ -109,7 +109,7 @@
 		BE5AEE161D4F7CED0027C49C /* HKUnit+BeatsPerMinute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HKUnit+BeatsPerMinute.swift"; sourceTree = "<group>"; };
 		BE7070081D57A13D00E41B95 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		BE70700C1D57A29500E41B95 /* AuthorizationManger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthorizationManger.swift; sourceTree = "<group>"; };
-		BEB5C5BA1D4F656D00BBF490 /* HeartRateManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeartRateManager.swift; sourceTree = "<group>"; };
+		BEB5C5BA1D4F656D00BBF490 /* BioSampleManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BioSampleManager.swift; sourceTree = "<group>"; };
 		D30E5E4D7CB82428D89F6B8D /* Pods-Lizzie.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lizzie.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Lizzie/Pods-Lizzie.debug.xcconfig"; sourceTree = "<group>"; };
 		E919691E21CF3F1A00E3D1BF /* EmotionSelectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmotionSelectionController.swift; sourceTree = "<group>"; };
 		E97008BC21D2CDD4009E4463 /* DataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStore.swift; sourceTree = "<group>"; };
@@ -219,7 +219,7 @@
 				BE25B00D1D4F33B100DAF094 /* InterfaceController.swift */,
 				BE25B00F1D4F33B100DAF094 /* ExtensionDelegate.swift */,
 				BE496A221D4F4D9A00C82C4F /* WorkoutManager.swift */,
-				BEB5C5BA1D4F656D00BBF490 /* HeartRateManager.swift */,
+				BEB5C5BA1D4F656D00BBF490 /* BioSampleManager.swift */,
 				E97008BC21D2CDD4009E4463 /* DataStore.swift */,
 				E97008C221D321B1009E4463 /* HealthKitDataPoint.swift */,
 				E97008BE21D2D03E009E4463 /* RequestManager.swift */,
@@ -549,7 +549,7 @@
 				E97008C321D321B1009E4463 /* HealthKitDataPoint.swift in Sources */,
 				E97008BF21D2D03E009E4463 /* RequestManager.swift in Sources */,
 				BE70700D1D57A29500E41B95 /* AuthorizationManger.swift in Sources */,
-				BEB5C5BB1D4F656D00BBF490 /* HeartRateManager.swift in Sources */,
+				BEB5C5BB1D4F656D00BBF490 /* BioSampleManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

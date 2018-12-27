@@ -1,5 +1,5 @@
 //
-//  HeartRateManager.swift
+//  BioSampleManager.swift
 //  Heart Control
 //
 //  Created by Thomas Paul Mann on 01/08/16.
@@ -12,19 +12,19 @@ import CoreData
 
 typealias HKQueryUpdateHandler = ((HKAnchoredObjectQuery, [HKSample]?, [HKDeletedObject]?, HKQueryAnchor?, Error?) -> Swift.Void)
 
-protocol HeartRateManagerDelegate: class {
-    func heartRate(didChangeTo newHeartRate: Double)
+protocol BioSampleManagerDelegate: class {
+    func updateHeartRate(didChangeTo newHeartRate: Double)
     func notifyUpdateBioSampleCnt()
 }
 
 @available(watchOSApplicationExtension 4.0, *)
-class HeartRateManager {
+class BioSampleManager {
     
     // MARK: - Properties
 
     private let healthStore = HKHealthStore()
 
-    weak var delegate: HeartRateManagerDelegate?
+    weak var delegate: BioSampleManagerDelegate?
 
     private var activeQueries = [HKQuery]()
     let context = (WKExtension.shared().delegate as! ExtensionDelegate).persistentContainer.viewContext
@@ -121,7 +121,7 @@ class HeartRateManager {
         switch sample.quantityType.identifier{
             case "HKQuantityTypeIdentifierHeartRate":
                 measurementValue = castHKUnitToDouble(theSample : sample, theUnit: HKUnit.beatsPerMinute())
-                delegate?.heartRate(didChangeTo: measurementValue)
+                delegate?.updateHeartRate(didChangeTo: measurementValue)
             case "HKQuantityTypeIdentifierVO2Max":
                 measurementValue = castHKUnitToDouble(theSample : sample, theUnit: HKUnit(from: "ml/kg*min"))
             default:
