@@ -38,7 +38,7 @@ class MainViewController: UIViewController {
         )
         self.storeBioSamplePhone(bioSample : curSample)
         
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSample")
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSamplePhone")
         do{
             let result = try context.fetch(request)
             phoneDataStoreCnt.text = String(result.count)
@@ -52,7 +52,7 @@ class MainViewController: UIViewController {
     
     // Saves the bioSamples from the watch to the phone's DataCore
     private func storeBioSamplePhone(bioSample : HealthKitDataPoint){
-        let entity = NSEntityDescription.entity(forEntityName: "BioSample", in: context)
+        let entity = NSEntityDescription.entity(forEntityName: "BioSamplePhone", in: context)
         let healthSample = NSManagedObject(entity: entity!, insertInto: context)
         healthSample.setValue(bioSample.dataPointName, forKey: "dataPointName")
         healthSample.setValue(bioSample.startTime, forKey: "startTime")
@@ -73,7 +73,7 @@ class MainViewController: UIViewController {
     
     
     private func fetchHeartrate(){
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSample")
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSamplePhone")
         //request.predicate = NSPredicate(format: "age = %@", "12")
         request.returnsObjectsAsFaults = false
         do {

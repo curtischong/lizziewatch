@@ -34,8 +34,8 @@
 		E97008C321D321B1009E4463 /* HealthKitDataPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97008C221D321B1009E4463 /* HealthKitDataPoint.swift */; };
 		E98FBA2921D4216600BF0784 /* HealthKitDataPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97008C221D321B1009E4463 /* HealthKitDataPoint.swift */; };
 		E98FBA3421D430FC00BF0784 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E98FBA3321D430FC00BF0784 /* MainViewController.swift */; };
-		E98FBA3F21D4482E00BF0784 /* BioSamplesPhone.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E98FBA3D21D4482E00BF0784 /* BioSamplesPhone.xcdatamodeld */; };
-		E98FBA4221D4484B00BF0784 /* BioSamplesWatch.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E98FBA4021D4484B00BF0784 /* BioSamplesWatch.xcdatamodeld */; };
+		E98FBA4521D45D4200BF0784 /* BioSamplePhone.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E98FBA4321D45D4200BF0784 /* BioSamplePhone.xcdatamodeld */; };
+		E98FBA4821D45DE000BF0784 /* BioSampleWatch.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E98FBA4621D45DE000BF0784 /* BioSampleWatch.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -117,8 +117,8 @@
 		E97008C021D2F5D2009E4463 /* WatchSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchSessionManager.swift; sourceTree = "<group>"; };
 		E97008C221D321B1009E4463 /* HealthKitDataPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitDataPoint.swift; sourceTree = "<group>"; };
 		E98FBA3321D430FC00BF0784 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MainViewController.swift; path = /Users/curtis/Desktop/Lizzie/Lizzie/MainViewController.swift; sourceTree = "<absolute>"; };
-		E98FBA3E21D4482E00BF0784 /* biosamplesphone.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = biosamplesphone.xcdatamodel; sourceTree = "<group>"; };
-		E98FBA4121D4484B00BF0784 /* biosampleswatch.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = biosampleswatch.xcdatamodel; sourceTree = "<group>"; };
+		E98FBA4421D45D4200BF0784 /* BioSamplePhone.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BioSamplePhone.xcdatamodel; sourceTree = "<group>"; };
+		E98FBA4721D45DE000BF0784 /* BioSampleWatch.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BioSampleWatch.xcdatamodel; sourceTree = "<group>"; };
 		EA66E66CEE61B8D7980AD7BD /* Pods-Lizzie WatchKit Extension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lizzie WatchKit Extension.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Lizzie WatchKit Extension/Pods-Lizzie WatchKit Extension.debug.xcconfig"; sourceTree = "<group>"; };
 		FC70F0B612DAB175CAE4DD72 /* Pods-Lizzie.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lizzie.release.xcconfig"; path = "Pods/Target Support Files/Pods-Lizzie/Pods-Lizzie.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -197,7 +197,7 @@
 				E919691E21CF3F1A00E3D1BF /* EmotionSelectionController.swift */,
 				BE25AFEE1D4F33B100DAF094 /* Main.storyboard */,
 				BE25AFF31D4F33B100DAF094 /* LaunchScreen.storyboard */,
-				E98FBA3D21D4482E00BF0784 /* BioSamplesPhone.xcdatamodeld */,
+				E98FBA4321D45D4200BF0784 /* BioSamplePhone.xcdatamodeld */,
 			);
 			path = Lizzie;
 			sourceTree = "<group>";
@@ -225,7 +225,7 @@
 				E97008BE21D2D03E009E4463 /* RequestManager.swift */,
 				BE70700C1D57A29500E41B95 /* AuthorizationManger.swift */,
 				BE5AEE161D4F7CED0027C49C /* HKUnit+BeatsPerMinute.swift */,
-				E98FBA4021D4484B00BF0784 /* BioSamplesWatch.xcdatamodeld */,
+				E98FBA4621D45DE000BF0784 /* BioSampleWatch.xcdatamodeld */,
 			);
 			path = "Lizzie WatchKit Extension";
 			sourceTree = "<group>";
@@ -529,9 +529,9 @@
 				E98FBA2921D4216600BF0784 /* HealthKitDataPoint.swift in Sources */,
 				BE25AFED1D4F33B100DAF094 /* ViewController.swift in Sources */,
 				E919691F21CF3F1A00E3D1BF /* EmotionSelectionController.swift in Sources */,
+				E98FBA4521D45D4200BF0784 /* BioSamplePhone.xcdatamodeld in Sources */,
 				E97008C121D2F5D2009E4463 /* WatchSessionManager.swift in Sources */,
 				BE25AFEB1D4F33B100DAF094 /* AppDelegate.swift in Sources */,
-				E98FBA3F21D4482E00BF0784 /* BioSamplesPhone.xcdatamodeld in Sources */,
 				E98FBA3421D430FC00BF0784 /* MainViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -544,9 +544,9 @@
 				E97008BD21D2CDD4009E4463 /* DataStore.swift in Sources */,
 				BE496A231D4F4D9A00C82C4F /* WorkoutManager.swift in Sources */,
 				BE5AEE171D4F7CED0027C49C /* HKUnit+BeatsPerMinute.swift in Sources */,
+				E98FBA4821D45DE000BF0784 /* BioSampleWatch.xcdatamodeld in Sources */,
 				BE25B00E1D4F33B100DAF094 /* InterfaceController.swift in Sources */,
 				E97008C321D321B1009E4463 /* HealthKitDataPoint.swift in Sources */,
-				E98FBA4221D4484B00BF0784 /* BioSamplesWatch.xcdatamodeld in Sources */,
 				E97008BF21D2D03E009E4463 /* RequestManager.swift in Sources */,
 				BE70700D1D57A29500E41B95 /* AuthorizationManger.swift in Sources */,
 				BEB5C5BB1D4F656D00BBF490 /* HeartRateManager.swift in Sources */,
@@ -855,23 +855,23 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		E98FBA3D21D4482E00BF0784 /* BioSamplesPhone.xcdatamodeld */ = {
+		E98FBA4321D45D4200BF0784 /* BioSamplePhone.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				E98FBA3E21D4482E00BF0784 /* biosamplesphone.xcdatamodel */,
+				E98FBA4421D45D4200BF0784 /* BioSamplePhone.xcdatamodel */,
 			);
-			currentVersion = E98FBA3E21D4482E00BF0784 /* biosamplesphone.xcdatamodel */;
-			path = BioSamplesPhone.xcdatamodeld;
+			currentVersion = E98FBA4421D45D4200BF0784 /* BioSamplePhone.xcdatamodel */;
+			path = BioSamplePhone.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};
-		E98FBA4021D4484B00BF0784 /* BioSamplesWatch.xcdatamodeld */ = {
+		E98FBA4621D45DE000BF0784 /* BioSampleWatch.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				E98FBA4121D4484B00BF0784 /* biosampleswatch.xcdatamodel */,
+				E98FBA4721D45DE000BF0784 /* BioSampleWatch.xcdatamodel */,
 			);
-			currentVersion = E98FBA4121D4484B00BF0784 /* biosampleswatch.xcdatamodel */;
-			path = BioSamplesWatch.xcdatamodeld;
+			currentVersion = E98FBA4721D45DE000BF0784 /* BioSampleWatch.xcdatamodel */;
+			path = BioSampleWatch.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

@@ -82,7 +82,7 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
     
     
     private func storeBioSampleWatch(bioSample : HealthKitDataPoint){
-        let entity = NSEntityDescription.entity(forEntityName: "BioSample2", in: context)
+        let entity = NSEntityDescription.entity(forEntityName: "BioSampleWatch", in: context)
         let healthSample = NSManagedObject(entity: entity!, insertInto: context)
         healthSample.setValue(bioSample.dataPointName, forKey: "dataPointName")
         healthSample.setValue(bioSample.startTime, forKey: "startTime")

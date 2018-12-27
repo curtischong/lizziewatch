@@ -2,22 +2,16 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:BioSample2+CoreDataClass.swift">
+      location = "group:Lizzie WatchKit Extension/BioSampleWatch+CoreDataClass.swift">
    </FileRef>
    <FileRef
-      location = "group:BioSample2+CoreDataProperties.swift">
+      location = "group:Lizzie WatchKit Extension/BioSampleWatch+CoreDataProperties.swift">
    </FileRef>
    <FileRef
-      location = "group:BioSample+CoreDataClass.swift">
+      location = "group:Lizzie/BioSamplePhone+CoreDataClass.swift">
    </FileRef>
    <FileRef
-      location = "group:BioSample+CoreDataProperties.swift">
-   </FileRef>
-   <FileRef
-      location = "group:BioSample+CoreDataProperties.swift">
-   </FileRef>
-   <FileRef
-      location = "group:BioSamplesPhone.xcdatamodeld">
+      location = "group:Lizzie/BioSamplePhone+CoreDataProperties.swift">
    </FileRef>
    <FileRef
       location = "group:Lizzie.xcodeproj">

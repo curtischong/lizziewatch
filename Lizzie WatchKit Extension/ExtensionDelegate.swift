@@ -36,7 +36,7 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate {
     
     lazy var persistentContainer: NSPersistentContainer = {
         
-        let container = NSPersistentContainer(name: "BioSamplesWatch")
+        let container = NSPersistentContainer(name: "BioSampleWatch")
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error {
                 
