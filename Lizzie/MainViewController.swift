@@ -127,9 +127,11 @@ class MainViewController: UIViewController , WCSessionDelegate{
         let watchContext = session!.receivedApplicationContext as? [String : String]
         if(watchContext != nil){
             
-            if (watchContext!["event"] == "dataStoreData") {
+            if (watchContext!["event"] == "dataStoreBioSamples") {
                 NSLog("Syncing Data")
-            } else {
+            } else if (watchContext!["event"] == "dataStoreMarkEvents"){
+                
+            }else {
                 NSLog("Invalid iPhoneContext event received: \(String(describing: watchContext!["event"]))")
             }
         }

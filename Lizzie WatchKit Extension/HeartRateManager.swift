@@ -114,9 +114,9 @@ class HeartRateManager {
         
         var measurementValue = -1.0
         switch sample.quantityType.identifier{
-            case "heartRate":
+            case "HKQuantityTypeIdentifierHeartRate":
                 measurementValue = castHKUnitToDouble(theSample : sample, theUnit: HKUnit.beatsPerMinute())
-            case "vo2Max":
+            case "HKQuantityTypeIdentifierVO2Max":
                 measurementValue = castHKUnitToDouble(theSample : sample, theUnit: HKUnit(from: "ml/kg*min"))
         default:
             NSLog("Can't find a quantity type for: %@", sample.quantityType.identifier)

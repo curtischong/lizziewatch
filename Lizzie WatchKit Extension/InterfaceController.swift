@@ -24,7 +24,7 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
     private let dataStore = DataStore()
     private var dataStoreUrl: URL!
 
-    var session: WCSession?
+    var session = WCSession.default
     let context = (WKExtension.shared().delegate as! ExtensionDelegate).persistentContainer.viewContext
 
     
@@ -53,8 +53,8 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
         super.awake(withContext: context)
         
         if(session != nil){
-            session!.delegate = self
-            session!.activate()
+            session.delegate = self
+            session.activate()
         }else{
             NSLog("Session isn't on")
         }
@@ -100,7 +100,7 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
     
     func processApplicationContext() {
         //TODO: FIX THE SESSION IMPLIMENTATION THIS IS HORRIBLE BC IT IS OPTIONAL
-        let iPhoneContext = session!.receivedApplicationContext as? [String : String]
+        let iPhoneContext = session.receivedApplicationContext as? [String : String]
         if(iPhoneContext != nil){
             
             
@@ -122,36 +122,60 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
     
     
     private func sendDataStore(){
-        if let validSession = session {
+        //if let validSession = session {
             
-            let request = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSamplePhone")
+            let request1 = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSampleWatch")
+            let request2 = NSFetchRequest<NSFetchRequestResult>(entityName: "MarkEventWatch")
             do{
-                let result = try context.fetch(request)
+                let result1 = try context.fetch(request1)
                 
-                var samples = Array<HealthKitDataPoint>()
+                var samples1 = Array<HealthKitDataPoint>()
 
             
-                for sample in result as! [NSManagedObject] {
+                for sample in result1 as! [NSManagedObject] {
                     let curSample = HealthKitDataPoint(
                         dataPointName: sample.value(forKey: "dataPointName") as! String,
                         startTime: sample.value(forKey: "startTime") as! Date,
                         endTime: sample.value(forKey: "endTime") as! Date,
                         measurement: sample.value(forKey: "measurement") as! Double
                     )
-                    samples.append(curSample)
+                    samples1.append(curSample)
                 }
                 
-                let dataStorePackage = ["event" : "dataStorePackage", "samples": samples, "numItems" : samples.count] as [String : Any]
+                let dataStorePackage1 = ["event" : "dataStoreBioSamples", "samples": samples1, "numItems" : samples1.count] as [String : Any]
                 
                 NSLog("Told watch to sync data")
-                let transfer = validSession.transferUserInfo(dataStorePackage)
                 
                 
+                
+                
+                // Now send the MarkEvents
+                
+                
+                /*
+                let transfer = validSession.transferUserInfo(dataStorePackage1)
+                
+                let result2 = try context.fetch(request2)
+                
+                var samples2 = Array<Date>()
+                for sample in result2 as! [NSManagedObject] {
+                    let curSample = HealthKitDataPoint(
+                        dataPointName: sample.value(forKey: "dataPointName") as! String,
+                        startTime: sample.value(forKey: "startTime") as! Date,
+                        endTime: sample.value(forKey: "endTime") as! Date,
+                        measurement: sample.value(forKey: "measurement") as! Double
+                    )
+                    samples1.append(curSample)
+                }
+                
+
+                let dataStorePackage2 = ["event" : "dataStoreMarkEvents", "samples": samples2, "numItems" : samples2.count] as [String : Any]
+                */
             } catch let error{
                 NSLog("Couldn't access CoreData: \(error)")
             }
             
-        }
+        //}
     }
     
     
