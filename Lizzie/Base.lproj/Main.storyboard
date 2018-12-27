@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="K4m-UN-kIQ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -134,13 +134,6 @@
                                     <action selector="sendBioSnapshot:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Vyf-VQ-WOo"/>
                                 </connections>
                             </button>
-                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="W3m-Zt-dsb">
-                                <rect key="frame" x="163" y="616" width="49" height="31"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <connections>
-                                    <action selector="switchValueChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="iP9-pn-nlw"/>
-                                </connections>
-                            </switch>
                         </subviews>
                         <color key="backgroundColor" red="0.76078431372549016" green="0.82352941176470584" blue="0.8784313725490196" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
@@ -156,8 +149,6 @@
                         <outlet property="eventTextField" destination="N7K-nA-gcy" id="mwl-FC-srO"/>
                         <outlet property="eventTextLabel" destination="4q5-Up-v2l" id="vO3-lO-4OH"/>
                         <outlet property="heartrateChart" destination="QWu-G5-gRf" id="uqe-E7-8hp"/>
-                        <outlet property="requestTest" destination="Xmk-99-zLM" id="wiV-D4-zPF"/>
-                        <outlet property="theSwitch" destination="W3m-Zt-dsb" id="mdZ-9X-yMA"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

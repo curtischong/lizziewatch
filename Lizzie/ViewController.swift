@@ -12,7 +12,7 @@ import Alamofire
 import SwiftyJSON
 import WatchConnectivity
 
-class ViewController: UIViewController ,UITextFieldDelegate, WCSessionDelegate{
+class ViewController: UIViewController ,UITextFieldDelegate{
 
     //MARK: Properties
     @IBOutlet weak var eventTextLabel: UILabel!
@@ -25,12 +25,7 @@ class ViewController: UIViewController ,UITextFieldDelegate, WCSessionDelegate{
     
     var selectedEmotions = Array(repeating: false, count: 8)
     
-    @IBOutlet weak var theSwitch: UISwitch!
-    @IBOutlet weak var requestTest: UIButton!
     
-    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) { }
-    func sessionDidBecomeInactive(_ session: WCSession) { }
-    func sessionDidDeactivate(_ session: WCSession) { }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,14 +33,7 @@ class ViewController: UIViewController ,UITextFieldDelegate, WCSessionDelegate{
         
         // IOS Setup
         eventTextField.delegate = self
-        
-        //TODO: Move this to an initializer
-        // Watch Setup
-        if WCSession.isSupported() {
-            session = WCSession.default
-            session?.delegate = self
-            session?.activate()
-        }
+
         NSLog("Finished Setting things up")
     }
 
@@ -148,32 +136,6 @@ class ViewController: UIViewController ,UITextFieldDelegate, WCSessionDelegate{
             if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
                 print("Data: \(utf8Text)") // original server data as UTF8 string
             }*/
-        }
-    }
-    
-    func processApplicationContext() {
-        if let iPhoneContext = session?.applicationContext as? [String : Bool] {
-            if iPhoneContext["switchStatus"] == true {
-                theSwitch.isOn = true
-            } else {
-                theSwitch.isOn = false
-            }
-        }
-    }
-    
-    // Watch connectivity
-    
-    var session: WCSession?
-    @IBAction func switchValueChanged(_ sender: UISwitch) {
-        if let validSession = session {
-            let iPhoneAppContext = ["switchStatus": sender.isOn]
-            
-            do {
-                try validSession.updateApplicationContext(iPhoneAppContext)
-            } catch {
-                //TODO: update a ui element when this happens
-                print("Something went wrong")
-            }
         }
     }
 }
