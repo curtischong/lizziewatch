@@ -11,16 +11,17 @@ import WatchConnectivity
 import Alamofire
 
 //TODO: find a way to show the shared folder and move the healthKitDataPoint to it
-class MainViewController: UIViewController , WCSessionDelegate{
+class MainViewController: UIViewController , WCSessionDelegate, UITableViewDelegate{
     
     
     @IBOutlet weak var syncToPhoneStateLabel: UILabel!
     @IBOutlet weak var bioSampleCntPhone: UILabel!
     @IBOutlet weak var markEventCntPhone: UILabel!
     
+    @IBOutlet weak var markEventTable: UITableView!
     
     var syncToPhoneState = false
-    
+    private let dataSource = DataSource()
     
     
     //MARK: Properties
@@ -36,11 +37,9 @@ class MainViewController: UIViewController , WCSessionDelegate{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         
-        //https://stackoverflow.com/questions/37810967/how-to-apply-the-type-to-a-nsfetchrequest-instance/37811827
-        //let request:NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "Level")
+
         // update the number of items not synced:
         if WCSession.isSupported() {
             session = WCSession.default
@@ -50,23 +49,8 @@ class MainViewController: UIViewController , WCSessionDelegate{
         updateBioSampleCnt()
         updateMarkEventCnt()
         
-        
-        /*
-        let curSample = HealthKitDataPoint(
-            dataPointName: "random name",
-            startTime: Date(),
-            endTime: Date() + 5,
-            measurement: 5.0
-        )
-        self.storeBioSamplePhone(bioSample : curSample)
-        
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSamplePhone")
-        do{
-            let result = try context.fetch(request)
-        } catch let error{
-            NSLog("Couldn't access CoreData: \(error)")
-        }*/
-        
+        dataSource.movies = ["Terminator","Back To The Future","The Dark Knight"]
+        markEventTable.dataSource = dataSource
     }
     
     //MARK: Actions
@@ -85,6 +69,18 @@ class MainViewController: UIViewController , WCSessionDelegate{
         } catch let error{
             NSLog("Couldn't save: \(bioSample.printVals()) with  error: \(error)")
         }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        let alertController = UIAlertController(title: "Hint", message: "You have selected row \(indexPath.row).", preferredStyle: .alert)
+        
+        let alertAction = UIAlertAction(title: "Ok", style: .cancel, handler: nil)
+        
+        alertController.addAction(alertAction)
+        
+        present(alertController, animated: true, completion: nil)
+        
     }
     
     // Saves the bioSamples the phone's DataCore to the server
@@ -197,17 +193,17 @@ class MainViewController: UIViewController , WCSessionDelegate{
         
         for i in 0..<numSamples {
             let curBio = NSManagedObject(entity: entity!, insertInto: context)
-            curBio.setValue(samplesNames[i], forKey: "samplesNames")
-            curBio.setValue(samplesNames[i], forKey: "samplesStartTime")
-            curBio.setValue(samplesNames[i], forKey: "samplesEndTime")
-            curBio.setValue(samplesNames[i], forKey: "samplesMeasurement")
+            curBio.setValue(samplesNames[i], forKey: "dataPointName")
+            curBio.setValue(samplesStartTime[i], forKey: "startTime")
+            curBio.setValue(samplesEndTime[i], forKey: "endTime")
+            curBio.setValue(samplesMeasurement[i], forKey: "measurement")
         }
         
         do {
             try context.save()
             self.updateBioSampleCnt()
             NSLog("Successfully saved the current BioSample")
-            
+            self.syncToPhoneStateLabel.text = "synced"
         } catch let error{
             NSLog("Couldn't save: the current EventMark with  error: \(error)")
         }
@@ -223,6 +219,7 @@ class MainViewController: UIViewController , WCSessionDelegate{
             try context.save()
             self.updateMarkEventCnt()
             NSLog("Successfully saved the current MarkEvent")
+            self.syncToPhoneStateLabel.text = "synced"
         } catch let error{
             NSLog("Couldn't save: the current EventMark with  error: \(error)")
         }

@@ -106,11 +106,12 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
         }
     }
     
-    func session(_ session: WCSession, didFinish userInfoTransfer: WCSessionUserInfoTransfer, error: Error?) {
+    func handleTransferData(userInfoTransfer: WCSessionUserInfoTransfer, error: Error?){
         if error == nil {
             DispatchQueue.main.async() {
-                let transfers = session.outstandingUserInfoTransfers
+                let transfers = self.session.outstandingUserInfoTransfers
                 if transfers.count > 0 {  //--> will in most cases now be 0
+                    var stillTransferring = false
                     for trans in transfers {
                         NSLog("State of current transfer: \(trans.isTransferring)")
                         
@@ -131,18 +132,25 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
                             }else{
                                 NSLog("Can't remove rows of unknown event: \(eventName)")
                             }
+                        }else{
+                            NSLog("Transfer is still is process")
+                            stillTransferring = true
                         }
-                        //NSLog(trans.userInfo.description)
-                        //trans.cancel()  // cancel transfer that will be sent by updateApplicationContext
-                        //let dict = trans.userInfo
-                        //session.transferUserInfo(dict)  // ***
+                    }
+                    if(stillTransferring){
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 10, execute: {
+                            self.handleTransferData(userInfoTransfer : userInfoTransfer, error : error)
+                        })
                     }
                 }
             }
+        }else {
+            NSLog("transfer failed with error \(String(describing: error))")
         }
-        else {
-            print(error as Any)
-        }
+    }
+    
+    func session(_ session: WCSession, didFinish userInfoTransfer: WCSessionUserInfoTransfer, error: Error?) {
+        handleTransferData(userInfoTransfer : userInfoTransfer, error : error)
     }
     
     private func dropAllBioSampleRows(selectBeforeTime : NSDate){
@@ -247,6 +255,8 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
                 
                 NSLog("Syncing \(result1.count) items")
                 session.transferUserInfo(dataStorePackage1)
+            }else{
+                NSLog("Turns out there are no BioSampleWatch rows. Syncing stopped")
             }
         } catch let error{
             NSLog("Couldn't fetch BioSampleWatch with error: \(error)")
@@ -268,6 +278,8 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
                                          "numItems" : result2.count] as [String : Any]
                 NSLog("Syncing \(result2.count) items")
                 session.transferUserInfo(dataStorePackage2)
+            }else{
+                NSLog("Turns out there are no MarkEventWatch rows. Syncing stopped")
             }
         } catch let error{
             NSLog("Couldn't fetch MarkEventWatch with error: \(error)")
