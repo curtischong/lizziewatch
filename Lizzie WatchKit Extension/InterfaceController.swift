@@ -138,6 +138,8 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
         do{
             try context.execute(deleteRequest)
             try context.save()
+            NSLog("Deleted BioSampleWatch rows")
+            updateBioSampleCnt()
         }catch let error{
             NSLog("Couldn't Delete BioSampleWatch rows before this date: \(selectBeforeTime) with \(error)")
         }
@@ -158,23 +160,6 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
             }
         }
     }
-
-    @IBAction func testYolo() {
-        sendSmallDataToPhone()
-    }
-    
-    func sendSmallDataToPhone(){
-        let stuffToSend = ["event": formatter.string(from: Date())]
-        //session.updateApplicationContext(stuffToSend)
-        do{
-            try session.updateApplicationContext(stuffToSend)
-            NSLog("told to yolo")
-        }catch let error{
-            NSLog("couldn't yolo: \(error)")
-        }
-    }
-    
-    
     
     private func sendDataStore(){
         // I'm pretty sure the session on the watch side is ALWAYS on. bc it assumes the phone is on
@@ -209,39 +194,26 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
                                      "samplesEndTime": samplesEndTime,
                                      "samplesMeasurement": samplesMeasurement,
                                      "endTimeOfQuery" : selectBeforeTime,
-                                     "numItems" : result1.count
-                ] as [String : Any]
+                                     "numItems" : result1.count] as [String : Any]
             
-            NSLog("Syncing \(result1.count)")
+            NSLog("Syncing \(result1.count) items")
             session.transferUserInfo(dataStorePackage1)
-            
-            
-            
-            // Now send the MarkEvents
-            
-            
-            /*
-            
-            
+        } catch let error{
+            NSLog("Couldn't fetch BioSampleWatch with error: \(error)")
+        }
+        // Now send the MarkEvents
+        do{
             let result2 = try context.fetch(request2)
-            
-            var samples2 = Array<Date>()
-            for sample in result2 as! [NSManagedObject] {
-                let curSample = HealthKitDataPoint(
-                    dataPointName: sample.value(forKey: "dataPointName") as! String,
-                    startTime: sample.value(forKey: "startTime") as! Date,
-                    endTime: sample.value(forKey: "endTime") as! Date,
-                    measurement: sample.value(forKey: "measurement") as! Double
-                )
-                samples1.append(curSample)
-            }
+            let timeOfMarks = result2 as! [Date]
             
 
-            let dataStorePackage2 = ["event" : "dataStoreMarkEvents", "samples": samples2, "numItems" : samples2.count] as [String : Any]
-            let transfer2 = session.transferUserInfo(dataStorePackage2)
-             */
+            let dataStorePackage2 = ["event" : "dataStoreMarkEvents",
+                                     "timeOfMarks": timeOfMarks,
+                                     "numItems" : result2.count] as [String : Any]
+            NSLog("Syncing \(result2.count) items")
+            session.transferUserInfo(dataStorePackage2)
         } catch let error{
-            NSLog("Couldn't access CoreData: \(error)")
+            NSLog("Couldn't fetch MarkEventWatch with error: \(error)")
         }
     }
     
@@ -283,9 +255,9 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
         do {
             try context.save()
             self.updateMarkEventCnt()
-            NSLog("Successfully saved the current EventMark")
+            NSLog("Successfully saved the current MarkEvent")
         } catch let error{
-            NSLog("Couldn't save: the current EventMark with  error: \(error)")
+            NSLog("Couldn't save: the current MarkEvent with  error: \(error)")
         }
     }
     

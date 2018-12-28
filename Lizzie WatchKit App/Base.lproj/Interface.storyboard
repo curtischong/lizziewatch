@@ -14,11 +14,6 @@
             <objects>
                 <controller title="Lizzie" id="AgC-eL-Hgc" customClass="InterfaceController" customModule="Lizzie_WatchKit_Extension">
                     <items>
-                        <button width="1" height="23" alignment="left" title="test yolo" id="KEW-Nr-cYR">
-                            <connections>
-                                <action selector="testYolo" destination="AgC-eL-Hgc" id="eha-ag-bd1"/>
-                            </connections>
-                        </button>
                         <label alignment="left" text="Label" id="wqB-R6-bEy"/>
                         <group width="1" alignment="right" spacing="5" id="Omy-g0-taR">
                             <items>

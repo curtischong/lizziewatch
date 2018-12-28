@@ -2,6 +2,12 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:Lizzie/MarkEventPhone+CoreDataClass.swift">
+   </FileRef>
+   <FileRef
+      location = "group:Lizzie/MarkEventPhone+CoreDataProperties.swift">
+   </FileRef>
+   <FileRef
       location = "group:Lizzie WatchKit Extension/MarkEventWatch+CoreDataClass.swift">
    </FileRef>
    <FileRef

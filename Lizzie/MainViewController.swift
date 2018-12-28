@@ -123,9 +123,10 @@ class MainViewController: UIViewController , WCSessionDelegate{
                 NSLog("Told watch to sync data")
                 //syncToPhoneStateLabel.text = "told watch sync"
             } catch let error{
+                
                 //TODO: update a ui element when this happens
                 //alertUser(message : "Please Turn on Watch to Pair")
-                //syncToPhoneStateLabel.text = "fail tell watch sync \(error)"
+                NSLog("Couldn't tell watch to sync with error: \(error)")
             }
         }
     }
@@ -135,15 +136,7 @@ class MainViewController: UIViewController , WCSessionDelegate{
     func processApplicationContext() {
         let watchContext = session!.receivedApplicationContext as? [String : String]
         if(watchContext != nil){
-            //syncToPhoneStateLabel.text = watchContext!["event"]
-            /*
-            if (watchContext!["event"] == "yolo") {
-                syncToPhoneStateLabel.text = "yolooooo"
-            } else if (watchContext!["event"] == "yasdasdolo"){
-                
-            }else {
-                NSLog("Invalid iPhoneContext event received: \(String(describing: watchContext!["event"]))")
-            }*/
+            NSLog("Received random application context ¯\\_(ツ)_/¯")
         }else{
             NSLog("ERROR THE WATCH CONTEXT IS NIL")
         }
@@ -159,36 +152,77 @@ class MainViewController: UIViewController , WCSessionDelegate{
     // this recieves a dictionary of objects from the watch
     func session(_ session: WCSession, didReceiveUserInfo userInfo: [String : Any]) {
         DispatchQueue.main.async{
-            //self.syncToPhoneStateLabel.text = "syncing"
+            self.syncToPhoneStateLabel.text = "syncing"
             // in the future I might want to cast each event into a specific struct
 
             let eventType = userInfo["event"] as! String
             if(eventType == "dataStoreBioSamples"){
                 let numItems = userInfo["numItems"] as! Int
                 NSLog("Number of items received: \(numItems)")
-                let sampleNames = userInfo["samplesNames"] as! [String]
-                for i in 0..<numItems {
-                    self.syncToPhoneStateLabel.text = sampleNames[i]
-                }
-                //we want to avoid casting it to healthkit data point to save battery
-                /*
-                if(numItems > 0){
-                    //let numSamples = userInfo["numSamples"]
-                    let samples = userInfo["samples"] as! Array<HealthKitDataPoint>
-                    for (index, sample) in samples.enumerated() {
-                        print("Item \(index): \(sample.printVals())")
-                    }
-                }*/
+                
+                self.storeBioSamplePhone(
+                    numSamples : userInfo["numSamples"] as! Int,
+                    endTimeOfQuery : userInfo["endTimeOfQuery"] as! Date,
+                    samplesNames : userInfo["samplesNames"] as! [String],
+                    samplesStartTime : userInfo["samplesStartTime"] as! [Date],
+                    samplesEndTime : userInfo["samplesEndTime"] as! [Date],
+                    samplesMeasurement : userInfo["samplesMeasurement"] as! [Double]
+                )
+            }else if(eventType == "dataStoreMarkEvents"){
+                let numItems = userInfo["numItems"] as! Int
+                NSLog("Number of items received: \(numItems)")
+                
+                self.storeMarkEventPhone(timeOfMarks : userInfo["timeOfMarks"] as! [Date])
+                
             }else{
                 NSLog("Can't find event for \(eventType)")
             }
-            /*DispatchQueue.main.async {
-             // make sure to put on the main queue to update UI!
-             }*/
         }
     }
 
     
+    // TODO: decrease lag and potential for crashing by using the batch insert method described here:
+    // https://stackoverflow.com/questions/4145888/ios-coredata-batch-insert
+    private func storeBioSamplePhone(numSamples : Int,
+                                     endTimeOfQuery : Date,
+                                     samplesNames : [String],
+                                     samplesStartTime : [Date],
+                                     samplesEndTime : [Date],
+                                     samplesMeasurement : [Double]){
+        
+        let entity = NSEntityDescription.entity(forEntityName: "BioSamplePhone", in: context)
+        
+        for i in 0..<numSamples {
+            let curBio = NSManagedObject(entity: entity!, insertInto: context)
+            curBio.setValue(samplesNames[i], forKey: "samplesNames")
+            curBio.setValue(samplesNames[i], forKey: "samplesStartTime")
+            curBio.setValue(samplesNames[i], forKey: "samplesEndTime")
+            curBio.setValue(samplesNames[i], forKey: "samplesMeasurement")
+        }
+        
+        do {
+            try context.save()
+            //TODO: self.updateBioSampleCnt()
+            NSLog("Successfully saved the current BioSample")
+        } catch let error{
+            NSLog("Couldn't save: the current EventMark with  error: \(error)")
+        }
+    }
+    
+    private func storeMarkEventPhone(timeOfMarks : [Date]){
+        let entity = NSEntityDescription.entity(forEntityName: "MarkEventPhone", in: context)
+        for eventMark in timeOfMarks {
+            let curMark = NSManagedObject(entity: entity!, insertInto: context)
+            curMark.setValue(eventMark, forKey: "timeOfMark")
+        }
+        do {
+            try context.save()
+            //TODO: self.updateCnt()
+            NSLog("Successfully saved the current MarkEvent")
+        } catch let error{
+            NSLog("Couldn't save: the current EventMark with  error: \(error)")
+        }
+    }
     
     /*
     // MARK: - Navigation

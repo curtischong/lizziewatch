@@ -6,7 +6,11 @@
         <attribute name="measurement" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="startTime" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
     </entity>
+    <entity name="MarkEventPhone" representedClassName="MarkEventPhone" syncable="YES" codeGenerationType="class">
+        <attribute name="timeOfMark" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+    </entity>
     <elements>
         <element name="BioSamplePhone" positionX="-63" positionY="-18" width="128" height="105"/>
+        <element name="MarkEventPhone" positionX="-63" positionY="9" width="128" height="60"/>
     </elements>
 </model>
