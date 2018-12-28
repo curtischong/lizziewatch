@@ -1,17 +1,17 @@
-[![Swift](https://img.shields.io/badge/Swift-3.0-green.svg)](https://swift.org) [![watchOS](https://img.shields.io/badge/watchOS-3.0-green.svg)](https://developer.apple.com/watchos/)
+# Lizzie watch
+*disclaimer: this repo was adapted from https://github.com/thomaspaulmann/HeartControl by Thomas Paulmann. His base repo fixed a fundamental authentication error I had as I was developing the app*
 
-# Heart Control
+Lizzie's WatchOS app is the core of my emotional database. By taking advantage of Apple's workouts API, I am able to query for a sample every 5 seconds... compared to healthkit's default of 5/10 minutes.
+### Core Features
+ - Data collection
+     - This app features a robust syncing mechanism to get the data off the watch, onto the app, and into Lizzie herself.
+ - Important Event archival
+     - When a significant event occurs I will tell the phone what happened and carefully crop the moment to tell Lizzie how my biometrics were affected leading up to the event and after the event
 
-Monitor your heart rate on the apple watch - continuously and easy.
+Please note:
+I rushed this project out in a week because I only have so much time to learn the entire ios + watch stack. For a side (but important!) component of Lizzie as a whole, I will knock out these todo list items in the future
 
-## What is it?
-
-Heart Control is a standalone watch app to monitor continuously heart rate on [watchOS 3](http://www.apple.com/watchos-preview/). It collects and analyzes data in real-time in the background.
-
-## What is it not?
-
-It's not a whole implementation of every little detail of [Apple's HealthKit](https://developer.apple.com/healthkit/). It's more or less a quick start guide for workout apps on watchOS 3.
-
-## Special Thanks
-
-Thanks to [Dash Brittain](http://www.roxannebrittain.com) and [Jorge Morinigo](https://www.linkedin.com/in/jorgemorinigo) for your WWDC talk [Building Great Workout Apps](https://developer.apple.com/videos/play/wwdc2016/235/).
+### Todo
+ - Refactor the ViewControllers
+ - add tests
+ - better error logs
