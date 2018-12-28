@@ -121,11 +121,11 @@ class MainViewController: UIViewController , WCSessionDelegate{
             do {
                 try validSession.updateApplicationContext(iPhoneAppContext)
                 NSLog("Told watch to sync data")
-                syncToPhoneStateLabel.text = "told watch sync"
+                //syncToPhoneStateLabel.text = "told watch sync"
             } catch let error{
                 //TODO: update a ui element when this happens
                 //alertUser(message : "Please Turn on Watch to Pair")
-                syncToPhoneStateLabel.text = "fail tell watch sync \(error)"
+                //syncToPhoneStateLabel.text = "fail tell watch sync \(error)"
             }
         }
     }
@@ -135,7 +135,7 @@ class MainViewController: UIViewController , WCSessionDelegate{
     func processApplicationContext() {
         let watchContext = session!.receivedApplicationContext as? [String : String]
         if(watchContext != nil){
-            syncToPhoneStateLabel.text = watchContext!["event"]
+            //syncToPhoneStateLabel.text = watchContext!["event"]
             /*
             if (watchContext!["event"] == "yolo") {
                 syncToPhoneStateLabel.text = "yolooooo"
@@ -159,23 +159,33 @@ class MainViewController: UIViewController , WCSessionDelegate{
     // this recieves a dictionary of objects from the watch
     func session(_ session: WCSession, didReceiveUserInfo userInfo: [String : Any]) {
         DispatchQueue.main.async{
-        self.syncToPhoneStateLabel.text = "syncing"
-        // in the future I might want to cast each event into a specific struct
-        if(String(describing: userInfo["event"]) == "dataStoreBioSamples"){
-            let numItems = userInfo["numItems"] as! Int
-            NSLog("Number of items received: \(numItems)")
-            if(numItems > 0){
-                //let numSamples = userInfo["numSamples"]
-                let samples = userInfo["samples"] as! Array<HealthKitDataPoint>
-                for (index, sample) in samples.enumerated() {
-                    print("Item \(index): \(sample.printVals())")
+            //self.syncToPhoneStateLabel.text = "syncing"
+            // in the future I might want to cast each event into a specific struct
+
+            let eventType = userInfo["event"] as! String
+            if(eventType == "dataStoreBioSamples"){
+                let numItems = userInfo["numItems"] as! Int
+                NSLog("Number of items received: \(numItems)")
+                let sampleNames = userInfo["samplesNames"] as! [String]
+                for i in 0..<numItems {
+                    self.syncToPhoneStateLabel.text = sampleNames[i]
                 }
+                //we want to avoid casting it to healthkit data point to save battery
+                /*
+                if(numItems > 0){
+                    //let numSamples = userInfo["numSamples"]
+                    let samples = userInfo["samples"] as! Array<HealthKitDataPoint>
+                    for (index, sample) in samples.enumerated() {
+                        print("Item \(index): \(sample.printVals())")
+                    }
+                }*/
+            }else{
+                NSLog("Can't find event for \(eventType)")
             }
+            /*DispatchQueue.main.async {
+             // make sure to put on the main queue to update UI!
+             }*/
         }
-        /*DispatchQueue.main.async {
-         // make sure to put on the main queue to update UI!
-         }*/
-    }
     }
 
     

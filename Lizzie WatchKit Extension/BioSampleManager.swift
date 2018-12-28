@@ -128,7 +128,7 @@ class BioSampleManager {
                 NSLog("Can't find a quantity type for: %@", sample.quantityType.identifier)
         }
         
-        
+        // WE DON'T NEED THE HEALTHKITDATAPOINT CLASS WE CAN JUST PASS IN ARRAYS. LESS TYPE CONVERSION = MORE BATTERY SAVED
         let curSample = HealthKitDataPoint(
             dataPointName: sample.quantityType.identifier,
             startTime: sample.startDate,

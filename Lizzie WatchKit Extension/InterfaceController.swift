@@ -113,7 +113,8 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
                 let transfers = session.outstandingUserInfoTransfers
                 if transfers.count > 0 {  //--> will in most cases now be 0
                     for trans in transfers {
-                        NSLog(trans.userInfo.description)
+                        NSLog("State of current transfer: \(trans.isTransferring)")
+                        //NSLog(trans.userInfo.description)
                         //trans.cancel()  // cancel transfer that will be sent by updateApplicationContext
                         //let dict = trans.userInfo
                         //session.transferUserInfo(dict)  // ***
@@ -167,22 +168,30 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
             do{
                 let result1 = try context.fetch(request1)
                 
-                var samples1 = Array<HealthKitDataPoint>()
+                var samplesNames = Array<String>()
+                var samplesStartTime = Array<Date>()
+                var samplesEndTime = Array<Date>()
+                var samplesMeasurement = Array<Double>()
 
             
                 for sample in result1 as! [NSManagedObject] {
-                    let curSample = HealthKitDataPoint(
-                        dataPointName: sample.value(forKey: "dataPointName") as! String,
-                        startTime: sample.value(forKey: "startTime") as! Date,
-                        endTime: sample.value(forKey: "endTime") as! Date,
-                        measurement: sample.value(forKey: "measurement") as! Double
-                    )
-                    samples1.append(curSample)
+                    // This casting is weird / might use battery. find a way to change it
+                    samplesNames.append(sample.value(forKey: "dataPointName") as! String)
+                    samplesStartTime.append(sample.value(forKey: "startTime") as! Date)
+                    samplesEndTime.append(sample.value(forKey: "endTime") as! Date)
+                    samplesMeasurement.append(sample.value(forKey: "measurement") as! Double)
                 }
                 
-                let dataStorePackage1 = ["event" : "dataStoreBioSamples", "samples": samples1, "TimeOfTransfer" : formatter.string(from: Date()), "numItems" : samples1.count] as [String : Any]
+                let dataStorePackage1 = ["event" : "dataStoreBioSamples",
+                                         "samplesNames": samplesNames,
+                                         "samplesStartTime": samplesStartTime,
+                                         "samplesEndTime": samplesEndTime,
+                                         "samplesMeasurement": samplesMeasurement,
+                                         "TimeOfTransfer" : formatter.string(from: Date()),
+                                         "numItems" : result1.count
+                    ] as [String : Any]
                 
-                NSLog("Syncing \(samples1.count)")
+                NSLog("Syncing \(result1.count)")
                 session.transferUserInfo(dataStorePackage1)
                 
                 
