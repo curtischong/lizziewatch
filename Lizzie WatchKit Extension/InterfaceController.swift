@@ -115,7 +115,7 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
                         NSLog("State of current transfer: \(trans.isTransferring)")
                         
                         if(!trans.isTransferring){
-                            
+                            self.dropAllBioSamplesBefore(selectBeforeTime : trans.userInfo["endTimeOfQuery"] as! Date)
                         }
                         //NSLog(trans.userInfo.description)
                         //trans.cancel()  // cancel transfer that will be sent by updateApplicationContext
@@ -130,8 +130,17 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
         }
     }
     
-    private func dropAllBioSamplesBefore(endDate : Date){
-        
+    private func dropAllBioSamplesBefore(selectBeforeTime : Date){
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSampleWatch")
+        fetchRequest.predicate = NSPredicate(format: "endTime < %@", selectBeforeTime as NSDate)
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+
+        do{
+            try context.execute(deleteRequest)
+            try context.save()
+        }catch let error{
+            NSLog("Couldn't Delete BioSampleWatch rows before this date: \(selectBeforeTime) with \(error)")
+        }
     }
     
     func processApplicationContext() {
@@ -199,7 +208,7 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
                                      "samplesStartTime": samplesStartTime,
                                      "samplesEndTime": samplesEndTime,
                                      "samplesMeasurement": samplesMeasurement,
-                                     "TimeOfTransfer" : formatter.string(from: Date()),
+                                     "endTimeOfQuery" : selectBeforeTime,
                                      "numItems" : result1.count
                 ] as [String : Any]
             
