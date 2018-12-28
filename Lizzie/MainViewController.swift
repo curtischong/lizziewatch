@@ -47,7 +47,8 @@ class MainViewController: UIViewController , WCSessionDelegate{
             session?.delegate = self
             session?.activate()
         }
-
+        updateBioSampleCnt()
+        updateMarkEventCnt()
         
         
         /*
@@ -163,7 +164,7 @@ class MainViewController: UIViewController , WCSessionDelegate{
                 NSLog("Number of items received: \(numItems)")
                 
                 self.storeBioSamplePhone(
-                    numSamples : userInfo["numSamples"] as! Int,
+                    numSamples : userInfo["numItems"] as! Int,
                     endTimeOfQuery : userInfo["endTimeOfQuery"] as! Date,
                     samplesNames : userInfo["samplesNames"] as! [String],
                     samplesStartTime : userInfo["samplesStartTime"] as! [Date],

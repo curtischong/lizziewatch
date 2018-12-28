@@ -115,7 +115,22 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
                         NSLog("State of current transfer: \(trans.isTransferring)")
                         
                         if(!trans.isTransferring){
-                            self.dropAllBioSamplesBefore(selectBeforeTime : trans.userInfo["endTimeOfQuery"] as! Date)
+                            let eventName = trans.userInfo["event"] as! String
+                            let selectBeforeTime = trans.userInfo["endTimeOfQuery"] as! NSDate
+                            NSLog("Deleting data before time: \(selectBeforeTime)")
+                            if(eventName == "dataStoreBioSamples"){
+                                self.dropAllBioSampleRows(selectBeforeTime : selectBeforeTime)
+                                //self.dropAllRowsOfTypeBefore(dataType: "BioSampleWatch",
+                                //                             selectBeforeTime : selectBeforeTime,
+                                //                             dateSelector : "endTime")
+                            }else if(eventName == "dataStoreMarkEvents"){
+                                self.dropAllMarkEventRows(selectBeforeTime : selectBeforeTime)
+                                //self.dropAllRowsOfTypeBefore(dataType: "MarkEventWatch",
+                                //                             selectBeforeTime : selectBeforeTime,
+                                //                             dateSelector : "timeOfMark")
+                            }else{
+                                NSLog("Can't remove rows of unknown event: \(eventName)")
+                            }
                         }
                         //NSLog(trans.userInfo.description)
                         //trans.cancel()  // cancel transfer that will be sent by updateApplicationContext
@@ -130,11 +145,11 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
         }
     }
     
-    private func dropAllBioSamplesBefore(selectBeforeTime : Date){
+    private func dropAllBioSampleRows(selectBeforeTime : NSDate){
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSampleWatch")
-        fetchRequest.predicate = NSPredicate(format: "endTime < %@", selectBeforeTime as NSDate)
+        fetchRequest.predicate = NSPredicate(format: "endTime < %@", selectBeforeTime)
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
-
+        
         do{
             try context.execute(deleteRequest)
             try context.save()
@@ -142,6 +157,38 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
             updateBioSampleCnt()
         }catch let error{
             NSLog("Couldn't Delete BioSampleWatch rows before this date: \(selectBeforeTime) with \(error)")
+        }
+    }
+    
+    private func dropAllMarkEventRows(selectBeforeTime : NSDate){
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "MarkEventWatch")
+        fetchRequest.predicate = NSPredicate(format: "timeOfMark < %@", selectBeforeTime)
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        
+        do{
+            try context.execute(deleteRequest)
+            try context.save()
+            NSLog("Deleted MarkEventWatch rows")
+            updateMarkEventCnt()
+        }catch let error{
+            NSLog("Couldn't Delete MarkEventWatch rows before this date: \(selectBeforeTime) with \(error)")
+        }
+    }
+    
+    private func dropAllRowsOfTypeBefore(dataType : String, selectBeforeTime : NSDate, dateSelector : String){
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: dataType)
+        NSLog("Using predicate: %@ < %@", dateSelector,selectBeforeTime as NSDate)
+        fetchRequest.predicate = NSPredicate(format: "%@ < %@", dateSelector, selectBeforeTime)
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+
+        do{
+            try context.execute(deleteRequest)
+            try context.save()
+            NSLog("Deleted \(dataType) rows")
+            //TODO: do the right update
+            //updateBioSampleCnt()
+        }catch let error{
+            NSLog("Couldn't Delete \(dataType) rows before this date: \(selectBeforeTime) with \(error)")
         }
     }
     
@@ -165,11 +212,12 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
         // I'm pretty sure the session on the watch side is ALWAYS on. bc it assumes the phone is on
         //if let validSession = session {
         
-        let selectBeforeTime = Date()
+        let selectBeforeTime = Date() as NSDate
+        NSLog("Syncing data before time: \(selectBeforeTime)")
         let request1 = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSampleWatch")
-        request1.predicate = NSPredicate(format: "endTime < %@", selectBeforeTime as NSDate)
+        request1.predicate = NSPredicate(format: "endTime < %@", selectBeforeTime)
         let request2 = NSFetchRequest<NSFetchRequestResult>(entityName: "MarkEventWatch")
-        request1.predicate = NSPredicate(format: "endTime < %@", selectBeforeTime as NSDate)
+        request2.predicate = NSPredicate(format: "timeOfMark < %@", selectBeforeTime)
         
         do{
             let result1 = try context.fetch(request1)
@@ -216,6 +264,7 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
 
                 let dataStorePackage2 = ["event" : "dataStoreMarkEvents",
                                          "timeOfMarks": timeOfMarks,
+                                         "endTimeOfQuery" : selectBeforeTime,
                                          "numItems" : result2.count] as [String : Any]
                 NSLog("Syncing \(result2.count) items")
                 session.transferUserInfo(dataStorePackage2)
