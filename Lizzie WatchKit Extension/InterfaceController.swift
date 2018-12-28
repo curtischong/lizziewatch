@@ -31,6 +31,10 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
 
     var session = WCSession.default
     let context = (WKExtension.shared().delegate as! ExtensionDelegate).persistentContainer.viewContext
+    
+    // VERY IMPORTANT I AM USING THIS FORMATTER BECAUSE APPLICATION CONTEXTS DON'T GET SENT IF THE SAME DATA IS SENT TWICE
+    // BY PUTTING THE CURRENT TIME IN MY DATA I ENSURE THAT NEW CALLS ARE ATTEMPTED
+    let formatter = DateFormatter()
 
     
     weak var delegate: InterfaceController?
@@ -52,6 +56,7 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
             endTime: Date() + 5,
             measurement: 5.0
         )*/
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         self.updateBioSampleCnt()
         self.updateMarkEventCnt()
     }
@@ -95,8 +100,29 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
     }
     
     func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
+        NSLog("dispatched app context")
         DispatchQueue.main.async() {
+            NSLog("processing app context")
             self.processApplicationContext()
+        }
+    }
+    
+    func session(_ session: WCSession, didFinish userInfoTransfer: WCSessionUserInfoTransfer, error: Error?) {
+        if error == nil {
+            DispatchQueue.main.async() {
+                let transfers = session.outstandingUserInfoTransfers
+                if transfers.count > 0 {  //--> will in most cases now be 0
+                    for trans in transfers {
+                        NSLog(trans.userInfo.description)
+                        //trans.cancel()  // cancel transfer that will be sent by updateApplicationContext
+                        //let dict = trans.userInfo
+                        //session.transferUserInfo(dict)  // ***
+                    }
+                }
+            }
+        }
+        else {
+            print(error as Any)
         }
     }
     
@@ -108,7 +134,7 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
             
             
             if (iPhoneContext!["event"] == "syncData") {
-                NSLog("Syncing Data")
+                NSLog("Received messsage to sync Data")
                 sendDataStore()
             } else {
                 NSLog("Invalid iPhoneContext event received: \(String(describing: iPhoneContext!["event"]))")
@@ -116,11 +142,26 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
         }
     }
 
+    @IBAction func testYolo() {
+        sendSmallDataToPhone()
+    }
+    
+    func sendSmallDataToPhone(){
+        let stuffToSend = ["event": formatter.string(from: Date())]
+        //session.updateApplicationContext(stuffToSend)
+        do{
+            try session.updateApplicationContext(stuffToSend)
+            NSLog("told to yolo")
+        }catch let error{
+            NSLog("couldn't yolo: \(error)")
+        }
+    }
+    
     
     
     private func sendDataStore(){
         //if let validSession = session {
-            
+        
             let request1 = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSampleWatch")
             let request2 = NSFetchRequest<NSFetchRequestResult>(entityName: "MarkEventWatch")
             do{
@@ -139,10 +180,10 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
                     samples1.append(curSample)
                 }
                 
-                let dataStorePackage1 = ["event" : "dataStoreBioSamples", "samples": samples1, "numItems" : samples1.count] as [String : Any]
+                let dataStorePackage1 = ["event" : "dataStoreBioSamples", "samples": samples1, "TimeOfTransfer" : formatter.string(from: Date()), "numItems" : samples1.count] as [String : Any]
                 
                 NSLog("Syncing \(samples1.count)")
-                let transfer1 = WCSession.default.transferUserInfo(dataStorePackage1)
+                session.transferUserInfo(dataStorePackage1)
                 
                 
                 

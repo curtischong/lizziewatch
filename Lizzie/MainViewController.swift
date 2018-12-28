@@ -28,11 +28,13 @@ class MainViewController: UIViewController , WCSessionDelegate{
     func sessionDidBecomeInactive(_ session: WCSession) { }
     func sessionDidDeactivate(_ session: WCSession) { }
     var session: WCSession?
-    
+    let formatter = DateFormatter()
     // MARK: Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         
         //https://stackoverflow.com/questions/37810967/how-to-apply-the-type-to-a-nsfetchrequest-instance/37811827
         //let request:NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "Level")
@@ -43,7 +45,7 @@ class MainViewController: UIViewController , WCSessionDelegate{
             session?.activate()
         }
 
-
+        
         
         
         let curSample = HealthKitDataPoint(
@@ -114,47 +116,52 @@ class MainViewController: UIViewController , WCSessionDelegate{
     
     @IBAction func syncWatchData(_ sender: Any) {
         if let validSession = session {
-            let iPhoneAppContext = ["event": "syncData"]
+            let iPhoneAppContext = ["event" : "syncData", "TimeOfTransfer" : formatter.string(from: Date())]
             
             do {
                 try validSession.updateApplicationContext(iPhoneAppContext)
                 NSLog("Told watch to sync data")
                 syncToPhoneStateLabel.text = "told watch sync"
-            } catch{
+            } catch let error{
                 //TODO: update a ui element when this happens
                 //alertUser(message : "Please Turn on Watch to Pair")
-                syncToPhoneStateLabel.text = "fail tell watch sync"
+                syncToPhoneStateLabel.text = "fail tell watch sync \(error)"
             }
         }
     }
     
     
-    /*
+    
     func processApplicationContext() {
         let watchContext = session!.receivedApplicationContext as? [String : String]
         if(watchContext != nil){
-            
-            if (watchContext!["event"] == "dataStoreBioSamples") {
-                NSLog("Syncing Data")
-            } else if (watchContext!["event"] == "dataStoreMarkEvents"){
+            syncToPhoneStateLabel.text = watchContext!["event"]
+            /*
+            if (watchContext!["event"] == "yolo") {
+                syncToPhoneStateLabel.text = "yolooooo"
+            } else if (watchContext!["event"] == "yasdasdolo"){
                 
             }else {
                 NSLog("Invalid iPhoneContext event received: \(String(describing: watchContext!["event"]))")
-            }
+            }*/
+        }else{
+            NSLog("ERROR THE WATCH CONTEXT IS NIL")
         }
-    }*/
-    /*
+    }
+    
     func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
         DispatchQueue.main.async() {
+            NSLog("received application context!")
             self.processApplicationContext()
         }
-    }*/
+    }
     
     // this recieves a dictionary of objects from the watch
     func session(_ session: WCSession, didReceiveUserInfo userInfo: [String : Any]) {
-        syncToPhoneStateLabel.text = "syncing"
+        DispatchQueue.main.async{
+        self.syncToPhoneStateLabel.text = "syncing"
         // in the future I might want to cast each event into a specific struct
-        if(String(describing: userInfo["event"]) == "dataStorePackage"){
+        if(String(describing: userInfo["event"]) == "dataStoreBioSamples"){
             let numItems = userInfo["numItems"] as! Int
             NSLog("Number of items received: \(numItems)")
             if(numItems > 0){
@@ -169,6 +176,8 @@ class MainViewController: UIViewController , WCSessionDelegate{
          // make sure to put on the main queue to update UI!
          }*/
     }
+    }
+
     
     
     /*

@@ -14,6 +14,11 @@
             <objects>
                 <controller title="Lizzie" id="AgC-eL-Hgc" customClass="InterfaceController" customModule="Lizzie_WatchKit_Extension">
                     <items>
+                        <button width="1" height="23" alignment="left" title="test yolo" id="KEW-Nr-cYR">
+                            <connections>
+                                <action selector="testYolo" destination="AgC-eL-Hgc" id="eha-ag-bd1"/>
+                            </connections>
+                        </button>
                         <label alignment="left" text="Label" id="wqB-R6-bEy"/>
                         <group width="1" alignment="right" spacing="5" id="Omy-g0-taR">
                             <items>
@@ -50,7 +55,7 @@
                     </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="33.580246913580247" y="42.71573604060913"/>
+            <point key="canvasLocation" x="33.580246913580247" y="35.380710659898476"/>
         </scene>
     </scenes>
     <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
