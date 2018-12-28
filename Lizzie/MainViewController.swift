@@ -247,6 +247,35 @@ class MainViewController: UIViewController , WCSessionDelegate{
         }
     }
     
+    private func dropAllRows(){
+        //TODO: could merge the do catch... maybe
+        // remove BioSample rows
+        let fetchRequest1 = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSampleWatch")
+        let deleteRequest1 = NSBatchDeleteRequest(fetchRequest: fetchRequest1)
+        
+        do{
+            try context.execute(deleteRequest1)
+            try context.save()
+            NSLog("Deleted BioSampleWatch rows")
+            updateBioSampleCnt()
+        }catch let error{
+            NSLog("Couldn't Delete BioSampleWatch rows with error: \(error)")
+        }
+        
+        // remove MarkEvent rows
+        let fetchRequest2 = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSampleWatch")
+        let deleteRequest2 = NSBatchDeleteRequest(fetchRequest: fetchRequest2)
+        
+        do{
+            try context.execute(deleteRequest2)
+            try context.save()
+            NSLog("Deleted MarkEvent rows")
+            updateBioSampleCnt()
+        }catch let error{
+            NSLog("Couldn't Delete MarkEvent rows with error: \(error)")
+        }
+    }
+    
     /*
     // MARK: - Navigation
 

@@ -156,7 +156,7 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
             NSLog("Deleted BioSampleWatch rows")
             updateBioSampleCnt()
         }catch let error{
-            NSLog("Couldn't Delete BioSampleWatch rows before this date: \(selectBeforeTime) with \(error)")
+            NSLog("Couldn't Delete BioSampleWatch rows before this date: \(selectBeforeTime) with error: \(error)")
         }
     }
     
@@ -171,7 +171,7 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
             NSLog("Deleted MarkEventWatch rows")
             updateMarkEventCnt()
         }catch let error{
-            NSLog("Couldn't Delete MarkEventWatch rows before this date: \(selectBeforeTime) with \(error)")
+            NSLog("Couldn't Delete MarkEventWatch rows before this date: \(selectBeforeTime) with error: \(error)")
         }
     }
     
