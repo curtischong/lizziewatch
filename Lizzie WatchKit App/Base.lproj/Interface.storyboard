@@ -41,12 +41,12 @@
                         </button>
                     </items>
                     <connections>
+                        <outlet property="bioSampleCntWatch" destination="8Qo-wJ-bjj" id="kcB-NH-p3s"/>
                         <outlet property="controlButton" destination="iNm-FD-Dqu" id="eMe-9U-iM4"/>
                         <outlet property="heartRateLabel" destination="q60-id-Pm7" id="gxC-k9-Omc"/>
                         <outlet property="markEventButton" destination="JRJ-Z8-l9b" id="39a-kK-UpM"/>
+                        <outlet property="markEventCntWatch" destination="ndt-c8-eZv" id="p9E-Hw-r9z"/>
                         <outlet property="syncingStateLabel" destination="wqB-R6-bEy" id="Lz7-tB-eHj"/>
-                        <outlet property="watchBioSampleCnt" destination="8Qo-wJ-bjj" id="kcB-NH-p3s"/>
-                        <outlet property="watchMarkEventCnt" destination="ndt-c8-eZv" id="p9E-Hw-r9z"/>
                     </connections>
                 </controller>
             </objects>

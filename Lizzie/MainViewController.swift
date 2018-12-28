@@ -13,12 +13,15 @@ import Alamofire
 //TODO: find a way to show the shared folder and move the healthKitDataPoint to it
 class MainViewController: UIViewController , WCSessionDelegate{
     
-
-    @IBOutlet weak var phoneDataStoreCnt: UILabel!
-
+    
     @IBOutlet weak var syncToPhoneStateLabel: UILabel!
+    @IBOutlet weak var bioSampleCntPhone: UILabel!
+    @IBOutlet weak var markEventCntPhone: UILabel!
+    
     
     var syncToPhoneState = false
+    
+    
     
     //MARK: Properties
     
@@ -47,7 +50,7 @@ class MainViewController: UIViewController , WCSessionDelegate{
 
         
         
-        
+        /*
         let curSample = HealthKitDataPoint(
             dataPointName: "random name",
             startTime: Date(),
@@ -59,10 +62,9 @@ class MainViewController: UIViewController , WCSessionDelegate{
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSamplePhone")
         do{
             let result = try context.fetch(request)
-            phoneDataStoreCnt.text = String(result.count)
         } catch let error{
             NSLog("Couldn't access CoreData: \(error)")
-        }
+        }*/
         
     }
     
@@ -202,8 +204,9 @@ class MainViewController: UIViewController , WCSessionDelegate{
         
         do {
             try context.save()
-            //TODO: self.updateBioSampleCnt()
+            self.updateBioSampleCnt()
             NSLog("Successfully saved the current BioSample")
+            
         } catch let error{
             NSLog("Couldn't save: the current EventMark with  error: \(error)")
         }
@@ -217,10 +220,29 @@ class MainViewController: UIViewController , WCSessionDelegate{
         }
         do {
             try context.save()
-            //TODO: self.updateCnt()
+            self.updateMarkEventCnt()
             NSLog("Successfully saved the current MarkEvent")
         } catch let error{
             NSLog("Couldn't save: the current EventMark with  error: \(error)")
+        }
+    }
+    
+    private func updateBioSampleCnt(){
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSamplePhone")
+        do{
+            let result = try context.fetch(request)
+            bioSampleCntPhone.text = String(result.count)
+        } catch let error{
+            NSLog("Couldn't access CoreDataWatch: \(error)")
+        }
+    }
+    private func updateMarkEventCnt(){
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "MarkEventPhone")
+        do{
+            let result = try context.fetch(request)
+            markEventCntPhone.text = String(result.count)
+        } catch let error{
+            NSLog("Couldn't access CoreDataWatch: \(error)")
         }
     }
     

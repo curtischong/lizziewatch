@@ -19,8 +19,8 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
     @IBOutlet var controlButton: WKInterfaceButton!
     @IBOutlet var markEventButton: WKInterfaceButton!
     
-    @IBOutlet var watchBioSampleCnt: WKInterfaceLabel!
-    @IBOutlet var watchMarkEventCnt: WKInterfaceLabel!
+    @IBOutlet var bioSampleCntWatch: WKInterfaceLabel!
+    @IBOutlet var markEventCntWatch: WKInterfaceLabel!
     @IBOutlet var syncingStateLabel: WKInterfaceLabel!
     // MARK: - Properties
 
@@ -173,45 +173,53 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
         
         do{
             let result1 = try context.fetch(request1)
-            
-            var samplesNames = Array<String>()
-            var samplesStartTime = Array<Date>()
-            var samplesEndTime = Array<Date>()
-            var samplesMeasurement = Array<Double>()
+            let numItems = result1.count
+            if(numItems > 0 ){
+                var samplesNames = Array<String>()
+                var samplesStartTime = Array<Date>()
+                var samplesEndTime = Array<Date>()
+                var samplesMeasurement = Array<Double>()
 
-        
-            for sample in result1 as! [NSManagedObject] {
-                // This casting is weird / might use battery. find a way to change it
-                samplesNames.append(sample.value(forKey: "dataPointName") as! String)
-                samplesStartTime.append(sample.value(forKey: "startTime") as! Date)
-                samplesEndTime.append(sample.value(forKey: "endTime") as! Date)
-                samplesMeasurement.append(sample.value(forKey: "measurement") as! Double)
+            
+                for sample in result1 as! [NSManagedObject] {
+                    // This casting is weird / might use battery. find a way to change it
+                    samplesNames.append(sample.value(forKey: "dataPointName") as! String)
+                    samplesStartTime.append(sample.value(forKey: "startTime") as! Date)
+                    samplesEndTime.append(sample.value(forKey: "endTime") as! Date)
+                    samplesMeasurement.append(sample.value(forKey: "measurement") as! Double)
+                }
+                
+                let dataStorePackage1 = ["event" : "dataStoreBioSamples",
+                                         "samplesNames": samplesNames,
+                                         "samplesStartTime": samplesStartTime,
+                                         "samplesEndTime": samplesEndTime,
+                                         "samplesMeasurement": samplesMeasurement,
+                                         "endTimeOfQuery" : selectBeforeTime,
+                                         "numItems" : numItems] as [String : Any]
+                
+                NSLog("Syncing \(result1.count) items")
+                session.transferUserInfo(dataStorePackage1)
             }
-            
-            let dataStorePackage1 = ["event" : "dataStoreBioSamples",
-                                     "samplesNames": samplesNames,
-                                     "samplesStartTime": samplesStartTime,
-                                     "samplesEndTime": samplesEndTime,
-                                     "samplesMeasurement": samplesMeasurement,
-                                     "endTimeOfQuery" : selectBeforeTime,
-                                     "numItems" : result1.count] as [String : Any]
-            
-            NSLog("Syncing \(result1.count) items")
-            session.transferUserInfo(dataStorePackage1)
         } catch let error{
             NSLog("Couldn't fetch BioSampleWatch with error: \(error)")
         }
         // Now send the MarkEvents
         do{
             let result2 = try context.fetch(request2)
-            let timeOfMarks = result2 as! [Date]
-            
+            let numItems = result2.count
+            if(numItems > 0 ){
+                var timeOfMarks = Array<Date>()
+                for sample in result2 as! [NSManagedObject] {
+                    timeOfMarks.append(sample.value(forKey: "timeOfMark") as! Date)
+                }
 
-            let dataStorePackage2 = ["event" : "dataStoreMarkEvents",
-                                     "timeOfMarks": timeOfMarks,
-                                     "numItems" : result2.count] as [String : Any]
-            NSLog("Syncing \(result2.count) items")
-            session.transferUserInfo(dataStorePackage2)
+
+                let dataStorePackage2 = ["event" : "dataStoreMarkEvents",
+                                         "timeOfMarks": timeOfMarks,
+                                         "numItems" : result2.count] as [String : Any]
+                NSLog("Syncing \(result2.count) items")
+                session.transferUserInfo(dataStorePackage2)
+            }
         } catch let error{
             NSLog("Couldn't fetch MarkEventWatch with error: \(error)")
         }
@@ -221,7 +229,7 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSampleWatch")
         do{
             let result = try context.fetch(request)
-            watchBioSampleCnt.setText(String(result.count))
+            bioSampleCntWatch.setText(String(result.count))
         } catch let error{
             NSLog("Couldn't access CoreDataWatch: \(error)")
         }
@@ -230,7 +238,7 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "MarkEventWatch")
         do{
             let result = try context.fetch(request)
-            watchMarkEventCnt.setText(String(result.count))
+            markEventCntWatch.setText(String(result.count))
         } catch let error{
             NSLog("Couldn't access CoreDataWatch: \(error)")
         }
