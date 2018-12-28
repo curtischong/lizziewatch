@@ -118,50 +118,43 @@ class BioSampleManager {
     private func process(sample: HKQuantitySample) {
         // If sample is not a heart rate sample, then do nothing.
         var measurementValue = -1.0
+        var dataPointName = "-1"
         switch sample.quantityType.identifier{
             case "HKQuantityTypeIdentifierHeartRate":
                 measurementValue = castHKUnitToDouble(theSample : sample, theUnit: HKUnit.beatsPerMinute())
                 delegate?.updateHeartRate(didChangeTo: measurementValue)
+                dataPointName = "HR"
             case "HKQuantityTypeIdentifierVO2Max":
                 measurementValue = castHKUnitToDouble(theSample : sample, theUnit: HKUnit(from: "ml/kg*min"))
+                dataPointName = "O2"
             default:
+                //TODO: find a better way to report this error
                 NSLog("Can't find a quantity type for: %@", sample.quantityType.identifier)
         }
         
         // WE DON'T NEED THE HEALTHKITDATAPOINT CLASS WE CAN JUST PASS IN ARRAYS. LESS TYPE CONVERSION = MORE BATTERY SAVED
-        let curSample = HealthKitDataPoint(
-            dataPointName: sample.quantityType.identifier,
-            startTime: sample.startDate,
-            endTime: sample.endDate,
-            measurement: measurementValue
-        )
-        //curSample.printVals()
-        
 
-        // Delegate new heart rate.
-        //let newHeartRate = HeartRate(timestamp: timestamp, bpm: count)
-        self.storeBioSampleWatch(bioSample : curSample)
+        let startTime = sample.startDate
+        let endTime = sample.endDate
+        let measurement = measurementValue
+
+        self.storeBioSampleWatch(sampleName : dataPointName, sampleStartTime : startTime, sampleEndTime : endTime, sampleMeasurement : measurement)
     }
-    
-    
     
     // TODO: add a test for this function
     // Saves the bioSamples to the watch's DataCore
-    // mght want to move this somewhere else
-    private func storeBioSampleWatch(bioSample : HealthKitDataPoint){
+    private func storeBioSampleWatch(sampleName : String, sampleStartTime : Date, sampleEndTime : Date, sampleMeasurement : Double){
         let entity = NSEntityDescription.entity(forEntityName: "BioSampleWatch", in: context)
         let healthSample = NSManagedObject(entity: entity!, insertInto: context)
-        healthSample.setValue(bioSample.dataPointName, forKey: "dataPointName")
-        healthSample.setValue(bioSample.startTime, forKey: "startTime")
-        healthSample.setValue(bioSample.endTime, forKey: "endTime")
-        healthSample.setValue(bioSample.measurement, forKey: "measurement")
-        
+        healthSample.setValue(sampleName, forKey: "dataPointName")
+        healthSample.setValue(sampleStartTime, forKey: "startTime")
+        healthSample.setValue(sampleEndTime, forKey: "endTime")
+        healthSample.setValue(sampleMeasurement, forKey: "measurement")
         do {
             try context.save()
             delegate?.notifyUpdateBioSampleCnt()
         } catch let error{
-            NSLog("Couldn't save: \(bioSample.printVals()) with  error: \(error)")
+            NSLog("Couldn't save object: with attributes: \(sampleStartTime), \(sampleStartTime), \(sampleEndTime), \(sampleMeasurement), with  error: \(error)")
         }
     }
-
 }

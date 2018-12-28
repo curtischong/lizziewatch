@@ -25,7 +25,6 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
     // MARK: - Properties
 
     private let workoutManager = WorkoutManager()
-    private let dataStore = DataStore()
     private var dataStoreUrl: URL!
     private var syncingStateBool = false
 
@@ -114,6 +113,10 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
                 if transfers.count > 0 {  //--> will in most cases now be 0
                     for trans in transfers {
                         NSLog("State of current transfer: \(trans.isTransferring)")
+                        
+                        if(!trans.isTransferring){
+                            
+                        }
                         //NSLog(trans.userInfo.description)
                         //trans.cancel()  // cancel transfer that will be sent by updateApplicationContext
                         //let dict = trans.userInfo
@@ -125,6 +128,10 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
         else {
             print(error as Any)
         }
+    }
+    
+    private func dropAllBioSamplesBefore(endDate : Date){
+        
     }
     
     func processApplicationContext() {
@@ -161,69 +168,72 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
     
     
     private func sendDataStore(){
+        // I'm pretty sure the session on the watch side is ALWAYS on. bc it assumes the phone is on
         //if let validSession = session {
         
-            let request1 = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSampleWatch")
-            let request2 = NSFetchRequest<NSFetchRequestResult>(entityName: "MarkEventWatch")
-            do{
-                let result1 = try context.fetch(request1)
-                
-                var samplesNames = Array<String>()
-                var samplesStartTime = Array<Date>()
-                var samplesEndTime = Array<Date>()
-                var samplesMeasurement = Array<Double>()
-
+        let selectBeforeTime = Date()
+        let request1 = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSampleWatch")
+        request1.predicate = NSPredicate(format: "endTime < %@", selectBeforeTime as NSDate)
+        let request2 = NSFetchRequest<NSFetchRequestResult>(entityName: "MarkEventWatch")
+        request1.predicate = NSPredicate(format: "endTime < %@", selectBeforeTime as NSDate)
+        
+        do{
+            let result1 = try context.fetch(request1)
             
-                for sample in result1 as! [NSManagedObject] {
-                    // This casting is weird / might use battery. find a way to change it
-                    samplesNames.append(sample.value(forKey: "dataPointName") as! String)
-                    samplesStartTime.append(sample.value(forKey: "startTime") as! Date)
-                    samplesEndTime.append(sample.value(forKey: "endTime") as! Date)
-                    samplesMeasurement.append(sample.value(forKey: "measurement") as! Double)
-                }
-                
-                let dataStorePackage1 = ["event" : "dataStoreBioSamples",
-                                         "samplesNames": samplesNames,
-                                         "samplesStartTime": samplesStartTime,
-                                         "samplesEndTime": samplesEndTime,
-                                         "samplesMeasurement": samplesMeasurement,
-                                         "TimeOfTransfer" : formatter.string(from: Date()),
-                                         "numItems" : result1.count
-                    ] as [String : Any]
-                
-                NSLog("Syncing \(result1.count)")
-                session.transferUserInfo(dataStorePackage1)
-                
-                
-                
-                // Now send the MarkEvents
-                
-                
-                /*
-                
-                
-                let result2 = try context.fetch(request2)
-                
-                var samples2 = Array<Date>()
-                for sample in result2 as! [NSManagedObject] {
-                    let curSample = HealthKitDataPoint(
-                        dataPointName: sample.value(forKey: "dataPointName") as! String,
-                        startTime: sample.value(forKey: "startTime") as! Date,
-                        endTime: sample.value(forKey: "endTime") as! Date,
-                        measurement: sample.value(forKey: "measurement") as! Double
-                    )
-                    samples1.append(curSample)
-                }
-                
+            var samplesNames = Array<String>()
+            var samplesStartTime = Array<Date>()
+            var samplesEndTime = Array<Date>()
+            var samplesMeasurement = Array<Double>()
 
-                let dataStorePackage2 = ["event" : "dataStoreMarkEvents", "samples": samples2, "numItems" : samples2.count] as [String : Any]
-                let transfer2 = session.transferUserInfo(dataStorePackage2)
-                 */
-            } catch let error{
-                NSLog("Couldn't access CoreData: \(error)")
+        
+            for sample in result1 as! [NSManagedObject] {
+                // This casting is weird / might use battery. find a way to change it
+                samplesNames.append(sample.value(forKey: "dataPointName") as! String)
+                samplesStartTime.append(sample.value(forKey: "startTime") as! Date)
+                samplesEndTime.append(sample.value(forKey: "endTime") as! Date)
+                samplesMeasurement.append(sample.value(forKey: "measurement") as! Double)
             }
             
-        //}
+            let dataStorePackage1 = ["event" : "dataStoreBioSamples",
+                                     "samplesNames": samplesNames,
+                                     "samplesStartTime": samplesStartTime,
+                                     "samplesEndTime": samplesEndTime,
+                                     "samplesMeasurement": samplesMeasurement,
+                                     "TimeOfTransfer" : formatter.string(from: Date()),
+                                     "numItems" : result1.count
+                ] as [String : Any]
+            
+            NSLog("Syncing \(result1.count)")
+            session.transferUserInfo(dataStorePackage1)
+            
+            
+            
+            // Now send the MarkEvents
+            
+            
+            /*
+            
+            
+            let result2 = try context.fetch(request2)
+            
+            var samples2 = Array<Date>()
+            for sample in result2 as! [NSManagedObject] {
+                let curSample = HealthKitDataPoint(
+                    dataPointName: sample.value(forKey: "dataPointName") as! String,
+                    startTime: sample.value(forKey: "startTime") as! Date,
+                    endTime: sample.value(forKey: "endTime") as! Date,
+                    measurement: sample.value(forKey: "measurement") as! Double
+                )
+                samples1.append(curSample)
+            }
+            
+
+            let dataStorePackage2 = ["event" : "dataStoreMarkEvents", "samples": samples2, "numItems" : samples2.count] as [String : Any]
+            let transfer2 = session.transferUserInfo(dataStorePackage2)
+             */
+        } catch let error{
+            NSLog("Couldn't access CoreData: \(error)")
+        }
     }
     
     private func updateBioSampleCnt(){
