@@ -92,14 +92,26 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
         if activationState == .activated {
             // Update application context here
             NSLog("Currently syncing data to app bc the session is connected")
-            self.sendDataStore()
+            // If you have a background transfer that exists bc you messed up
+            //DispatchQueue.main.async{
+                let transfers = WCSession.default.outstandingUserInfoTransfers
+                if(transfers.count > 0){
+                    for trans in transfers{
+                        trans.cancel()
+                        NSLog("removed transfer: \(trans.userInfo["event"] as! String)")
+                    }
+                    NSLog("Sorry, app open sync skipped")
+                }else{
+                    self.sendDataStore()
+                }
+           // }
+            
         }else{
             NSLog("ERROR the activation state is not activated")
         }
     }
     
     func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
-        NSLog("dispatched app context")
         DispatchQueue.main.async() {
             NSLog("processing app context")
             self.processApplicationContext()
@@ -108,40 +120,40 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
     
     func handleTransferData(userInfoTransfer: WCSessionUserInfoTransfer, error: Error?){
         if error == nil {
-            DispatchQueue.main.async() {
-                let transfers = self.session.outstandingUserInfoTransfers
-                if transfers.count > 0 {  //--> will in most cases now be 0
-                    var stillTransferring = false
-                    for trans in transfers {
-                        NSLog("State of current transfer: \(trans.isTransferring)")
-                        
-                        if(!trans.isTransferring){
-                            let eventName = trans.userInfo["event"] as! String
-                            let selectBeforeTime = trans.userInfo["endTimeOfQuery"] as! NSDate
-                            NSLog("Deleting data before time: \(selectBeforeTime)")
-                            if(eventName == "dataStoreBioSamples"){
-                                self.dropAllBioSampleRows(selectBeforeTime : selectBeforeTime)
-                                //self.dropAllRowsOfTypeBefore(dataType: "BioSampleWatch",
-                                //                             selectBeforeTime : selectBeforeTime,
-                                //                             dateSelector : "endTime")
-                            }else if(eventName == "dataStoreMarkEvents"){
-                                self.dropAllMarkEventRows(selectBeforeTime : selectBeforeTime)
-                                //self.dropAllRowsOfTypeBefore(dataType: "MarkEventWatch",
-                                //                             selectBeforeTime : selectBeforeTime,
-                                //                             dateSelector : "timeOfMark")
-                            }else{
-                                NSLog("Can't remove rows of unknown event: \(eventName)")
-                            }
+            let transfers = WCSession.default.outstandingUserInfoTransfers
+            if transfers.count > 0 {  //--> will in most cases now be 0
+                var stillTransferring = false
+                for trans in transfers {
+                    NSLog("State of transfer: \(trans.isTransferring) for \(trans.userInfo["event"] as! String)")
+                    
+                    if(!trans.isTransferring){
+                        let eventName = trans.userInfo["event"] as! String
+                        let selectBeforeTime = trans.userInfo["endTimeOfQuery"] as! NSDate
+                        NSLog("Deleting data before time: \(selectBeforeTime)")
+                        if(eventName == "dataStoreBioSamples"){
+                            self.dropAllBioSampleRows(selectBeforeTime : selectBeforeTime)
+                            //self.dropAllRowsOfTypeBefore(dataType: "BioSampleWatch",
+                            //                             selectBeforeTime : selectBeforeTime,
+                            //                             dateSelector : "endTime")
+                        }else if(eventName == "dataStoreMarkEvents"){
+                            self.dropAllMarkEventRows(selectBeforeTime : selectBeforeTime)
+                            //self.dropAllRowsOfTypeBefore(dataType: "MarkEventWatch",
+                            //                             selectBeforeTime : selectBeforeTime,
+                            //                             dateSelector : "timeOfMark")
                         }else{
-                            NSLog("Transfer is still is process")
-                            stillTransferring = true
+                            NSLog("Can't remove rows of unknown event: \(eventName)")
                         }
+                    }else{
+                        NSLog("Transfer is still in process")
+                        stillTransferring = true
                     }
-                    if(stillTransferring){
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 10, execute: {
-                            self.handleTransferData(userInfoTransfer : userInfoTransfer, error : error)
-                        })
-                    }
+                }
+                if(stillTransferring){
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 10, execute: {
+                        self.handleTransferData(userInfoTransfer : userInfoTransfer, error : error)
+                    })
+                }else{
+                    self.setSyncingState(newSyncState : false)
                 }
             }
         }else {
@@ -150,7 +162,9 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
     }
     
     func session(_ session: WCSession, didFinish userInfoTransfer: WCSessionUserInfoTransfer, error: Error?) {
-        handleTransferData(userInfoTransfer : userInfoTransfer, error : error)
+        DispatchQueue.main.async{
+            self.handleTransferData(userInfoTransfer : userInfoTransfer, error : error)
+        }
     }
     
     private func dropAllBioSampleRows(selectBeforeTime : NSDate){
@@ -201,88 +215,105 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
     }
     
     func processApplicationContext() {
-        setSyncingState(newSyncState : true)
-        //TODO: FIX THE SESSION IMPLIMENTATION THIS IS HORRIBLE BC IT IS OPTIONAL
-        let iPhoneContext = session.receivedApplicationContext as? [String : String]
-        if(iPhoneContext != nil){
-            
-            
-            if (iPhoneContext!["event"] == "syncData") {
-                NSLog("Received messsage to sync Data")
-                sendDataStore()
-            } else {
-                NSLog("Invalid iPhoneContext event received: \(String(describing: iPhoneContext!["event"]))")
+        if(!syncingStateBool){
+            //TODO: FIX THE SESSION IMPLIMENTATION THIS IS HORRIBLE BC IT IS OPTIONAL
+            let iPhoneContext = session.receivedApplicationContext as? [String : String]
+            if(iPhoneContext != nil){
+                
+                
+                if (iPhoneContext!["event"] == "syncData") {
+                    NSLog("Received messsage to sync Data")
+                    sendDataStore()
+                } else {
+                    NSLog("Invalid iPhoneContext event received: \(String(describing: iPhoneContext!["event"]))")
+                }
             }
+        }else{
+            NSLog("Already Syncing")
         }
     }
     
     private func sendDataStore(){
         // I'm pretty sure the session on the watch side is ALWAYS on. bc it assumes the phone is on
         //if let validSession = session {
-        
-        let selectBeforeTime = Date() as NSDate
-        NSLog("Syncing data before time: \(selectBeforeTime)")
-        let request1 = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSampleWatch")
-        request1.predicate = NSPredicate(format: "endTime < %@", selectBeforeTime)
-        let request2 = NSFetchRequest<NSFetchRequestResult>(entityName: "MarkEventWatch")
-        request2.predicate = NSPredicate(format: "timeOfMark < %@", selectBeforeTime)
-        
-        do{
-            let result1 = try context.fetch(request1)
-            let numItems = result1.count
-            if(numItems > 0 ){
-                var samplesNames = Array<String>()
-                var samplesStartTime = Array<Date>()
-                var samplesEndTime = Array<Date>()
-                var samplesMeasurement = Array<Double>()
-
+        if(WCSession.default.outstandingUserInfoTransfers.count == 0){
+            setSyncingState(newSyncState : true)
+            let selectBeforeTime = Date() as NSDate
+            NSLog("Syncing data before time: \(selectBeforeTime)")
+            let request1 = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSampleWatch")
+            request1.predicate = NSPredicate(format: "endTime < %@", selectBeforeTime)
+            let request2 = NSFetchRequest<NSFetchRequestResult>(entityName: "MarkEventWatch")
+            request2.predicate = NSPredicate(format: "timeOfMark < %@", selectBeforeTime)
             
-                for sample in result1 as! [NSManagedObject] {
-                    // This casting is weird / might use battery. find a way to change it
-                    samplesNames.append(sample.value(forKey: "dataPointName") as! String)
-                    samplesStartTime.append(sample.value(forKey: "startTime") as! Date)
-                    samplesEndTime.append(sample.value(forKey: "endTime") as! Date)
-                    samplesMeasurement.append(sample.value(forKey: "measurement") as! Double)
+            var bothEmpty = true
+            do{
+                let result1 = try context.fetch(request1)
+                let numItems = result1.count
+                if(numItems > 0 ){
+                    bothEmpty = false
+                    var samplesNames = Array<String>()
+                    var samplesStartTime = Array<Date>()
+                    var samplesEndTime = Array<Date>()
+                    var samplesMeasurement = Array<Double>()
+
+                
+                    for sample in result1 as! [NSManagedObject] {
+                        // This casting is weird / might use battery. find a way to change it
+                        samplesNames.append(sample.value(forKey: "dataPointName") as! String)
+                        samplesStartTime.append(sample.value(forKey: "startTime") as! Date)
+                        samplesEndTime.append(sample.value(forKey: "endTime") as! Date)
+                        samplesMeasurement.append(sample.value(forKey: "measurement") as! Double)
+                    }
+                    
+                    let dataStorePackage1 = ["event" : "dataStoreBioSamples",
+                                             "samplesNames": samplesNames,
+                                             "samplesStartTime": samplesStartTime,
+                                             "samplesEndTime": samplesEndTime,
+                                             "samplesMeasurement": samplesMeasurement,
+                                             "endTimeOfQuery" : selectBeforeTime,
+                                             "numItems" : numItems] as [String : Any]
+                    
+                    NSLog("Syncing \(result1.count) items")
+                    session.transferUserInfo(dataStorePackage1)
+                }else{
+                    NSLog("Turns out there are no BioSampleWatch rows")
                 }
-                
-                let dataStorePackage1 = ["event" : "dataStoreBioSamples",
-                                         "samplesNames": samplesNames,
-                                         "samplesStartTime": samplesStartTime,
-                                         "samplesEndTime": samplesEndTime,
-                                         "samplesMeasurement": samplesMeasurement,
-                                         "endTimeOfQuery" : selectBeforeTime,
-                                         "numItems" : numItems] as [String : Any]
-                
-                NSLog("Syncing \(result1.count) items")
-                session.transferUserInfo(dataStorePackage1)
-            }else{
-                NSLog("Turns out there are no BioSampleWatch rows. Syncing stopped")
+            } catch let error{
+                NSLog("Couldn't fetch BioSampleWatch with error: \(error)")
             }
-        } catch let error{
-            NSLog("Couldn't fetch BioSampleWatch with error: \(error)")
-        }
-        // Now send the MarkEvents
-        do{
-            let result2 = try context.fetch(request2)
-            let numItems = result2.count
-            if(numItems > 0 ){
-                var timeOfMarks = Array<Date>()
-                for sample in result2 as! [NSManagedObject] {
-                    timeOfMarks.append(sample.value(forKey: "timeOfMark") as! Date)
-                }
+            // Now send the MarkEvents
+            do{
+                let result2 = try context.fetch(request2)
+                let numItems = result2.count
+                if(numItems > 0 ){
+                    bothEmpty = false
+                    var timeOfMarks = Array<Date>()
+                    for sample in result2 as! [NSManagedObject] {
+                        timeOfMarks.append(sample.value(forKey: "timeOfMark") as! Date)
+                    }
 
 
-                let dataStorePackage2 = ["event" : "dataStoreMarkEvents",
-                                         "timeOfMarks": timeOfMarks,
-                                         "endTimeOfQuery" : selectBeforeTime,
-                                         "numItems" : result2.count] as [String : Any]
-                NSLog("Syncing \(result2.count) items")
-                session.transferUserInfo(dataStorePackage2)
-            }else{
-                NSLog("Turns out there are no MarkEventWatch rows. Syncing stopped")
+                    let dataStorePackage2 = ["event" : "dataStoreMarkEvents",
+                                             "timeOfMarks": timeOfMarks,
+                                             "endTimeOfQuery" : selectBeforeTime,
+                                             "numItems" : result2.count] as [String : Any]
+                    NSLog("Syncing \(result2.count) items")
+                    session.transferUserInfo(dataStorePackage2)
+                }else{
+                    NSLog("Turns out there are no MarkEventWatch rows")
+                }
+            } catch let error{
+                NSLog("Couldn't fetch MarkEventWatch with error: \(error)")
             }
-        } catch let error{
-            NSLog("Couldn't fetch MarkEventWatch with error: \(error)")
+            if(bothEmpty){
+                setSyncingState(newSyncState : false)
+            }
+        }else{
+            NSLog("Sorry, already syncing. can't sync")
+            for trans in WCSession.default.outstandingUserInfoTransfers{
+                NSLog("State of transfer: \(trans.isTransferring) for \(trans.userInfo["event"] as! String)")
+            }
+            
         }
     }
     
