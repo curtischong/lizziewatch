@@ -142,7 +142,7 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
     }
     
     func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
-        DispatchQueue.main.async() {
+        DispatchQueue.main.async(){
             NSLog("received application context!")
             self.processApplicationContext()
         }
@@ -150,7 +150,7 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
     
     // this recieves a dictionary of objects from the watch
     func session(_ session: WCSession, didReceiveUserInfo userInfo: [String : Any]) {
-        DispatchQueue.main.async{
+        DispatchQueue.main.async(){
             self.syncToPhoneStateLabel.text = "syncing"
             // in the future I might want to cast each event into a specific struct
 

@@ -112,7 +112,7 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
     }
     
     func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
-        DispatchQueue.main.async() {
+        DispatchQueue.main.async(){
             NSLog("processing app context")
             self.processApplicationContext()
         }
@@ -162,8 +162,45 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
     }
     
     func session(_ session: WCSession, didFinish userInfoTransfer: WCSessionUserInfoTransfer, error: Error?) {
-        DispatchQueue.main.async{
-            self.handleTransferData(userInfoTransfer : userInfoTransfer, error : error)
+        if error == nil {
+            DispatchQueue.main.async(){
+                let transfers = WCSession.default.outstandingUserInfoTransfers
+                if transfers.count > 0 {  //--> will in most cases now be 0
+                    var stillTransferring = false
+                    for trans in transfers {
+                        NSLog("State of transfer: \(trans.isTransferring) for \(trans.userInfo["event"] as! String)")
+                        
+                        if(!trans.isTransferring){
+                            let eventName = trans.userInfo["event"] as! String
+                            let selectBeforeTime = trans.userInfo["endTimeOfQuery"] as! NSDate
+                            NSLog("Deleting data before time: \(selectBeforeTime)")
+                            if(eventName == "dataStoreBioSamples"){
+                                self.dropAllBioSampleRows(selectBeforeTime : selectBeforeTime)
+                                //self.dropAllRowsOfTypeBefore(dataType: "BioSampleWatch",
+                                //                             selectBeforeTime : selectBeforeTime,
+                                //                             dateSelector : "endTime")
+                            }else if(eventName == "dataStoreMarkEvents"){
+                                self.dropAllMarkEventRows(selectBeforeTime : selectBeforeTime)
+                                //self.dropAllRowsOfTypeBefore(dataType: "MarkEventWatch",
+                                //                             selectBeforeTime : selectBeforeTime,
+                                //                             dateSelector : "timeOfMark")
+                            }else{
+                                NSLog("Can't remove rows of unknown event: \(eventName)")
+                            }
+                        }else{
+                            NSLog("Transfer is still in process")
+                            stillTransferring = true
+                        }
+                    }
+                    if(stillTransferring){
+
+                    }else{
+                        self.setSyncingState(newSyncState : false)
+                    }
+                }
+            }
+        }else {
+            NSLog("transfer failed with error \(String(describing: error))")
         }
     }
     
