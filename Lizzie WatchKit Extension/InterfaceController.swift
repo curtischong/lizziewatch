@@ -47,14 +47,6 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
         // Configure workout manager.
         workoutManager.delegate = self
         
-        // testing the watch's DataCore
-        
-        /*let curSample = HealthKitDataPoint(
-            dataPointName: "random name",
-            startTime: Date(),
-            endTime: Date() + 5,
-            measurement: 5.0
-        )*/
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         self.updateBioSampleCnt()
         self.updateMarkEventCnt()
@@ -115,49 +107,6 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
         DispatchQueue.main.async(){
             NSLog("processing app context")
             self.processApplicationContext()
-        }
-    }
-    
-    func handleTransferData(userInfoTransfer: WCSessionUserInfoTransfer, error: Error?){
-        if error == nil {
-            let transfers = WCSession.default.outstandingUserInfoTransfers
-            if transfers.count > 0 {  //--> will in most cases now be 0
-                var stillTransferring = false
-                for trans in transfers {
-                    NSLog("State of transfer: \(trans.isTransferring) for \(trans.userInfo["event"] as! String)")
-                    
-                    if(!trans.isTransferring){
-                        let eventName = trans.userInfo["event"] as! String
-                        let selectBeforeTime = trans.userInfo["endTimeOfQuery"] as! NSDate
-                        NSLog("Deleting data before time: \(selectBeforeTime)")
-                        if(eventName == "dataStoreBioSamples"){
-                            self.dropAllBioSampleRows(selectBeforeTime : selectBeforeTime)
-                            //self.dropAllRowsOfTypeBefore(dataType: "BioSampleWatch",
-                            //                             selectBeforeTime : selectBeforeTime,
-                            //                             dateSelector : "endTime")
-                        }else if(eventName == "dataStoreMarkEvents"){
-                            self.dropAllMarkEventRows(selectBeforeTime : selectBeforeTime)
-                            //self.dropAllRowsOfTypeBefore(dataType: "MarkEventWatch",
-                            //                             selectBeforeTime : selectBeforeTime,
-                            //                             dateSelector : "timeOfMark")
-                        }else{
-                            NSLog("Can't remove rows of unknown event: \(eventName)")
-                        }
-                    }else{
-                        NSLog("Transfer is still in process")
-                        stillTransferring = true
-                    }
-                }
-                if(stillTransferring){
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 10, execute: {
-                        self.handleTransferData(userInfoTransfer : userInfoTransfer, error : error)
-                    })
-                }else{
-                    self.setSyncingState(newSyncState : false)
-                }
-            }
-        }else {
-            NSLog("transfer failed with error \(String(describing: error))")
         }
     }
     
