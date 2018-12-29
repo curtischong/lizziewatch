@@ -34,7 +34,7 @@
                                 </prototypes>
                             </tableView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="yba-V4-4gL">
-                                <rect key="frame" x="10" y="30" width="355" height="58.5"/>
+                                <rect key="frame" x="10" y="30" width="355" height="56.5"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Frf-vO-3ij">
                                         <rect key="frame" x="0.0" y="0.0" width="355" height="20.5"/>
@@ -53,23 +53,24 @@
                                             </label>
                                         </subviews>
                                     </stackView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" alignment="center" spacing="107" translatesAutoresizingMaskIntoConstraints="NO" id="ODy-hN-w9G">
-                                        <rect key="frame" x="38.5" y="28.5" width="278" height="30"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" alignment="center" spacing="50" translatesAutoresizingMaskIntoConstraints="NO" id="ODy-hN-w9G">
+                                        <rect key="frame" x="97" y="28.5" width="161" height="28"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oK0-wq-TVD">
-                                                <rect key="frame" x="0.0" y="5" width="10.5" height="20.5"/>
+                                                <rect key="frame" x="0.0" y="4" width="10.5" height="20.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fuL-Sf-yHb">
-                                                <rect key="frame" x="128.5" y="5" width="10.5" height="20.5"/>
+                                                <rect key="frame" x="70.5" y="4" width="10.5" height="20.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="41S-k1-mts">
-                                                <rect key="frame" x="246" y="0.0" width="32" height="30"/>
+                                                <rect key="frame" x="131" y="0.0" width="30" height="28"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                 <state key="normal" title="sync"/>
                                                 <connections>
                                                     <action selector="syncWatchData:" destination="K4m-UN-kIQ" eventType="touchUpInside" id="muB-fs-j2K"/>

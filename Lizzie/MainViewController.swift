@@ -101,6 +101,7 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
             }
             dataSource.markEvents = markEvents
             markEventTable.dataSource = dataSource
+            markEventTable.reloadData()
         } catch let error{
             NSLog("Couldn't load MarkEventPhone rows with error: \(error)")
         }
@@ -144,8 +145,6 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
             }
         }
     }
-    
-    
     
     func processApplicationContext() {
         
