@@ -16,10 +16,10 @@
                     <items>
                         <group width="1" alignment="left" id="Py8-6M-P46">
                             <items>
-                                <label alignment="left" text="Sync" textAlignment="center" baselineAdjustment="alignCenters" id="wqB-R6-bEy">
+                                <label alignment="left" text="LastDate" id="lej-7B-Eb4">
                                     <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
                                 </label>
-                                <label alignment="left" text="LastDate" id="lej-7B-Eb4">
+                                <label alignment="left" text="Sync" textAlignment="center" baselineAdjustment="alignCenters" id="wqB-R6-bEy">
                                     <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
                                 </label>
                             </items>

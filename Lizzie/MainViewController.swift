@@ -56,6 +56,8 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
         
         // Used only in testing
         // dropAllRows()
+        
+        //TODO: I need to have a default "last synced" variable stored in system memory. so if the watch isn't on, I still get the date
     }
     
     //MARK: Actions
@@ -75,6 +77,10 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
             NSLog("Couldn't save: \(bioSample.printVals()) with  error: \(error)")
         }
     }
+    /*
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        NSLog("\(dataSource.markEvents[indexPath.row])")
+    }*/
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         

@@ -336,6 +336,9 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
         do{
             let result = try context.fetch(request)
             bioSampleCntWatch.setText(String(result.count))
+            if(result.count != 0){
+                syncingStateLabel.setText("Not Synced")
+            }
         } catch let error{
             NSLog("Couldn't access CoreDataWatch: \(error)")
         }
@@ -345,6 +348,9 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
         do{
             let result = try context.fetch(request)
             markEventCntWatch.setText(String(result.count))
+            if(result.count != 0){
+                syncingStateLabel.setText("Not Synced")
+            }
         } catch let error{
             NSLog("Couldn't access CoreDataWatch: \(error)")
         }
