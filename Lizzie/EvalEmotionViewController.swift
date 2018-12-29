@@ -10,6 +10,8 @@ import UIKit
 
 class EvalEmotionViewController: UIViewController {
 
+    @IBOutlet weak var normalEvalSliderLabel: UILabel!
+    @IBOutlet weak var normalEvalSlider: UISlider!
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -17,6 +19,12 @@ class EvalEmotionViewController: UIViewController {
     }
     
 
+    @IBAction func normalEvalSliderMoved(_ sender: UISlider) {
+        let sliderPos = Float(lroundf(normalEvalSlider.value))
+        normalEvalSliderLabel.text = NSString(format: "%.2f", sliderPos) as String
+        sender.setValue(sliderPos, animated: true)
+    }
+    
     /*
     // MARK: - Navigation
 
