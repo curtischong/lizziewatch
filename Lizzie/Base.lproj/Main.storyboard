@@ -22,7 +22,7 @@
                                 <rect key="frame" x="0.0" y="30" width="375" height="122"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zh6-7L-sUv">
-                                        <rect key="frame" x="170.5" y="0.0" width="34" height="30"/>
+                                        <rect key="frame" x="20" y="0.0" width="335" height="30"/>
                                         <state key="normal" title="Back"/>
                                         <connections>
                                             <action selector="goBackToOneButtonTapped:" destination="XhB-HF-MDQ" eventType="touchUpInside" id="Ha7-Sj-yta"/>
@@ -48,6 +48,7 @@
                                     </slider>
                                 </subviews>
                                 <constraints>
+                                    <constraint firstItem="Zh6-7L-sUv" firstAttribute="leading" secondItem="khQ-Qa-ArG" secondAttribute="leading" constant="20" id="2lO-zq-nqe"/>
                                     <constraint firstAttribute="trailing" secondItem="TRW-6a-7yk" secondAttribute="trailing" constant="20" id="CAT-h1-PNr"/>
                                     <constraint firstItem="B08-fl-mZz" firstAttribute="leading" secondItem="khQ-Qa-ArG" secondAttribute="leading" constant="20" id="fQN-Br-w4R"/>
                                     <constraint firstItem="y42-Kh-UsB" firstAttribute="leading" secondItem="khQ-Qa-ArG" secondAttribute="leading" constant="20" id="m3B-Y3-5iP"/>
@@ -295,8 +296,24 @@
                             <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="pS6-JN-u5o">
                                 <rect key="frame" x="0.0" y="36" width="375" height="562"/>
                                 <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" semanticContentAttribute="forceLeftToRight" translatesAutoresizingMaskIntoConstraints="NO" id="aKz-2l-hid">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="30"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OyT-GX-x6S">
+                                                <rect key="frame" x="0.0" y="0.0" width="46" height="30"/>
+                                                <state key="normal" title="   Back"/>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xmk-99-zLM">
+                                                <rect key="frame" x="46" y="0.0" width="329" height="30"/>
+                                                <state key="normal" title="Upload"/>
+                                                <connections>
+                                                    <action selector="sendBioSnapshot:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Vyf-VQ-WOo"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="25" translatesAutoresizingMaskIntoConstraints="NO" id="hcH-BK-DEQ">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="75.5"/>
+                                        <rect key="frame" x="0.0" y="40" width="375" height="75.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name of Event" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4q5-Up-v2l">
                                                 <rect key="frame" x="20" y="0.0" width="335" height="20.5"/>
@@ -319,7 +336,7 @@
                                         </constraints>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="F6O-EB-sVL">
-                                        <rect key="frame" x="0.0" y="85.5" width="375" height="66.5"/>
+                                        <rect key="frame" x="0.0" y="125.5" width="375" height="66.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="egH-qb-5gY">
                                                 <rect key="frame" x="20" y="0.0" width="335" height="20.5"/>
@@ -342,30 +359,25 @@
                                         </constraints>
                                     </stackView>
                                     <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QWu-G5-gRf" customClass="LineChartView" customModule="Charts">
-                                        <rect key="frame" x="10" y="162" width="355" height="150"/>
+                                        <rect key="frame" x="10" y="202" width="355" height="150"/>
                                         <color key="backgroundColor" red="1" green="0.72469553313764035" blue="0.75450649487102506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                     </view>
                                     <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" distribution="fillProportionally" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="kOb-B6-Xlc" customClass="EmotionButtonsControl" customModule="Lizzie" customModuleProvider="target">
-                                        <rect key="frame" x="10" y="322" width="355" height="50"/>
+                                        <rect key="frame" x="10" y="362" width="355" height="50"/>
                                     </stackView>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" text="comments?" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="HSJ-Vm-MaH">
-                                        <rect key="frame" x="18" y="382" width="339" height="140"/>
+                                        <rect key="frame" x="18" y="422" width="339" height="140"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textView>
-                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xmk-99-zLM">
-                                        <rect key="frame" x="164.5" y="532" width="46" height="30"/>
-                                        <state key="normal" title="Button"/>
-                                        <connections>
-                                            <action selector="sendBioSnapshot:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Vyf-VQ-WOo"/>
-                                        </connections>
-                                    </button>
                                 </subviews>
                                 <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="aKz-2l-hid" secondAttribute="trailing" id="9S5-OX-wFp"/>
                                     <constraint firstAttribute="trailing" secondItem="hcH-BK-DEQ" secondAttribute="trailing" id="9k7-MR-1Ht"/>
                                     <constraint firstAttribute="trailing" secondItem="hcH-BK-DEQ" secondAttribute="trailing" id="OYj-sj-Rfi"/>
                                     <constraint firstItem="hcH-BK-DEQ" firstAttribute="leading" secondItem="pS6-JN-u5o" secondAttribute="leading" id="a0v-It-FHw"/>
+                                    <constraint firstItem="aKz-2l-hid" firstAttribute="leading" secondItem="pS6-JN-u5o" secondAttribute="leading" id="fuj-5H-tCd"/>
                                     <constraint firstItem="hcH-BK-DEQ" firstAttribute="top" secondItem="pS6-JN-u5o" secondAttribute="top" id="pZF-bW-oJT"/>
                                     <constraint firstItem="hcH-BK-DEQ" firstAttribute="leading" secondItem="pS6-JN-u5o" secondAttribute="leading" id="tLR-de-FOn"/>
                                 </constraints>
