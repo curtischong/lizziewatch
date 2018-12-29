@@ -19,6 +19,7 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
     @IBOutlet weak var markEventCntPhone: UILabel!
     
     @IBOutlet weak var markEventTable: UITableView!
+    @IBOutlet weak var dateLastSyncLabel: UILabel!
     
     var syncToPhoneState = false
     private let dataSource = DataSource()
@@ -32,13 +33,14 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
     func sessionDidBecomeInactive(_ session: WCSession) { }
     func sessionDidDeactivate(_ session: WCSession) { }
     var session: WCSession?
-    let formatter = DateFormatter()
+    let appContextFormatter = DateFormatter()
+    let displayDateFormatter = DateFormatter()
     // MARK: Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        
+        appContextFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        displayDateFormatter.dateFormat = "HH:mm:ss"
 
         // update the number of items not synced:
         if WCSession.isSupported() {
@@ -105,17 +107,9 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
         }
     }
     
-    private func alertUser(message: String){
-        let alertController = UIAlertController(title: "Action Required", message:
-            "Hello, world!", preferredStyle: UIAlertController.Style.alert)
-        alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertAction.Style.default,handler: nil))
-        
-        self.present(alertController, animated: true, completion: nil)
-    }
-    
     @IBAction func syncWatchData(_ sender: Any) {
         if let validSession = session {
-            let iPhoneAppContext = ["event" : "syncData", "TimeOfTransfer" : formatter.string(from: Date())]
+            let iPhoneAppContext = ["event" : "syncData", "TimeOfTransfer" : appContextFormatter.string(from: Date())]
             
             do {
                 try validSession.updateApplicationContext(iPhoneAppContext)
@@ -124,7 +118,6 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
             } catch let error{
                 
                 //TODO: update a ui element when this happens
-                //alertUser(message : "Please Turn on Watch to Pair")
                 NSLog("Couldn't tell watch to sync with error: \(error)")
             }
         }
@@ -155,13 +148,16 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
             // in the future I might want to cast each event into a specific struct
 
             let eventType = userInfo["event"] as! String
+            let endTimeOfQuery = userInfo["endTimeOfQuery"] as! Date
+            // I might want a diff formatter for a better format
+            self.dateLastSyncLabel.text = self.displayDateFormatter.string(from: endTimeOfQuery)
             if(eventType == "dataStoreBioSamples"){
                 let numItems = userInfo["numItems"] as! Int
                 NSLog("Number of items received: \(numItems)")
                 
                 self.storeBioSamplePhone(
                     numSamples : userInfo["numItems"] as! Int,
-                    endTimeOfQuery : userInfo["endTimeOfQuery"] as! Date,
+                    endTimeOfQuery : endTimeOfQuery,
                     samplesNames : userInfo["samplesNames"] as! [String],
                     samplesStartTime : userInfo["samplesStartTime"] as! [Date],
                     samplesEndTime : userInfo["samplesEndTime"] as! [Date],
@@ -171,7 +167,7 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
                 let numItems = userInfo["numItems"] as! Int
                 NSLog("Number of items received: \(numItems)")
                 
-                self.storeMarkEventPhone(timeOfMarks : userInfo["timeOfMarks"] as! [Date])
+                self.storeMarkEventPhone(timeOfMarks : userInfo["timeOfMarks"] as! [Date], endTimeOfQuery : endTimeOfQuery)
                 
             }else{
                 NSLog("Can't find event for \(eventType)")
@@ -204,12 +200,20 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
             self.updateBioSampleCnt()
             NSLog("Successfully saved the current BioSample")
             self.syncToPhoneStateLabel.text = "synced"
+            
+            // Tell the phone that the transfer finished
+            // TODO: if this fails I might want to ask the phone for another batch
+            // Note: I'm not sure if this force unwrap is safe
+            let dataStorePackage = ["event" : "finishedSyncing",
+                                     "syncDataType": "dataStoreBioSamples",
+                                     "selectBeforeTime": endTimeOfQuery] as [String : Any]
+            session!.transferUserInfo(dataStorePackage)
         } catch let error{
-            NSLog("Couldn't save: the current EventMark with  error: \(error)")
+            NSLog("Couldn't save: the current BioSample with  error: \(error)")
         }
     }
     
-    private func storeMarkEventPhone(timeOfMarks : [Date]){
+    private func storeMarkEventPhone(timeOfMarks : [Date], endTimeOfQuery : Date){
         let entity = NSEntityDescription.entity(forEntityName: "MarkEventPhone", in: context)
         for eventMark in timeOfMarks {
             let curMark = NSManagedObject(entity: entity!, insertInto: context)
@@ -220,6 +224,13 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
             self.updateMarkEventCnt()
             NSLog("Successfully saved the current MarkEvent")
             self.syncToPhoneStateLabel.text = "synced"
+            
+            // TODO: note: the concerns raised above applies to here too
+            let dataStorePackage = ["event" : "finishedSyncing",
+                                     "syncDataType": "dataStoreMarkEvents",
+                                     "selectBeforeTime": endTimeOfQuery] as [String : Any]
+            
+            session!.transferUserInfo(dataStorePackage)
         } catch let error{
             NSLog("Couldn't save: the current EventMark with  error: \(error)")
         }
@@ -260,7 +271,7 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
         }
         
         // remove MarkEvent rows
-        let fetchRequest2 = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSampleWatch")
+        let fetchRequest2 = NSFetchRequest<NSFetchRequestResult>(entityName: "MarkEventWatch")
         let deleteRequest2 = NSBatchDeleteRequest(fetchRequest: fetchRequest2)
         
         do{
@@ -269,7 +280,7 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
             NSLog("Deleted MarkEvent rows")
             updateBioSampleCnt()
         }catch let error{
-            NSLog("Couldn't Delete MarkEvent rows with error: \(error)")
+            NSLog("Couldn't Delete MarkEventWatch rows with error: \(error)")
         }
     }
     

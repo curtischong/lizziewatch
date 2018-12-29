@@ -9,7 +9,9 @@ Lizzie's WatchOS app is the core of my emotional database. By taking advantage o
      - When a significant event occurs I will tell the phone what happened and carefully crop the moment to tell Lizzie how my biometrics were affected leading up to the event and after the event
 
 Please note:
-I rushed this project out in a week because I only have so much time to learn the entire ios + watch stack. For a side (but important!) component of Lizzie as a whole, I will knock out these todo list items in the future
+I rushed this project out in a week because I only have so much time to learn the entire ios + watch stack. For a side (but important!) component of Lizzie as a whole, I will knock out these todo list items in the future.
+Note: you'll notice that for most of the code I'ver separated biosample and markevent code into different functions even though some functions could probably have been combined.
+This was done intentionally because I couldn't find a way to pass a parameter to specify a variable predicate. Yeah, the CoreData API (and tbh the WatchConnectivity) API is buggy :/
 
 ### Todo
  - Refactor the ViewControllers

@@ -14,11 +14,20 @@
             <objects>
                 <controller title="Lizzie" id="AgC-eL-Hgc" customClass="InterfaceController" customModule="Lizzie_WatchKit_Extension">
                     <items>
-                        <label alignment="left" text="Label" id="wqB-R6-bEy"/>
+                        <group width="1" alignment="left" id="Py8-6M-P46">
+                            <items>
+                                <label alignment="left" text="Sync" textAlignment="center" baselineAdjustment="alignCenters" id="wqB-R6-bEy"/>
+                                <label alignment="left" text="LastDate" id="lej-7B-Eb4"/>
+                            </items>
+                        </group>
                         <group width="1" alignment="right" spacing="5" id="Omy-g0-taR">
                             <items>
-                                <label alignment="left" text="Label" id="8Qo-wJ-bjj"/>
-                                <label alignment="left" text="Label" id="ndt-c8-eZv"/>
+                                <group width="74" alignment="left" id="fzF-uM-nJf">
+                                    <items>
+                                        <label alignment="left" text="Bio" id="8Qo-wJ-bjj"/>
+                                        <label alignment="left" text="Mark" id="ndt-c8-eZv"/>
+                                    </items>
+                                </group>
                                 <label alignment="right" text="--" textAlignment="center" id="q60-id-Pm7">
                                     <accessibilityTraits key="accessibilityTraits" staticText="YES" notEnabled="YES"/>
                                     <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -43,6 +52,7 @@
                     <connections>
                         <outlet property="bioSampleCntWatch" destination="8Qo-wJ-bjj" id="kcB-NH-p3s"/>
                         <outlet property="controlButton" destination="iNm-FD-Dqu" id="eMe-9U-iM4"/>
+                        <outlet property="dateOfSync" destination="lej-7B-Eb4" id="oZ9-rn-Vea"/>
                         <outlet property="heartRateLabel" destination="q60-id-Pm7" id="gxC-k9-Omc"/>
                         <outlet property="markEventButton" destination="JRJ-Z8-l9b" id="39a-kK-UpM"/>
                         <outlet property="markEventCntWatch" destination="ndt-c8-eZv" id="p9E-Hw-r9z"/>
@@ -50,7 +60,7 @@
                     </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="33.580246913580247" y="35.380710659898476"/>
+            <point key="canvasLocation" x="33.580246913580247" y="34.949238578680202"/>
         </scene>
     </scenes>
     <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>

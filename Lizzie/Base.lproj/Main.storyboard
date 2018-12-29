@@ -94,6 +94,7 @@
                     </view>
                     <connections>
                         <outlet property="bioSampleCntPhone" destination="oK0-wq-TVD" id="mYN-VO-xUE"/>
+                        <outlet property="dateLastSyncLabel" destination="0bj-DF-Qpa" id="fJ6-UD-cvH"/>
                         <outlet property="markEventCntPhone" destination="fuL-Sf-yHb" id="m0d-uL-gkY"/>
                         <outlet property="markEventTable" destination="znv-Ic-zB8" id="yIe-7Q-rke"/>
                         <outlet property="syncToPhoneStateLabel" destination="QqO-ej-EvB" id="ePL-8o-D3L"/>
