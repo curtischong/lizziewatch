@@ -83,6 +83,8 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
         NSLog("\(dataSource.markEvents[indexPath.row])")
     }
     
+    //prepareForSegue:sender:
+    
     /*
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
