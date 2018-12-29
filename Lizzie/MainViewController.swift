@@ -149,13 +149,6 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
     
     func processApplicationContext() {
         
-        let dataReceived = session!.receivedApplicationContext as? [String : String]
-        
-        if (dataReceived!["event"] == "updateLastSync") {
-            dateLastSyncLabel.text =  appContextFormatter.string(from: dataReceived!["selectBeforeTime"] as! Date)
-        } else {
-            NSLog("Invalid watchContext event received: \(String(describing: dataReceived!["event"]))")
-        }
     }
     
     func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
@@ -165,38 +158,58 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
         }
     }
     
+    
     // this recieves a dictionary of objects from the watch
     func session(_ session: WCSession, didReceiveUserInfo userInfo: [String : Any]) {
         DispatchQueue.main.async(){
-            self.syncToPhoneStateLabel.text = "syncing"
             // in the future I might want to cast each event into a specific struct
-
+            
             let eventType = userInfo["event"] as! String
-            let endTimeOfQuery = userInfo["endTimeOfQuery"] as! Date
-            // I might want a diff formatter for a better format
-            self.dateLastSyncLabel.text = self.displayDateFormatter.string(from: endTimeOfQuery)
-            if(eventType == "dataStoreBioSamples"){
-                let numItems = userInfo["numItems"] as! Int
-                NSLog("Number of items received: \(numItems)")
-                
-                self.storeBioSamplePhone(
-                    numSamples : userInfo["numItems"] as! Int,
-                    endTimeOfQuery : endTimeOfQuery,
-                    samplesNames : userInfo["samplesNames"] as! [String],
-                    samplesStartTime : userInfo["samplesStartTime"] as! [Date],
-                    samplesEndTime : userInfo["samplesEndTime"] as! [Date],
-                    samplesMeasurement : userInfo["samplesMeasurement"] as! [Double]
-                )
+            
+            if(eventType == "updateLastSync"){
+                self.updateLastSync(userInfo : userInfo)
+            }else if(eventType == "dataStoreBioSamples"){
+                self.dataStoreBioSamples(userInfo: userInfo)
             }else if(eventType == "dataStoreMarkEvents"){
-                let numItems = userInfo["numItems"] as! Int
-                NSLog("Number of items received: \(numItems)")
-                
-                self.storeMarkEventPhone(timeOfMarks : userInfo["timeOfMarks"] as! [Date], endTimeOfQuery : endTimeOfQuery)
-                
+                self.dataStoreMarkEvents(userInfo: userInfo)
             }else{
-                NSLog("Can't find event for \(eventType)")
+                NSLog("Invalid watchContext event received: \(eventType)")
             }
         }
+    }
+    
+    func updateLastSync(userInfo : [String : Any]){
+        self.syncToPhoneStateLabel.text = "Synced"
+        dateLastSyncLabel.text = userInfo["selectBeforeTime"] as! String
+    }
+    
+    func dataStoreBioSamples(userInfo : [String : Any]){
+        self.syncToPhoneStateLabel.text = "Syncing"
+        let endTimeOfQuery = userInfo["endTimeOfQuery"] as! Date
+        self.dateLastSyncLabel.text = self.displayDateFormatter.string(from: endTimeOfQuery)
+        
+        let numItems = userInfo["numItems"] as! Int
+        NSLog("Number of items received: \(numItems)")
+        
+        self.storeBioSamplePhone(
+            numSamples : userInfo["numItems"] as! Int,
+            endTimeOfQuery : endTimeOfQuery,
+            samplesNames : userInfo["samplesNames"] as! [String],
+            samplesStartTime : userInfo["samplesStartTime"] as! [Date],
+            samplesEndTime : userInfo["samplesEndTime"] as! [Date],
+            samplesMeasurement : userInfo["samplesMeasurement"] as! [Double]
+        )
+    }
+    
+    func dataStoreMarkEvents(userInfo : [String : Any]){
+        self.syncToPhoneStateLabel.text = "Syncing"
+        let endTimeOfQuery = userInfo["endTimeOfQuery"] as! Date
+        self.dateLastSyncLabel.text = self.displayDateFormatter.string(from: endTimeOfQuery)
+        
+        let numItems = userInfo["numItems"] as! Int
+        NSLog("Number of items received: \(numItems)")
+        
+        self.storeMarkEventPhone(timeOfMarks : userInfo["timeOfMarks"] as! [Date], endTimeOfQuery : endTimeOfQuery)
     }
 
     
@@ -223,7 +236,7 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
             try context.save()
             self.updateBioSampleCnt()
             NSLog("Successfully saved the current BioSample")
-            self.syncToPhoneStateLabel.text = "synced"
+            self.syncToPhoneStateLabel.text = "Synced"
             
             // Tell the phone that the transfer finished
             // TODO: if this fails I might want to ask the phone for another batch
@@ -248,7 +261,7 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
             try context.save()
             self.updateMarkEventCnt()
             NSLog("Successfully saved the current MarkEvent")
-            self.syncToPhoneStateLabel.text = "synced"
+            self.syncToPhoneStateLabel.text = "Synced"
             
             // TODO: note: the concerns raised above applies to here too
             let dataStorePackage = ["event" : "finishedSyncing",

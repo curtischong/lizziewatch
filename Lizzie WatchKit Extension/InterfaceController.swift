@@ -119,7 +119,7 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
                     for trans in transfers {
                         NSLog("State of transfer: \(trans.isTransferring) for \(trans.userInfo["event"] as! String)")
                         
-                        if(!trans.isTransferring){
+                        if(!trans.isTransferring && trans.userInfo["event"] as! String != "updateLastSync"){
                             let eventName = trans.userInfo["event"] as! String
                             let selectBeforeTime = trans.userInfo["endTimeOfQuery"] as! NSDate
                             NSLog("Deleting data before time: \(selectBeforeTime)")
@@ -267,14 +267,12 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
                     NSLog("Couldn't fetch MarkEventWatch with error: \(error)")
                 }
                 if(bothEmpty){
-                    let dataToSend = ["event" : "updateLastSync", "selectBeforeTime" : selectBeforeTime] as [String : Any]
+                    let newTime = displayDateFormatter.string(from: selectBeforeTime as Date)
+                    let dataToSend = ["event" : "updateLastSync", "selectBeforeTime" : newTime] as [String : Any]
                     
-                    do{
-                        try session.updateApplicationContext(dataToSend)
-                    }catch let error{
-                        NSLog("Couldn't update the last sync date of the phone with error: \(error)")
-                    }
+                    session.transferUserInfo(dataToSend)
                     setSyncingState(newSyncState : false)
+                    NSLog("Updated phone's last synced time to: \(newTime)")
                 }
             }else{
                 NSLog("Sorry, already syncing. can't sync")
