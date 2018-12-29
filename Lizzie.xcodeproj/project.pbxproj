@@ -36,6 +36,7 @@
 		E98FBA3421D430FC00BF0784 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E98FBA3321D430FC00BF0784 /* MainViewController.swift */; };
 		E98FBA4521D45D4200BF0784 /* BioSamplePhone.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E98FBA4321D45D4200BF0784 /* BioSamplePhone.xcdatamodeld */; };
 		E98FBA4821D45DE000BF0784 /* BioSampleWatch.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E98FBA4621D45DE000BF0784 /* BioSampleWatch.xcdatamodeld */; };
+		E9AC88E821D72D96008E2D55 /* MarkEventDataPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9AC88E721D72D96008E2D55 /* MarkEventDataPoint.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -119,6 +120,7 @@
 		E98FBA3321D430FC00BF0784 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MainViewController.swift; path = /Users/curtis/Desktop/Lizzie/Lizzie/MainViewController.swift; sourceTree = "<absolute>"; };
 		E98FBA4421D45D4200BF0784 /* BioSamplePhone.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BioSamplePhone.xcdatamodel; sourceTree = "<group>"; };
 		E98FBA4721D45DE000BF0784 /* BioSampleWatch.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BioSampleWatch.xcdatamodel; sourceTree = "<group>"; };
+		E9AC88E721D72D96008E2D55 /* MarkEventDataPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkEventDataPoint.swift; sourceTree = "<group>"; };
 		EA66E66CEE61B8D7980AD7BD /* Pods-Lizzie WatchKit Extension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lizzie WatchKit Extension.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Lizzie WatchKit Extension/Pods-Lizzie WatchKit Extension.debug.xcconfig"; sourceTree = "<group>"; };
 		FC70F0B612DAB175CAE4DD72 /* Pods-Lizzie.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lizzie.release.xcconfig"; path = "Pods/Target Support Files/Pods-Lizzie/Pods-Lizzie.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -194,6 +196,7 @@
 				BE25AFEA1D4F33B100DAF094 /* AppDelegate.swift */,
 				E98FBA3321D430FC00BF0784 /* MainViewController.swift */,
 				E959E3AD21D603AC003B370E /* DataSource.swift */,
+				E9AC88E721D72D96008E2D55 /* MarkEventDataPoint.swift */,
 				BE25AFEC1D4F33B100DAF094 /* ViewController.swift */,
 				E919691E21CF3F1A00E3D1BF /* EmotionSelectionController.swift */,
 				BE25AFEE1D4F33B100DAF094 /* Main.storyboard */,
@@ -532,6 +535,7 @@
 				E98FBA4521D45D4200BF0784 /* BioSamplePhone.xcdatamodeld in Sources */,
 				E959E3B021D6064D003B370E /* MarkEventTableViewCell.swift in Sources */,
 				E97008C121D2F5D2009E4463 /* WatchSessionManager.swift in Sources */,
+				E9AC88E821D72D96008E2D55 /* MarkEventDataPoint.swift in Sources */,
 				BE25AFEB1D4F33B100DAF094 /* AppDelegate.swift in Sources */,
 				E959E3AE21D603AC003B370E /* DataSource.swift in Sources */,
 				E98FBA3421D430FC00BF0784 /* MainViewController.swift in Sources */,

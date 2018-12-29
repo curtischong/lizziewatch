@@ -40,7 +40,7 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
     override func viewDidLoad() {
         super.viewDidLoad()
         appContextFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        displayDateFormatter.dateFormat = "HH:mm:ss"
+        displayDateFormatter.dateFormat = "MMM d, h:mm a"
 
         // update the number of items not synced:
         if WCSession.isSupported() {
@@ -50,9 +50,12 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
         }
         updateBioSampleCnt()
         updateMarkEventCnt()
+        loadMarkEventRows()
+        // dataSource.movies = ["Terminator","Back To The Future","The Dark Knight"]
+        //markEventTable.dataSource = dataSource
         
-        dataSource.movies = ["Terminator","Back To The Future","The Dark Knight"]
-        markEventTable.dataSource = dataSource
+        // Used only in testing
+        // dropAllRows()
     }
     
     //MARK: Actions
@@ -83,6 +86,25 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
         
         present(alertController, animated: true, completion: nil)
         
+    }
+    
+    
+    private func loadMarkEventRows(){
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "MarkEventPhone")
+        
+        do{
+            let result = try context.fetch(request)
+            var markEvents = Array<Date>()
+            
+            for sample in result as! [NSManagedObject] {
+                markEvents.append(sample.value(forKey: "timeOfMark") as! Date)
+            }
+            dataSource.markEvents = markEvents
+            markEventTable.dataSource = dataSource
+        } catch let error{
+            NSLog("Couldn't load MarkEventPhone rows with error: \(error)")
+        }
+
     }
     
     // Saves the bioSamples the phone's DataCore to the server
@@ -126,11 +148,13 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
     
     
     func processApplicationContext() {
-        let watchContext = session!.receivedApplicationContext as? [String : String]
-        if(watchContext != nil){
-            NSLog("Received random application context ¯\\_(ツ)_/¯")
-        }else{
-            NSLog("ERROR THE WATCH CONTEXT IS NIL")
+        
+        let dataReceived = session!.receivedApplicationContext as? [String : String]
+        
+        if (dataReceived!["event"] == "updateLastSync") {
+            dateLastSyncLabel.text =  appContextFormatter.string(from: dataReceived!["selectBeforeTime"] as! Date)
+        } else {
+            NSLog("Invalid watchContext event received: \(String(describing: dataReceived!["event"]))")
         }
     }
     
@@ -213,6 +237,7 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
         }
     }
     
+    // Stores the received data into the phone's coredata, updates the UI (MarkEvent Table View), and notifies the watch it's done syncing
     private func storeMarkEventPhone(timeOfMarks : [Date], endTimeOfQuery : Date){
         let entity = NSEntityDescription.entity(forEntityName: "MarkEventPhone", in: context)
         for eventMark in timeOfMarks {
@@ -231,6 +256,7 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
                                      "selectBeforeTime": endTimeOfQuery] as [String : Any]
             
             session!.transferUserInfo(dataStorePackage)
+            loadMarkEventRows()
         } catch let error{
             NSLog("Couldn't save: the current EventMark with  error: \(error)")
         }
@@ -258,29 +284,29 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
     private func dropAllRows(){
         //TODO: could merge the do catch... maybe
         // remove BioSample rows
-        let fetchRequest1 = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSampleWatch")
+        let fetchRequest1 = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSamplePhone")
         let deleteRequest1 = NSBatchDeleteRequest(fetchRequest: fetchRequest1)
         
         do{
             try context.execute(deleteRequest1)
             try context.save()
-            NSLog("Deleted BioSampleWatch rows")
+            NSLog("Deleted BioSamplePhone rows")
             updateBioSampleCnt()
         }catch let error{
-            NSLog("Couldn't Delete BioSampleWatch rows with error: \(error)")
+            NSLog("Couldn't Delete BioSamplePhone rows with error: \(error)")
         }
         
         // remove MarkEvent rows
-        let fetchRequest2 = NSFetchRequest<NSFetchRequestResult>(entityName: "MarkEventWatch")
+        let fetchRequest2 = NSFetchRequest<NSFetchRequestResult>(entityName: "MarkEventPhone")
         let deleteRequest2 = NSBatchDeleteRequest(fetchRequest: fetchRequest2)
         
         do{
             try context.execute(deleteRequest2)
             try context.save()
-            NSLog("Deleted MarkEvent rows")
-            updateBioSampleCnt()
+            NSLog("Deleted MarkEventPhone rows")
+            updateMarkEventCnt()
         }catch let error{
-            NSLog("Couldn't Delete MarkEventWatch rows with error: \(error)")
+            NSLog("Couldn't Delete MarkEventPhone rows with error: \(error)")
         }
     }
     

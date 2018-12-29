@@ -1,8 +1,11 @@
 import UIKit
 
+
+
 class DataSource: NSObject, UITableViewDataSource {
-    
-    var movies = [String]()
+    let displayDateFormatter = DateFormatter()
+
+    var markEvents = [Date]()
     
     //MARK: - UITableViewDataSource
     
@@ -11,13 +14,13 @@ class DataSource: NSObject, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return movies.count
+        return markEvents.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cellIdentifier") as! MarkEventTableViewCell
-        
-        cell.textLabel?.text = movies[indexPath.row]
+        displayDateFormatter.dateFormat = "MMM d, h:mm a"
+        cell.textLabel?.text = displayDateFormatter.string(from: markEvents[indexPath.row])
         
         return cell
     }

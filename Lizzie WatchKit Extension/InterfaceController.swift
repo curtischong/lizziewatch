@@ -48,7 +48,7 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
         // Configure workout manager.
         workoutManager.delegate = self
     
-        displayDateFormatter.dateFormat = "HH:mm:ss"
+        displayDateFormatter.dateFormat = "MMM d, h:mm a"
         self.updateBioSampleCnt()
         self.updateMarkEventCnt()
     }
@@ -267,6 +267,13 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
                     NSLog("Couldn't fetch MarkEventWatch with error: \(error)")
                 }
                 if(bothEmpty){
+                    let dataToSend = ["event" : "updateLastSync", "selectBeforeTime" : selectBeforeTime] as [String : Any]
+                    
+                    do{
+                        try session.updateApplicationContext(dataToSend)
+                    }catch let error{
+                        NSLog("Couldn't update the last sync date of the phone with error: \(error)")
+                    }
                     setSyncingState(newSyncState : false)
                 }
             }else{
