@@ -18,9 +18,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="znv-Ic-zB8">
-                                <rect key="frame" x="0.0" y="93.5" width="375" height="573.5"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="znv-Ic-zB8">
+                                <rect key="frame" x="0.0" y="118.5" width="375" height="548.5"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cellIdentifier" rowHeight="26" id="Eoc-I6-aFH" customClass="MarkEventTableViewCell" customModule="Lizzie" customModuleProvider="target">
@@ -84,11 +83,39 @@
                                     <constraint firstItem="Frf-vO-3ij" firstAttribute="leading" secondItem="yba-V4-4gL" secondAttribute="leading" id="gx9-O1-RBV"/>
                                 </constraints>
                             </stackView>
+                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" alignment="center" spacing="80" translatesAutoresizingMaskIntoConstraints="NO" id="kME-Rg-Sks">
+                                <rect key="frame" x="0.0" y="88.5" width="375" height="30"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tv4-Rk-aMl">
+                                        <rect key="frame" x="0.0" y="0.0" width="167" height="30"/>
+                                        <state key="normal" title="Evaluate Emotions"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eOe-BC-6Sh">
+                                        <rect key="frame" x="247" y="0.0" width="128" height="30"/>
+                                        <state key="normal" title="Mark Event"/>
+                                    </button>
+                                </subviews>
+                            </stackView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zcp-2Y-h56">
+                                <rect key="frame" x="118" y="332" width="138" height="30"/>
+                                <state key="normal" title="Upload Bio Samples"/>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="znv-Ic-zB8" firstAttribute="top" secondItem="kME-Rg-Sks" secondAttribute="bottom" id="4fK-fJ-BQm"/>
+                            <constraint firstItem="kME-Rg-Sks" firstAttribute="trailing" secondItem="3Fh-20-ZWG" secondAttribute="trailing" id="5UU-As-abn"/>
+                            <constraint firstItem="3Fh-20-ZWG" firstAttribute="trailing" secondItem="Zcp-2Y-h56" secondAttribute="trailing" constant="119" id="B2e-9L-0FT"/>
+                            <constraint firstItem="3Fh-20-ZWG" firstAttribute="bottom" secondItem="Zcp-2Y-h56" secondAttribute="bottom" constant="305" id="BKE-xK-xOh"/>
+                            <constraint firstItem="Zcp-2Y-h56" firstAttribute="leading" secondItem="3Fh-20-ZWG" secondAttribute="leading" constant="118" id="E2E-Mp-TFv"/>
                             <constraint firstItem="3Fh-20-ZWG" firstAttribute="trailing" secondItem="yba-V4-4gL" secondAttribute="trailing" constant="10" id="HXq-lC-eIZ"/>
                             <constraint firstItem="yba-V4-4gL" firstAttribute="leading" secondItem="3Fh-20-ZWG" secondAttribute="leading" constant="10" id="HiZ-GW-4KQ"/>
+                            <constraint firstItem="kME-Rg-Sks" firstAttribute="top" secondItem="yba-V4-4gL" secondAttribute="bottom" constant="2" id="MYZ-rV-ETA"/>
+                            <constraint firstItem="Zcp-2Y-h56" firstAttribute="top" secondItem="kME-Rg-Sks" secondAttribute="bottom" constant="213.5" id="VVW-30-VrL"/>
+                            <constraint firstItem="znv-Ic-zB8" firstAttribute="trailing" secondItem="3Fh-20-ZWG" secondAttribute="trailing" id="avo-SI-n3g"/>
+                            <constraint firstItem="kME-Rg-Sks" firstAttribute="leading" secondItem="3Fh-20-ZWG" secondAttribute="leading" id="h45-dR-NgC"/>
+                            <constraint firstItem="znv-Ic-zB8" firstAttribute="bottom" secondItem="3Fh-20-ZWG" secondAttribute="bottom" id="j4E-na-Sxf"/>
+                            <constraint firstItem="znv-Ic-zB8" firstAttribute="leading" secondItem="3Fh-20-ZWG" secondAttribute="leading" id="p7q-oA-zm0"/>
                             <constraint firstItem="yba-V4-4gL" firstAttribute="top" secondItem="3Fh-20-ZWG" secondAttribute="top" constant="10" id="rYS-eL-h34"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="3Fh-20-ZWG"/>

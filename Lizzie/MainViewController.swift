@@ -41,6 +41,7 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
         super.viewDidLoad()
         appContextFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         displayDateFormatter.dateFormat = "MMM d, h:mm a"
+        markEventTable.delegate = self
 
         // update the number of items not synced:
         if WCSession.isSupported() {
@@ -77,11 +78,12 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
             NSLog("Couldn't save: \(bioSample.printVals()) with  error: \(error)")
         }
     }
-    /*
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        NSLog("\(dataSource.markEvents[indexPath.row])")
-    }*/
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        NSLog("\(dataSource.markEvents[indexPath.row])")
+    }
+    
+    /*
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let alertController = UIAlertController(title: "Hint", message: "You have selected row \(indexPath.row).", preferredStyle: .alert)
@@ -91,7 +93,25 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
         alertController.addAction(alertAction)
         
         present(alertController, animated: true, completion: nil)
+    }*/
+    
+    func removeMarkEvent(timeOfMark : Date){
+        //TODO: google for an alternative to BatchDelete
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "MarkEventPhone")
+        fetchRequest.predicate = NSPredicate(format: "timeOfMark == %@", timeOfMark as NSDate)
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
         
+        do{
+            try context.execute(deleteRequest)
+            try context.save()
+            NSLog("Deleted MarkEventPhone with timeOfMark: \(appContextFormatter.string(from: timeOfMark)) ")
+            
+            //not sure if the mainview controller reloads
+            //updateMarkEventCnt()
+            //loadMarkEventRows()
+        }catch let error{
+            NSLog("Couldn't Delete MarkEventPhone of time\(appContextFormatter.string(from: timeOfMark)) with error: \(error)")
+        }
     }
     
     

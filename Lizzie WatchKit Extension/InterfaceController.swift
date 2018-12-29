@@ -59,6 +59,7 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
         session.delegate = self
         session.activate()
     }
+    //TODO: change the color of the Sync state for each diff state
     
 
     // MARK: - Actions

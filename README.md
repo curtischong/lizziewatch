@@ -15,5 +15,6 @@ This was done intentionally because I couldn't find a way to pass a parameter to
 
 ### Todo
  - Refactor the ViewControllers
+   - Move coreData scripts into it's own script (for the watch and phone)
  - add tests
  - better error logs
