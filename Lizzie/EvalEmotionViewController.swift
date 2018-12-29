@@ -34,6 +34,9 @@ class EvalEmotionViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
     
+    @IBAction func goBackToOneButtonTapped(_ sender: Any) {
+        performSegue(withIdentifier: "unwindSegueToMainViewController", sender: self)
+    }
 
     @IBAction func normalEvalSliderMoved(_ sender: UISlider) {
         let sliderPos = normalEvalSlider.value

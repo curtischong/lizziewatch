@@ -207,7 +207,7 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
     
     func updateLastSync(userInfo : [String : Any]){
         self.syncToPhoneStateLabel.text = "Synced"
-        dateLastSyncLabel.text = userInfo["selectBeforeTime"] as! String
+        dateLastSyncLabel.text = userInfo["selectBeforeTime"] as? String
     }
     
     func dataStoreBioSamples(userInfo : [String : Any]){
@@ -394,6 +394,28 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
                  print("Data: \(utf8Text)") // original server data as UTF8 string
                  }*/
         }
+    }
+        
+
+    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        NSLog("Received event for: \(segue.identifier)")
+        /*if segue.identifier == "evalEmotionSegue"{
+            if segue.destination is EvalEmotionViewController {
+
+            }
+        }else if(segue.identifier == "contextualizeMarkEventSegue"){
+            if let destinationVC = segue.destination as? ViewController {
+                //destinationVC.markEventDate = counter
+            }
+        }*/
+    }
+    
+    @IBAction func unwindEmotionView(segue:UIStoryboardSegue) {
+        
+    }
+    
+    @IBAction func gotoEvalEmotionSegue(_ sender: UIButton) {
+        performSegue(withIdentifier: "evalEmotionSegue", sender: self)
     }
     
     private func sendMarkEventSnapshot(markEvent: HealthKitDataPoint) {

@@ -19,22 +19,29 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="7" translatesAutoresizingMaskIntoConstraints="NO" id="khQ-Qa-ArG">
-                                <rect key="frame" x="0.0" y="30" width="375" height="85"/>
+                                <rect key="frame" x="0.0" y="30" width="375" height="122"/>
                                 <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zh6-7L-sUv">
+                                        <rect key="frame" x="170.5" y="0.0" width="34" height="30"/>
+                                        <state key="normal" title="Back"/>
+                                        <connections>
+                                            <action selector="goBackToOneButtonTapped:" destination="XhB-HF-MDQ" eventType="touchUpInside" id="Ha7-Sj-yta"/>
+                                        </connections>
+                                    </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="How Normal do you feel?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B08-fl-mZz">
-                                        <rect key="frame" x="20" y="0.0" width="335" height="20.5"/>
+                                        <rect key="frame" x="20" y="37" width="335" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y42-Kh-UsB">
-                                        <rect key="frame" x="20" y="27.5" width="335" height="20.5"/>
+                                        <rect key="frame" x="20" y="64.5" width="335" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="TRW-6a-7yk">
-                                        <rect key="frame" x="18" y="55" width="339" height="31"/>
+                                        <rect key="frame" x="18" y="92" width="339" height="31"/>
                                         <connections>
                                             <action selector="normalEvalSliderMoved:" destination="XhB-HF-MDQ" eventType="valueChanged" id="8RJ-46-8en"/>
                                         </connections>
@@ -50,7 +57,7 @@
                                 </constraints>
                             </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="fEb-US-mtk">
-                                <rect key="frame" x="0.0" y="125" width="375" height="77"/>
+                                <rect key="frame" x="0.0" y="162" width="375" height="77"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="How Tired do you feel?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9B3-FY-bBd">
                                         <rect key="frame" x="20" y="0.0" width="335" height="20.5"/>
@@ -81,7 +88,7 @@
                                 </constraints>
                             </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="lUr-Pz-AS1">
-                                <rect key="frame" x="0.0" y="212" width="375" height="87"/>
+                                <rect key="frame" x="0.0" y="249" width="375" height="87"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="How Happy do you feel?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7S4-wI-OdR">
                                         <rect key="frame" x="20" y="0.0" width="335" height="20.5"/>
@@ -142,9 +149,11 @@
                         <outlet property="normalEvalSliderLabel" destination="y42-Kh-UsB" id="f72-IP-OgC"/>
                         <outlet property="tiredEvalSlider" destination="DNt-Xq-FOm" id="orc-xm-kCO"/>
                         <outlet property="tiredEvalSliderLabel" destination="Amd-pd-YbD" id="iFc-kk-HYW"/>
+                        <segue destination="k5P-fd-WWY" kind="unwind" identifier="unwindSegueToMainViewController" unwindAction="unwindEmotionViewWithSegue:" id="QQd-tQ-2zJ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZaB-cn-t1N" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="k5P-fd-WWY" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="-1951.2" y="34.632683658170919"/>
         </scene>
@@ -227,6 +236,9 @@
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tv4-Rk-aMl">
                                         <rect key="frame" x="0.0" y="0.0" width="167" height="30"/>
                                         <state key="normal" title="Evaluate Emotions"/>
+                                        <connections>
+                                            <action selector="gotoEvalEmotionSegue:" destination="K4m-UN-kIQ" eventType="touchUpInside" id="w2w-R8-yHV"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eOe-BC-6Sh">
                                         <rect key="frame" x="247" y="0.0" width="128" height="30"/>
@@ -265,7 +277,7 @@
                         <outlet property="markEventTable" destination="znv-Ic-zB8" id="yIe-7Q-rke"/>
                         <outlet property="syncToPhoneStateLabel" destination="QqO-ej-EvB" id="ePL-8o-D3L"/>
                         <segue destination="BYZ-38-t0r" kind="show" id="yFN-UM-AvG"/>
-                        <segue destination="XhB-HF-MDQ" kind="show" id="EKJ-9G-Ef4"/>
+                        <segue destination="XhB-HF-MDQ" kind="show" identifier="evalEmotionSegue" id="1aJ-Js-cxB"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TbP-Gt-apH" userLabel="First Responder" sceneMemberID="firstResponder"/>

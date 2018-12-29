@@ -12,7 +12,7 @@ import Alamofire
 import SwiftyJSON
 import WatchConnectivity
 
-class ViewController: UIViewController ,UITextFieldDelegate{
+class ViewController: UIViewController, UITextFieldDelegate{
 
     //MARK: Properties
     @IBOutlet weak var eventTextLabel: UILabel!
@@ -23,16 +23,21 @@ class ViewController: UIViewController ,UITextFieldDelegate{
     
     @IBOutlet weak var heartrateChart: LineChartView!
     
+    let displayDateFormatter = DateFormatter()
+    
     var selectedEmotions = Array(repeating: false, count: 8)
+    var markEventDate = Date()
     
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         NSLog("Setting things up")
+        displayDateFormatter.dateFormat = "MMM d, h:mm a"
         
         // IOS Setup
         eventTextField.delegate = self
+        eventTextField.placeholder = self.displayDateFormatter.string(from: markEventDate)
 
         NSLog("Finished Setting things up")
     }
