@@ -26,7 +26,7 @@ class ViewController: UIViewController, UITextFieldDelegate{
     let displayDateFormatter = DateFormatter()
     
     var selectedEmotions = Array(repeating: false, count: 8)
-    var markEventDate = Date()
+    var markEventDate: Date = Date()
     
     
     
@@ -59,6 +59,7 @@ class ViewController: UIViewController, UITextFieldDelegate{
     }
     @IBAction func eventDurationSliderChanged(_ sender: UISlider) {
         eventDurationTextLabel.text = "\(eventDurationSlider.value)"
+        print(markEventDate)
         updateGraph()
     }
     
@@ -79,7 +80,9 @@ class ViewController: UIViewController, UITextFieldDelegate{
         heartrateChart.chartDescription?.text = "Heartrate"
     }
     
-    
+    @IBAction func goBackToOneButtonTapped(_ sender: Any) {
+        performSegue(withIdentifier: "unwindSegue2ToMainViewController", sender: self)
+    }
     
     
     /*func readConfig() -> String{

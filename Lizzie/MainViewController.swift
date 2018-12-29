@@ -21,6 +21,7 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
     @IBOutlet weak var markEventTable: UITableView!
     @IBOutlet weak var dateLastSyncLabel: UILabel!
     
+    @IBOutlet weak var uploadBioSamplesButton: UIButton!
     var syncToPhoneState = false
     private let dataSource = DataSource()
     
@@ -80,7 +81,7 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        NSLog("\(dataSource.markEvents[indexPath.row])")
+        fillMarkEvent(timeOfMark : dataSource.markEvents[indexPath.row])
     }
     
     //prepareForSegue:sender:
@@ -316,6 +317,14 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
         do{
             let result = try context.fetch(request)
             markEventCntPhone.text = String(result.count)
+
+            if(result.count == 0){
+                uploadBioSamplesButton.isHidden = false
+                markEventTable.isHidden = true
+            }else{
+                uploadBioSamplesButton.isHidden = true
+                markEventTable.isHidden = false
+            }
         } catch let error{
             NSLog("Couldn't access CoreDataWatch: \(error)")
         }
@@ -397,28 +406,35 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
     }
         
 
-    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        NSLog("Received event for: \(segue.identifier)")
-        /*if segue.identifier == "evalEmotionSegue"{
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "evalEmotionSegue"{ // no params to pass as of this version
             if segue.destination is EvalEmotionViewController {
-
+                
             }
         }else if(segue.identifier == "contextualizeMarkEventSegue"){
             if let destinationVC = segue.destination as? ViewController {
-                //destinationVC.markEventDate = counter
+                destinationVC.markEventDate = sender as! Date
+                NSLog("sending this date: \( sender as! Date)")
             }
-        }*/
+        }else{
+            NSLog("Using unidentified segue: \(evalEmotionSegue)")
+        }
     }
     
+    // I think this gets called when a back button is pressed. maybe reload markeventcnt?
     @IBAction func unwindEmotionView(segue:UIStoryboardSegue) {
         
     }
     
     @IBAction func gotoEvalEmotionSegue(_ sender: UIButton) {
+        //TODO: if I add a map fearue later I need to alter the sender into a dict
         performSegue(withIdentifier: "evalEmotionSegue", sender: self)
+        NSLog("using evalEmotionSegue")
     }
     
-    private func sendMarkEventSnapshot(markEvent: HealthKitDataPoint) {
-        
+    func fillMarkEvent(timeOfMark : Date){
+        NSLog("using contextualizeMarkEventSegue with time: \(timeOfMark)")
+         performSegue(withIdentifier: "contextualizeMarkEventSegue", sender: timeOfMark)
     }
+
 }
