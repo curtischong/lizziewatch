@@ -417,7 +417,7 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
                 NSLog("sending this date: \( sender as! Date)")
             }
         }else{
-            NSLog("Using unidentified segue: \(evalEmotionSegue)")
+            NSLog("Using unidentified segue: \(segue.identifier)")
         }
     }
     

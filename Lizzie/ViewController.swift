@@ -11,6 +11,7 @@ import Charts
 import Alamofire
 import SwiftyJSON
 import WatchConnectivity
+import CoreData
 
 class ViewController: UIViewController, UITextFieldDelegate{
 
@@ -28,7 +29,7 @@ class ViewController: UIViewController, UITextFieldDelegate{
     var selectedEmotions = Array(repeating: false, count: 8)
     var markEventDate: Date = Date()
     
-    
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,6 +41,7 @@ class ViewController: UIViewController, UITextFieldDelegate{
         eventTextField.placeholder = self.displayDateFormatter.string(from: markEventDate)
 
         NSLog("Finished Setting things up")
+        updateGraph()
     }
 
     override func didReceiveMemoryWarning() {
@@ -59,7 +61,6 @@ class ViewController: UIViewController, UITextFieldDelegate{
     }
     @IBAction func eventDurationSliderChanged(_ sender: UISlider) {
         eventDurationTextLabel.text = "\(eventDurationSlider.value)"
-        print(markEventDate)
         updateGraph()
     }
     

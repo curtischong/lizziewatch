@@ -15,4 +15,5 @@ struct MarkEventDataPoint{
     var startTimeLeadingToEvent : Date
     var timeOfEvent : Date
     var endTimeOfReaction : Date
+    var comments: String
 }
