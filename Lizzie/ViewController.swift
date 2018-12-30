@@ -16,7 +16,7 @@ import CoreData
 class ViewController: UIViewController, UITextFieldDelegate{
 
     //MARK: Properties
-    @IBOutlet weak var eventTextLabel: UILabel!
+    //@IBOutlet weak var eventTextLabel: UILabel!
     @IBOutlet weak var eventTextField: UITextField!
     
     @IBOutlet weak var eventDurationTextLabel: UILabel!
@@ -57,7 +57,7 @@ class ViewController: UIViewController, UITextFieldDelegate{
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        eventTextLabel.text = textField.text
+        //eventTextLabel.text = textField.text
     }
     @IBAction func eventDurationSliderChanged(_ sender: UISlider) {
         eventDurationTextLabel.text = "\(eventDurationSlider.value)"
