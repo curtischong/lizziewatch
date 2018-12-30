@@ -91,8 +91,53 @@
                                     <constraint firstAttribute="trailing" secondItem="DNt-Xq-FOm" secondAttribute="trailing" constant="20" id="zJM-kx-EEQ"/>
                                 </constraints>
                             </stackView>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="YFk-Xo-QbR">
+                                <rect key="frame" x="0.0" y="249" width="375" height="77"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="How Exhausted do you feel?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WnS-E3-HoB">
+                                        <rect key="frame" x="20" y="0.0" width="335" height="20.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gLa-6m-PVl">
+                                        <rect key="frame" x="20" y="23.5" width="335" height="20.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="sM2-6p-S4P">
+                                        <rect key="frame" x="18" y="47" width="339" height="31"/>
+                                        <connections>
+                                            <action selector="exhaustedEvalSliderMoved:" destination="XhB-HF-MDQ" eventType="valueChanged" id="5IT-fx-sh1"/>
+                                        </connections>
+                                    </slider>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="gLa-6m-PVl" secondAttribute="trailing" constant="20" id="7VY-zJ-ljG"/>
+                                    <constraint firstAttribute="trailing" secondItem="sM2-6p-S4P" secondAttribute="trailing" constant="20" id="Es9-wu-qjv"/>
+                                    <constraint firstAttribute="trailing" secondItem="WnS-E3-HoB" secondAttribute="trailing" constant="20" id="WcT-Ja-47K"/>
+                                    <constraint firstItem="sM2-6p-S4P" firstAttribute="leading" secondItem="YFk-Xo-QbR" secondAttribute="leading" constant="20" id="eLr-pZ-c8z"/>
+                                    <constraint firstItem="gLa-6m-PVl" firstAttribute="leading" secondItem="YFk-Xo-QbR" secondAttribute="leading" constant="20" id="g8z-9B-7Mn"/>
+                                </constraints>
+                            </stackView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aeN-1s-tan">
+                                <rect key="frame" x="102" y="617" width="175" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Upload Response">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                            </button>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Y9p-Fb-k4h">
+                                <rect key="frame" x="20" y="481" width="335" height="128"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="lUr-Pz-AS1">
-                                <rect key="frame" x="0.0" y="249" width="375" height="87"/>
+                                <rect key="frame" x="0.0" y="336" width="375" height="87"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="How Happy do you feel?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7S4-wI-OdR">
                                         <rect key="frame" x="20" y="0.0" width="335" height="20.5"/>
@@ -124,38 +169,28 @@
                                     <constraint firstAttribute="trailing" secondItem="7S4-wI-OdR" secondAttribute="trailing" constant="20" id="ZyC-Cq-anw"/>
                                 </constraints>
                             </stackView>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Y9p-Fb-k4h">
-                                <rect key="frame" x="20" y="374" width="335" height="128"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aeN-1s-tan">
-                                <rect key="frame" x="100" y="543" width="175" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Upload Response">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
                         <constraints>
                             <constraint firstItem="khQ-Qa-ArG" firstAttribute="top" secondItem="Fpg-VO-ljY" secondAttribute="top" constant="10" id="0BG-j1-MyG"/>
                             <constraint firstAttribute="trailing" secondItem="fEb-US-mtk" secondAttribute="trailing" id="0Tp-eP-5gL"/>
+                            <constraint firstItem="YFk-Xo-QbR" firstAttribute="top" secondItem="fEb-US-mtk" secondAttribute="bottom" constant="10" id="2m1-La-hNO"/>
                             <constraint firstAttribute="trailing" secondItem="lUr-Pz-AS1" secondAttribute="trailing" id="MTb-8q-fb0"/>
+                            <constraint firstItem="YFk-Xo-QbR" firstAttribute="leading" secondItem="Fpg-VO-ljY" secondAttribute="leading" id="NeL-po-hrX"/>
                             <constraint firstItem="lUr-Pz-AS1" firstAttribute="leading" secondItem="Vnh-I0-4TW" secondAttribute="leading" id="PJe-YR-EIN"/>
-                            <constraint firstItem="lUr-Pz-AS1" firstAttribute="top" secondItem="fEb-US-mtk" secondAttribute="bottom" constant="10" id="QV1-Cv-Lng"/>
+                            <constraint firstAttribute="trailing" secondItem="YFk-Xo-QbR" secondAttribute="trailing" id="QrZ-NX-eZV"/>
                             <constraint firstItem="khQ-Qa-ArG" firstAttribute="leading" secondItem="Fpg-VO-ljY" secondAttribute="leading" id="UjP-Pb-c2a"/>
                             <constraint firstItem="fEb-US-mtk" firstAttribute="leading" secondItem="Fpg-VO-ljY" secondAttribute="leading" id="jCY-jX-yjF"/>
                             <constraint firstItem="fEb-US-mtk" firstAttribute="top" secondItem="khQ-Qa-ArG" secondAttribute="bottom" constant="10" id="kg8-nB-Nem"/>
                             <constraint firstItem="Fpg-VO-ljY" firstAttribute="trailing" secondItem="khQ-Qa-ArG" secondAttribute="trailing" id="ocZ-s3-MdJ"/>
+                            <constraint firstItem="lUr-Pz-AS1" firstAttribute="top" secondItem="YFk-Xo-QbR" secondAttribute="bottom" constant="10" id="uEc-c2-ac8"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Fpg-VO-ljY"/>
                     </view>
                     <connections>
                         <outlet property="commentBoxTextView" destination="Y9p-Fb-k4h" id="cSF-F5-KVA"/>
+                        <outlet property="exhaustedEvalSlider" destination="sM2-6p-S4P" id="P3n-mb-cqx"/>
+                        <outlet property="exhaustedEvalSliderLabel" destination="gLa-6m-PVl" id="qMJ-V2-64F"/>
                         <outlet property="happyEvalSlider" destination="qSc-b6-wnW" id="zez-t9-HO6"/>
                         <outlet property="happyEvalSliderLabel" destination="qBX-vs-aJ8" id="zri-rL-WEM"/>
                         <outlet property="normalEvalSlider" destination="TRW-6a-7yk" id="2JN-Qp-trt"/>
@@ -178,23 +213,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="znv-Ic-zB8">
-                                <rect key="frame" x="0.0" y="118.5" width="375" height="548.5"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <color key="sectionIndexColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <color key="sectionIndexBackgroundColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cellIdentifier" rowHeight="26" id="Eoc-I6-aFH" customClass="MarkEventTableViewCell" customModule="Lizzie" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="375" height="26"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Eoc-I6-aFH" id="UNg-Ir-X0b">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="25.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
-                                </prototypes>
-                            </tableView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="yba-V4-4gL">
                                 <rect key="frame" x="10" y="30" width="355" height="56.5"/>
                                 <subviews>
@@ -274,11 +292,30 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                             </button>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="znv-Ic-zB8">
+                                <rect key="frame" x="10" y="118.5" width="342" height="548.5"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="sectionIndexColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="sectionIndexBackgroundColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cellIdentifier" rowHeight="26" id="Eoc-I6-aFH" customClass="MarkEventTableViewCell" customModule="Lizzie" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="342" height="26"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Eoc-I6-aFH" id="UNg-Ir-X0b">
+                                            <rect key="frame" x="0.0" y="0.0" width="342" height="25.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
                         </subviews>
-                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
                         <constraints>
                             <constraint firstItem="znv-Ic-zB8" firstAttribute="top" secondItem="kME-Rg-Sks" secondAttribute="bottom" id="4fK-fJ-BQm"/>
                             <constraint firstItem="kME-Rg-Sks" firstAttribute="trailing" secondItem="3Fh-20-ZWG" secondAttribute="trailing" id="5UU-As-abn"/>
+                            <constraint firstItem="znv-Ic-zB8" firstAttribute="leading" secondItem="3Fh-20-ZWG" secondAttribute="leading" constant="10" id="5bU-By-jaE"/>
+                            <constraint firstItem="3Fh-20-ZWG" firstAttribute="trailing" secondItem="znv-Ic-zB8" secondAttribute="trailing" constant="23" id="7xD-ig-ojD"/>
                             <constraint firstItem="3Fh-20-ZWG" firstAttribute="trailing" secondItem="Zcp-2Y-h56" secondAttribute="trailing" constant="119" id="B2e-9L-0FT"/>
                             <constraint firstItem="3Fh-20-ZWG" firstAttribute="bottom" secondItem="Zcp-2Y-h56" secondAttribute="bottom" constant="305" id="BKE-xK-xOh"/>
                             <constraint firstItem="Zcp-2Y-h56" firstAttribute="leading" secondItem="3Fh-20-ZWG" secondAttribute="leading" constant="118" id="E2E-Mp-TFv"/>
@@ -286,10 +323,8 @@
                             <constraint firstItem="yba-V4-4gL" firstAttribute="leading" secondItem="3Fh-20-ZWG" secondAttribute="leading" constant="10" id="HiZ-GW-4KQ"/>
                             <constraint firstItem="kME-Rg-Sks" firstAttribute="top" secondItem="yba-V4-4gL" secondAttribute="bottom" constant="2" id="MYZ-rV-ETA"/>
                             <constraint firstItem="Zcp-2Y-h56" firstAttribute="top" secondItem="kME-Rg-Sks" secondAttribute="bottom" constant="213.5" id="VVW-30-VrL"/>
-                            <constraint firstItem="znv-Ic-zB8" firstAttribute="trailing" secondItem="3Fh-20-ZWG" secondAttribute="trailing" id="avo-SI-n3g"/>
                             <constraint firstItem="kME-Rg-Sks" firstAttribute="leading" secondItem="3Fh-20-ZWG" secondAttribute="leading" id="h45-dR-NgC"/>
                             <constraint firstItem="znv-Ic-zB8" firstAttribute="bottom" secondItem="3Fh-20-ZWG" secondAttribute="bottom" id="j4E-na-Sxf"/>
-                            <constraint firstItem="znv-Ic-zB8" firstAttribute="leading" secondItem="3Fh-20-ZWG" secondAttribute="leading" id="p7q-oA-zm0"/>
                             <constraint firstItem="yba-V4-4gL" firstAttribute="top" secondItem="3Fh-20-ZWG" secondAttribute="top" constant="10" id="rYS-eL-h34"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="3Fh-20-ZWG"/>
@@ -413,11 +448,17 @@
                                                 <color key="minimumTrackTintColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <color key="maximumTrackTintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <color key="thumbTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <connections>
+                                                    <action selector="timeStartSliderMoved:" destination="BYZ-38-t0r" eventType="valueChanged" id="hmx-1A-TPR"/>
+                                                </connections>
                                             </slider>
                                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="sEI-Vs-Te1">
                                                 <rect key="frame" x="18" y="40" width="339" height="31"/>
                                                 <color key="minimumTrackTintColor" cocoaTouchSystemColor="darkTextColor"/>
                                                 <color key="maximumTrackTintColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <connections>
+                                                    <action selector="timeEndSliderMoved:" destination="BYZ-38-t0r" eventType="valueChanged" id="5DN-XM-8xg"/>
+                                                </connections>
                                             </slider>
                                         </subviews>
                                         <constraints>

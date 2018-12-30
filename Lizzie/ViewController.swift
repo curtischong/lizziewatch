@@ -182,7 +182,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
         for i in 0...(bioPoints!.count - 1){
             //NSLog("Cur Time: \(Double(bioPoints![i].endTime.seconds(from : markEventDate)))")
             let difference = Double(bioPoints![i].endTime.seconds(from : markEventDate))
-            NSLog("\(difference)")
+            //NSLog("\(difference)")
             if(abs(difference) < lowestAbs){
                 lowestIdx = i
                 lowestAbs = abs(difference)
@@ -190,7 +190,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
             let value = ChartDataEntry(x: difference, y: bioPoints![i].measurement)
             lineChartEntry.append(value)
         }
-        NSLog("The lowest difference is \(lowestAbs) with idx \(lowestIdx)")
+        NSLog("The closest datapoint to the timeOfMark is \(lowestAbs) seconds away. It is the \(lowestIdx)th idx")
         
         let line = LineChartDataSet(values: lineChartEntry, label: "Heartrate")
         line.colors = [UIColor.red]
@@ -279,6 +279,35 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
             }
         }
     }
+    
+    
+    
+    /*
+     let sliderPos = normalEvalSlider.value
+     let sliderVal = round(sliderPos*5)/5
+     let realVal = Int(round(sliderPos*5))
+     normalEvalSliderLabel.text = "\(realVal)"
+     sender.setValue(sliderVal, animated: true)
+     */
+    
+    @IBAction func timeStartSliderMoved(_ sender: UISlider) {
+        let timeStartSliderPos = timeStartSlider.value
+        let timeEndSliderPos = timeEndSlider.value
+        if(timeStartSliderPos > timeEndSliderPos){
+            sender.setValue(timeEndSliderPos, animated: true)
+        }
+    }
+    
+    @IBAction func timeEndSliderMoved(_ sender: UISlider) {
+        let timeStartSliderPos = timeStartSlider.value
+        let timeEndSliderPos = timeEndSlider.value
+        if(timeEndSliderPos < timeStartSliderPos){
+            sender.setValue(timeStartSliderPos, animated: true)
+        }
+    }
+    
+    
+    
     
 
     @IBAction func sendBioSnapshot(_ sender: Any) {

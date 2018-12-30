@@ -12,11 +12,14 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
 
     @IBOutlet weak var normalEvalSliderLabel: UILabel!
     @IBOutlet weak var tiredEvalSliderLabel: UILabel!
+    @IBOutlet weak var exhaustedEvalSliderLabel: UILabel!
     @IBOutlet weak var happyEvalSliderLabel: UILabel!
     
     @IBOutlet weak var normalEvalSlider: UISlider!
     @IBOutlet weak var tiredEvalSlider: UISlider!
+    @IBOutlet weak var exhaustedEvalSlider: UISlider!
     @IBOutlet weak var happyEvalSlider: UISlider!
+    
     @IBOutlet weak var commentBoxTextView: UITextView!
     
     
@@ -32,6 +35,9 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
         
         tiredEvalSliderLabel.text = "0"
         tiredEvalSlider.setValue(0.0, animated: true)
+        
+        exhaustedEvalSliderLabel.text = "0"
+        exhaustedEvalSlider.setValue(0.0, animated: true)
         
         happyEvalSliderLabel.text = "0"
         happyEvalSlider.setValue(0.5, animated: true)
@@ -103,6 +109,13 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
         let sliderVal = round(sliderPos*5)/5
         let realVal = Int(round(sliderPos*5))
         tiredEvalSliderLabel.text = "\(realVal)"
+        sender.setValue(sliderVal, animated: true)
+    }
+    @IBAction func exhaustedEvalSliderMoved(_ sender: UISlider) {
+        let sliderPos = exhaustedEvalSlider.value
+        let sliderVal = round(sliderPos*5)/5
+        let realVal = Int(round(sliderPos*5))
+        exhaustedEvalSliderLabel.text = "\(realVal)"
         sender.setValue(sliderVal, animated: true)
     }
     
