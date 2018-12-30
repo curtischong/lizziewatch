@@ -23,6 +23,7 @@ class ViewController: UIViewController, UITextFieldDelegate{
     @IBOutlet weak var eventDurationSlider: UISlider!
     
     @IBOutlet weak var heartrateChart: LineChartView!
+    @IBOutlet weak var commentBoxTextView: UITextView!
     
     let displayDateFormatter = DateFormatter()
     
@@ -40,8 +41,25 @@ class ViewController: UIViewController, UITextFieldDelegate{
         eventTextField.delegate = self
         eventTextField.placeholder = self.displayDateFormatter.string(from: markEventDate)
 
+        commentBoxTextView.text = "Comments"
+        commentBoxTextView.textColor = UIColor.lightGray
+        
         NSLog("Finished Setting things up")
         updateGraph()
+    }
+    
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if commentBoxTextView.textColor == UIColor.lightGray {
+            commentBoxTextView.text = nil
+            commentBoxTextView.textColor = UIColor.black
+        }
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        if commentBoxTextView.text.isEmpty {
+            commentBoxTextView.text = "Comments?"
+            commentBoxTextView.textColor = UIColor.lightGray
+        }
     }
 
     override func didReceiveMemoryWarning() {
