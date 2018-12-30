@@ -36,8 +36,12 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
     var session: WCSession?
     let appContextFormatter = DateFormatter()
     let displayDateFormatter = DateFormatter()
-    // MARK: Lifecycle
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
+    // MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         appContextFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"

@@ -5,6 +5,9 @@
 //  Created by Thomas Paul Mann on 01/08/16.
 //  Copyright © 2016 Thomas Paul Mann. All rights reserved.
 // TODO: Add a button that switches between minutes and seconds... or have it automatically switch
+// TODO: improve the quering thing. Since we at most query for times 5 min on each side,
+// We can query for the 10 minute interval then crop. we don't need to requery each time
+// TODO: we should add code so you can't move the left sider further that where the right slider ends
 
 import UIKit
 import Charts
@@ -63,6 +66,11 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
+    // sets the carrier, time, and battery to white
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         NSLog("Setting things up")
@@ -119,7 +127,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
     func textViewDidBeginEditing(_ textView: UITextView) {
         if commentBoxTextView.textColor == UIColor.lightGray {
             commentBoxTextView.text = nil
-            commentBoxTextView.textColor = UIColor.black
+            commentBoxTextView.textColor = UIColor.white
         }
     }
     
@@ -188,6 +196,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
         line.colors = [UIColor.red]
         line.drawCirclesEnabled = false
         line.drawValuesEnabled = false
+        line.setDrawHighlightIndicators(false)
         
         let data = LineChartData()
         data.addDataSet(line)
@@ -237,7 +246,8 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
         if(!isReaction){
             eventDurationSlider.isEnabled = false
         }else{
-            eventDurationSlider.minimumTrackTintColor = eventDurationSlider.maximumTrackTintColor
+            eventDurationSlider.minimumTrackTintColor = UIColor.lightGray
+            eventDurationSlider.isEnabled = true
         }
         timeStartSlider.isEnabled = true
         timeEndSlider.isEnabled = true
@@ -261,8 +271,12 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
         }else{
             isReaction = true
         }
-        if(selectedPoints && isReaction){
-            eventDurationSlider.isEnabled = true
+        if(selectedPoints){
+            if(isReaction){
+                eventDurationSlider.isEnabled = true
+            }else{
+                eventDurationSlider.isEnabled = false
+            }
         }
     }
     
