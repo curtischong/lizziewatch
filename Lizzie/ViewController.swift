@@ -72,9 +72,11 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
         
+        eventDurationTextLabel.text = "1m"
+        eventDurationSlider.setValue(0.2, animated: true)
         
         NSLog("Finished Setting things up")
-        updateGraph(timeOfMark : markEventDate)
+        updateGraph()
     }
     
     // textview functions
@@ -154,16 +156,24 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
      heartrateChart.chartDescription?.text = "Heartrate"
      }*/
     
-    func updateGraph(timeOfMark : Date){
-        bioPoints = queryBioSamples(timeOfMark : timeOfMark)
+    func updateGraph(){
+        bioPoints = queryBioSamples()
         var lineChartEntry = [ChartDataEntry]()
 
-        
+        var lowestAbs = 9999.0
+        var lowestIdx = 0
         for i in 0...(bioPoints!.count - 1){
-            NSLog("Cur Time: \(Double(bioPoints![i].endTime.seconds(from : timeOfMark)))")
-            let value = ChartDataEntry(x: Double(bioPoints![i].endTime.seconds(from : timeOfMark)), y: bioPoints![i].measurement)
+            //NSLog("Cur Time: \(Double(bioPoints![i].endTime.seconds(from : markEventDate)))")
+            let difference = Double(bioPoints![i].endTime.seconds(from : markEventDate))
+            NSLog("\(difference)")
+            if(abs(difference) < lowestAbs){
+                lowestIdx = i
+                lowestAbs = abs(difference)
+            }
+            let value = ChartDataEntry(x: difference, y: bioPoints![i].measurement)
             lineChartEntry.append(value)
         }
+        NSLog("The lowest difference is \(lowestAbs) with idx \(lowestIdx)")
         
         let line = LineChartDataSet(values: lineChartEntry, label: "Heartrate")
         line.colors = [NSUIColor.blue]
@@ -171,14 +181,15 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
         let data = LineChartData()
         data.addDataSet(line)
         heartrateChart.data = data
+        heartrateChart.highlightValue(x: 0.0, y: bioPoints![lowestIdx].measurement, dataSetIndex: 0, callDelegate: true)
         //heartrateChart.chartDescription?.text = "Heartrate"
     }
     
-    func queryBioSamples(timeOfMark : Date) -> [chartPoint]{
+    func queryBioSamples() -> [chartPoint]{
         
-        let numMinutesGap = 1.0
-        let endTime = timeOfMark.addingTimeInterval(TimeInterval(numMinutesGap * 60.0))
-        let startTime = timeOfMark.addingTimeInterval(TimeInterval(-numMinutesGap * 60.0))
+        let numMinutesGap = eventDurationSlider.value * 5.0
+        let endTime = markEventDate.addingTimeInterval(TimeInterval(numMinutesGap * 60.0))
+        let startTime = markEventDate.addingTimeInterval(TimeInterval(-numMinutesGap * 60.0))
         
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSamplePhone")
         //"endTime => %@ AND endTime <= %@ AND (dataPointName == HR OR dataPointName == X)"
@@ -211,7 +222,8 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
     
     // Mark: Actions
     @IBAction func eventDurationSliderChanged(_ sender: UISlider) {
-        eventDurationTextLabel.text = "\(eventDurationSlider.value)"
+        eventDurationTextLabel.text = "\(eventDurationSlider.value * 5.0)m"
+        updateGraph()
     }
     
     @IBAction func goBackToOneButtonTapped(_ sender: Any) {
