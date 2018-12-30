@@ -28,8 +28,12 @@
                             <items>
                                 <group width="74" alignment="left" id="fzF-uM-nJf">
                                     <items>
-                                        <label alignment="left" text="Bio" id="8Qo-wJ-bjj"/>
-                                        <label alignment="left" text="Mark" id="ndt-c8-eZv"/>
+                                        <label alignment="left" text="Bio" id="8Qo-wJ-bjj">
+                                            <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
+                                        </label>
+                                        <label alignment="left" text="Mark" id="ndt-c8-eZv">
+                                            <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
+                                        </label>
                                     </items>
                                 </group>
                                 <label alignment="right" text="--" textAlignment="center" id="q60-id-Pm7">
@@ -39,6 +43,7 @@
                                 </label>
                                 <label alignment="right" text="BPM" id="vo6-Km-Myq">
                                     <accessibilityTraits key="accessibilityTraits" staticText="YES" notEnabled="YES"/>
+                                    <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
                                 </label>
                             </items>
                         </group>

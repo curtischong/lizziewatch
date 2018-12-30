@@ -3,7 +3,7 @@
 //  
 //
 //  Created by Curtis Chong on 2018-12-26.
-//
+
 
 import UIKit
 import CoreData
@@ -128,6 +128,7 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
             for sample in result as! [NSManagedObject] {
                 markEvents.append(sample.value(forKey: "timeOfMark") as! Date)
             }
+            markEvents = markEvents.sorted{ $0 > $1 }
             dataSource.markEvents = markEvents
             markEventTable.dataSource = dataSource
             markEventTable.reloadData()
@@ -417,7 +418,7 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
                 NSLog("sending this date: \( sender as! Date)")
             }
         }else{
-            NSLog("Using unidentified segue: \(segue.identifier)")
+            NSLog("Using unidentified segue: \(String(describing: segue.identifier))")
         }
     }
     
