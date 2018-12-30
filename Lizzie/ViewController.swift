@@ -13,6 +13,7 @@ import SwiftyJSON
 import WatchConnectivity
 import CoreData
 
+
 struct chartPoint{
     let endTime : Date
     let measurement : Double
@@ -47,18 +48,39 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
     
     @IBOutlet weak var heartrateChart: LineChartView!
     @IBOutlet weak var commentBoxTextView: UITextView!
+    @IBOutlet weak var selectPointsButton: UIButton!
+    @IBOutlet weak var timeStartSlider: UISlider!
+    @IBOutlet weak var timeEndSlider: UISlider!
+    @IBOutlet weak var isReactionSwitch: UISwitch!
     
     let displayDateFormatter = DateFormatter()
     
     var selectedEmotions = Array(repeating: false, count: 8)
     var markEventDate: Date = Date()
     var bioPoints : [chartPoint]?
+    var selectedPoints = false
+    var isReaction = false
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     override func viewDidLoad() {
         super.viewDidLoad()
         NSLog("Setting things up")
+        
+        // Colors:
+        commentBoxTextView.layer.borderColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1.0).cgColor
+        commentBoxTextView.layer.borderWidth = 1.0
+        commentBoxTextView.layer.cornerRadius = 5
+        
+        heartrateChart.legend.textColor = UIColor.white
+        heartrateChart.xAxis.labelTextColor = UIColor.white
+        heartrateChart.leftAxis.labelTextColor = UIColor.white
+        heartrateChart!.rightAxis.enabled = false
+        heartrateChart.data?.setValueTextColor(UIColor.white)
+        
+        
+        
+        
         displayDateFormatter.dateFormat = "MMM d, h:mm a"
         
         // IOS Setup
@@ -72,9 +94,15 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
         
-        eventDurationTextLabel.text = "1m"
+        eventDurationTextLabel.text = "1.0 min"
         eventDurationSlider.setValue(0.2, animated: true)
         
+        timeStartSlider.isEnabled = false
+        timeEndSlider.isEnabled = false
+        timeStartSlider.setValue(0.0, animated: true)
+        timeEndSlider.setValue(1.0, animated: true)
+        
+        view.bringSubviewToFront(isReactionSwitch)
         NSLog("Finished Setting things up")
         updateGraph()
     }
@@ -136,25 +164,6 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
     func textFieldDidEndEditing(_ textField: UITextField) {
         //eventTextLabel.text = textField.text
     }
-    /*
-     func updateGraph(timeOfMark : Date){
-     let point = queryBioSamples(timeOfMark : timeOfMark)
-     var lineChartEntry = [ChartDataEntry]()
-     var numbers = [3,4,2,1,6]
-     
-     for i in 0...(numbers.count-1){
-     let value = ChartDataEntry(x: Double(i), y: Double(numbers[i]))
-     lineChartEntry.append(value)
-     }
-     
-     let line1 = LineChartDataSet(values: lineChartEntry, label: "Number")
-     line1.colors = [NSUIColor.blue]
-     
-     let data = LineChartData()
-     data.addDataSet(line1)
-     heartrateChart.data = data
-     heartrateChart.chartDescription?.text = "Heartrate"
-     }*/
     
     func updateGraph(){
         bioPoints = queryBioSamples()
@@ -176,7 +185,9 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
         NSLog("The lowest difference is \(lowestAbs) with idx \(lowestIdx)")
         
         let line = LineChartDataSet(values: lineChartEntry, label: "Heartrate")
-        line.colors = [NSUIColor.blue]
+        line.colors = [UIColor.red]
+        line.drawCirclesEnabled = false
+        line.drawValuesEnabled = false
         
         let data = LineChartData()
         data.addDataSet(line)
@@ -221,13 +232,38 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
     }
     
     // Mark: Actions
+    @IBAction func selectPointsClicked(_ sender: UIButton) {
+        sender.isEnabled = false
+        if(!isReaction){
+            eventDurationSlider.isEnabled = false
+        }else{
+            eventDurationSlider.minimumTrackTintColor = eventDurationSlider.maximumTrackTintColor
+        }
+        timeStartSlider.isEnabled = true
+        timeEndSlider.isEnabled = true
+        selectedPoints = true
+    }
     @IBAction func eventDurationSliderChanged(_ sender: UISlider) {
-        eventDurationTextLabel.text = "\(eventDurationSlider.value * 5.0)m"
-        updateGraph()
+        if(selectedPoints){
+            
+        }else{
+            eventDurationTextLabel.text = String(format: "%.2f", eventDurationSlider.value * 5.0) + " min"
+            updateGraph()
+        }
     }
     
     @IBAction func goBackToOneButtonTapped(_ sender: Any) {
         performSegue(withIdentifier: "unwindSegue2ToMainViewController", sender: self)
+    }
+    @IBAction func isReactionSwitch(_ sender: Any) {
+        if(isReaction){
+            isReaction = false
+        }else{
+            isReaction = true
+        }
+        if(selectedPoints && isReaction){
+            eventDurationSlider.isEnabled = true
+        }
     }
     
 

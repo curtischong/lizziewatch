@@ -428,7 +428,7 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
     }
     
     @IBAction func gotoEvalEmotionSegue(_ sender: UIButton) {
-        //TODO: if I add a map fearue later I need to alter the sender into a dict
+        //TODO: if I add a map feature later I need to alter the sender into a dict
         performSegue(withIdentifier: "evalEmotionSegue", sender: self)
         NSLog("using evalEmotionSegue")
     }

@@ -7,6 +7,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -303,7 +304,9 @@
                                             <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OyT-GX-x6S">
                                                 <rect key="frame" x="0.0" y="0.0" width="187.5" height="18"/>
                                                 <inset key="contentEdgeInsets" minX="-130" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                                <state key="normal" title="   Back"/>
+                                                <state key="normal" title="   Back">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </state>
                                                 <connections>
                                                     <action selector="goBackToOneButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="WgY-jz-3wT"/>
                                                 </connections>
@@ -311,7 +314,9 @@
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xmk-99-zLM">
                                                 <rect key="frame" x="187.5" y="0.0" width="187.5" height="18"/>
                                                 <inset key="contentEdgeInsets" minX="-187" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                                <state key="normal" title="Upload"/>
+                                                <state key="normal" title="Upload">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </state>
                                                 <connections>
                                                     <action selector="sendBioSnapshot:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Vyf-VQ-WOo"/>
                                                 </connections>
@@ -336,55 +341,72 @@
                                             <constraint firstAttribute="trailing" secondItem="N7K-nA-gcy" secondAttribute="trailing" constant="20" id="aS9-Qm-pBJ"/>
                                         </constraints>
                                     </stackView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="NoQ-HL-eQF">
-                                        <rect key="frame" x="20" y="68" width="335" height="29"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="NoQ-HL-eQF">
+                                        <rect key="frame" x="20" y="68" width="335" height="30"/>
                                         <subviews>
-                                            <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="LeH-Ey-11a">
-                                                <rect key="frame" x="0.0" y="0.0" width="167.5" height="29"/>
+                                            <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LeH-Ey-11a">
+                                                <rect key="frame" x="0.0" y="0.0" width="143" height="30"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="IsReaction   " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZuH-hA-gxN">
-                                                        <rect key="frame" x="0.0" y="0.0" width="93" height="29"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="93" height="30"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                        <nil key="textColor"/>
+                                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mny-Li-gL3">
-                                                        <rect key="frame" x="93" y="0.0" width="74.5" height="29"/>
+                                                        <rect key="frame" x="93" y="0.0" width="50" height="30"/>
                                                         <subviews>
                                                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="13v-EW-hl3">
                                                                 <rect key="frame" x="-1" y="0.0" width="86" height="31"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                <connections>
+                                                                    <action selector="isReactionSwitch:" destination="BYZ-38-t0r" eventType="valueChanged" id="lZZ-A0-vqV"/>
+                                                                </connections>
                                                             </switch>
                                                         </subviews>
                                                     </view>
                                                 </subviews>
                                             </stackView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="egH-qb-5gY">
-                                                <rect key="frame" x="167.5" y="5" width="167.5" height="19.5"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="egH-qb-5gY">
+                                                <rect key="frame" x="174.5" y="0.0" width="39.5" height="30"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                <nil key="textColor"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wtN-h9-zdS">
+                                                <rect key="frame" x="245" y="0.0" width="90" height="30"/>
+                                                <state key="normal" title="Select Points">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="selectPointsClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Jm0-Gq-b62"/>
+                                                </connections>
+                                            </button>
                                         </subviews>
                                     </stackView>
                                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="zoF-KU-7vC">
-                                        <rect key="frame" x="18" y="107" width="339" height="31"/>
+                                        <rect key="frame" x="18" y="108" width="339" height="31"/>
                                         <connections>
                                             <action selector="eventDurationSliderChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="cJo-eB-U1S"/>
                                         </connections>
                                     </slider>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QWu-G5-gRf" customClass="LineChartView" customModule="Charts">
-                                        <rect key="frame" x="10" y="147" width="355" height="220"/>
+                                        <rect key="frame" x="10" y="148" width="355" height="233"/>
                                         <color key="backgroundColor" red="1" green="0.72469553313764035" blue="0.75450649487102506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                     </view>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="xqq-sW-mlZ">
-                                        <rect key="frame" x="0.0" y="377" width="375" height="70"/>
+                                        <rect key="frame" x="0.0" y="391" width="375" height="70"/>
                                         <subviews>
                                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="vZV-EL-HuV">
                                                 <rect key="frame" x="18" y="0.0" width="339" height="31"/>
+                                                <color key="minimumTrackTintColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="maximumTrackTintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <color key="thumbTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </slider>
                                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="sEI-Vs-Te1">
                                                 <rect key="frame" x="18" y="40" width="339" height="31"/>
+                                                <color key="minimumTrackTintColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <color key="maximumTrackTintColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             </slider>
                                         </subviews>
                                         <constraints>
@@ -395,11 +417,11 @@
                                         </constraints>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="kOb-B6-Xlc" customClass="EmotionButtonsControl" customModule="Lizzie" customModuleProvider="target">
-                                        <rect key="frame" x="10" y="457" width="355" height="50"/>
+                                        <rect key="frame" x="10" y="471" width="355" height="36"/>
                                     </stackView>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="HSJ-Vm-MaH">
                                         <rect key="frame" x="20" y="517" width="335" height="100"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="100" id="Jsd-jT-Ghn"/>
                                         </constraints>
@@ -428,7 +450,7 @@
                                 </constraints>
                             </stackView>
                         </subviews>
-                        <color key="backgroundColor" red="0.76078431372549016" green="0.82352941176470584" blue="0.8784313725490196" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
                         <constraints>
                             <constraint firstItem="5d9-BZ-wbb" firstAttribute="bottom" secondItem="pS6-JN-u5o" secondAttribute="bottom" constant="20" id="Fia-4c-Jzt"/>
                             <constraint firstItem="pS6-JN-u5o" firstAttribute="leading" secondItem="5d9-BZ-wbb" secondAttribute="leading" id="Oer-Xh-0lg"/>
@@ -443,6 +465,10 @@
                         <outlet property="eventDurationTextLabel" destination="egH-qb-5gY" id="gn0-Bx-Zfo"/>
                         <outlet property="eventTextField" destination="N7K-nA-gcy" id="mwl-FC-srO"/>
                         <outlet property="heartrateChart" destination="QWu-G5-gRf" id="uqe-E7-8hp"/>
+                        <outlet property="isReactionSwitch" destination="13v-EW-hl3" id="mrU-Lb-hdM"/>
+                        <outlet property="selectPointsButton" destination="wtN-h9-zdS" id="G4S-4c-cOF"/>
+                        <outlet property="timeEndSlider" destination="sEI-Vs-Te1" id="abg-qW-rrj"/>
+                        <outlet property="timeStartSlider" destination="vZV-EL-HuV" id="WfQ-3c-BdO"/>
                         <segue destination="trF-OB-Kz1" kind="unwind" identifier="unwindSegue2ToMainViewController" unwindAction="unwindEmotionViewWithSegue:" id="MVC-zg-mi5"/>
                     </connections>
                 </viewController>

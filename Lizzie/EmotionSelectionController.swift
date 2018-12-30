@@ -14,7 +14,13 @@ import UIKit
     lazy var numEmotions = 8
     private var ratingButtons = [UIButton]()
     private var selectedEmotions = Array(repeating: 0, count: 8) // TODO: use numEmotions instead of 8
-    private var selectedColors = [UIColor.cyan, UIColor.blue, UIColor.green, UIColor.red]
+    
+    
+    
+    private var selectedColors = [UIColor.white,
+                                  UIColor(red:1.00, green:0.84, blue:0.00, alpha:1.0),
+                                  UIColor(red:0.11, green:0.84, blue:0.00, alpha:1.0),
+                                  UIColor(red:0.00, green:0.76, blue:1.00, alpha:1.0)]
     //TODO: add the tripple emotion state code
     //TODO: remove the useless slider pod
     //MARK: Initialization
