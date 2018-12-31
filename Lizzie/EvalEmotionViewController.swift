@@ -11,13 +11,15 @@ import UIKit
 class EvalEmotionViewController: UIViewController, UITextViewDelegate {
 
     @IBOutlet weak var normalEvalSliderLabel: UILabel!
-    @IBOutlet weak var tiredEvalSliderLabel: UILabel!
+    @IBOutlet weak var socialEvalSliderLabel: UILabel!
     @IBOutlet weak var exhaustedEvalSliderLabel: UILabel!
+    @IBOutlet weak var tiredEvalSliderLabel: UILabel!
     @IBOutlet weak var happyEvalSliderLabel: UILabel!
     
     @IBOutlet weak var normalEvalSlider: UISlider!
-    @IBOutlet weak var tiredEvalSlider: UISlider!
+    @IBOutlet weak var socialEvalSlider: UISlider!
     @IBOutlet weak var exhaustedEvalSlider: UISlider!
+    @IBOutlet weak var tiredEvalSlider: UISlider!
     @IBOutlet weak var happyEvalSlider: UISlider!
     
     @IBOutlet weak var commentBoxTextView: UITextView!
@@ -30,16 +32,19 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        normalEvalSliderLabel.text = "0"
+        normalEvalSliderLabel.text = "How normal do you feel? 0"
         normalEvalSlider.setValue(0.0, animated: true)
         
-        tiredEvalSliderLabel.text = "0"
+        socialEvalSliderLabel.text = "How social do you feel? 0"
+        socialEvalSlider.setValue(0.0, animated: true)
+        
+        tiredEvalSliderLabel.text = "How tired do you feel? 0"
         tiredEvalSlider.setValue(0.0, animated: true)
         
-        exhaustedEvalSliderLabel.text = "0"
+        exhaustedEvalSliderLabel.text = "How exhausted do you feel? 0"
         exhaustedEvalSlider.setValue(0.0, animated: true)
         
-        happyEvalSliderLabel.text = "0"
+        happyEvalSliderLabel.text = "How happy do you feel? 0"
         happyEvalSlider.setValue(0.5, animated: true)
 
         // Textview
@@ -100,7 +105,22 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
         let sliderPos = normalEvalSlider.value
         let sliderVal = round(sliderPos*5)/5
         let realVal = Int(round(sliderPos*5))
-        normalEvalSliderLabel.text = "\(realVal)"
+        normalEvalSliderLabel.text = "How normal do you feel? \(realVal)"
+        sender.setValue(sliderVal, animated: true)
+    }
+    @IBAction func socialEvalSliderMoved(_ sender: UISlider) {
+        let sliderPos = socialEvalSlider.value
+        let sliderVal = round(sliderPos*5)/5
+        let realVal = Int(round(sliderPos*5))
+        socialEvalSliderLabel.text = "How social do you feel? \(realVal)"
+        sender.setValue(sliderVal, animated: true)
+    }
+    
+    @IBAction func exhaustedEvalSliderMoved(_ sender: UISlider) {
+        let sliderPos = exhaustedEvalSlider.value
+        let sliderVal = round(sliderPos*5)/5
+        let realVal = Int(round(sliderPos*5))
+        exhaustedEvalSliderLabel.text = "How exhausted do you feel? \(realVal)"
         sender.setValue(sliderVal, animated: true)
     }
     
@@ -108,14 +128,7 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
         let sliderPos = tiredEvalSlider.value
         let sliderVal = round(sliderPos*5)/5
         let realVal = Int(round(sliderPos*5))
-        tiredEvalSliderLabel.text = "\(realVal)"
-        sender.setValue(sliderVal, animated: true)
-    }
-    @IBAction func exhaustedEvalSliderMoved(_ sender: UISlider) {
-        let sliderPos = exhaustedEvalSlider.value
-        let sliderVal = round(sliderPos*5)/5
-        let realVal = Int(round(sliderPos*5))
-        exhaustedEvalSliderLabel.text = "\(realVal)"
+        tiredEvalSliderLabel.text = "How tired do you feel? \(realVal)"
         sender.setValue(sliderVal, animated: true)
     }
     
@@ -123,7 +136,7 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
         let sliderPos = happyEvalSlider.value
         let sliderVal = round(sliderPos*10)/10
         let realVal = Int(round(sliderPos*10)) - 5
-        happyEvalSliderLabel.text = "\(realVal)"
+        happyEvalSliderLabel.text = "How happy do you feel? \(realVal)"
         sender.setValue(sliderVal, animated: true)
     }
     
