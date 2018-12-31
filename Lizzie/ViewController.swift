@@ -56,13 +56,14 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
     @IBOutlet weak var timeEndSlider: UISlider!
     @IBOutlet weak var isReactionSwitch: UISwitch!
     
-    let displayDateFormatter = DateFormatter()
-    
-    var selectedEmotions = Array(repeating: false, count: 8)
     var markEventDate: Date = Date()
-    var bioPoints : [chartPoint]?
-    var selectedPoints = false
-    var isReaction = false
+    
+    private let displayDateFormatter = DateFormatter()
+    private var selectedEmotions = Array(repeating: false, count: 8)
+    private var bioPoints : [chartPoint]?
+    private var selectedPoints = false
+    private var isReaction = false
+    private var activeTypingField = ""
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
@@ -138,10 +139,20 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
         }
     }
     
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        activeTypingField = "eventTextField"
+    }
+    
+    func textViewDidBeginEditing(textField: UITextView) {
+        activeTypingField = "commentBoxTextView"
+    }
+    
     @objc func keyboardWillShow(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-            if self.view.frame.origin.y == 0 {
-                self.view.frame.origin.y -= keyboardSize.height
+        if(commentBoxTextView.isFirstResponder){
+            if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+                if self.view.frame.origin.y == 0 {
+                    self.view.frame.origin.y -= keyboardSize.height
+                }
             }
         }
     }
@@ -149,6 +160,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
     @objc func keyboardWillHide(notification: NSNotification) {
         if self.view.frame.origin.y != 0 {
             self.view.frame.origin.y = 0
+            activeTypingField = ""
         }
     }
     
