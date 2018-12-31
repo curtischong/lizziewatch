@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AudioToolbox
 
 class EvalEmotionViewController: UIViewController, UITextViewDelegate {
 
@@ -24,7 +25,7 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
     
     @IBOutlet weak var commentBoxTextView: UITextView!
     
-    
+    let generator = UIImpactFeedbackGenerator(style: .light)
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
@@ -102,42 +103,67 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
     }
 
     @IBAction func normalEvalSliderMoved(_ sender: UISlider) {
+        let phrase = "How normal do you feel? "
         let sliderPos = normalEvalSlider.value
         let sliderVal = round(sliderPos*5)/5
         let realVal = Int(round(sliderPos*5))
-        normalEvalSliderLabel.text = "How normal do you feel? \(realVal)"
         sender.setValue(sliderVal, animated: true)
+        
+        if(normalEvalSliderLabel.text != phrase + "\(realVal)"){
+            normalEvalSliderLabel.text = phrase + "\(realVal)"
+            generator.impactOccurred()
+        }
     }
     @IBAction func socialEvalSliderMoved(_ sender: UISlider) {
+        let phrase = "How social do you feel? "
         let sliderPos = socialEvalSlider.value
         let sliderVal = round(sliderPos*5)/5
         let realVal = Int(round(sliderPos*5))
-        socialEvalSliderLabel.text = "How social do you feel? \(realVal)"
         sender.setValue(sliderVal, animated: true)
+        
+        if(socialEvalSliderLabel.text != phrase + "\(realVal)"){
+            socialEvalSliderLabel.text = phrase + "\(realVal)"
+            generator.impactOccurred()
+        }
     }
     
     @IBAction func exhaustedEvalSliderMoved(_ sender: UISlider) {
+        let phrase = "How exhausted do you feel? "
         let sliderPos = exhaustedEvalSlider.value
         let sliderVal = round(sliderPos*5)/5
         let realVal = Int(round(sliderPos*5))
-        exhaustedEvalSliderLabel.text = "How exhausted do you feel? \(realVal)"
         sender.setValue(sliderVal, animated: true)
+        
+        if(exhaustedEvalSliderLabel.text != phrase + "\(realVal)"){
+            exhaustedEvalSliderLabel.text = phrase + "\(realVal)"
+            generator.impactOccurred()
+        }
     }
     
     @IBAction func tiredEvalSliderMoved(_ sender: UISlider) {
+        let phrase = "How tired do you feel? "
         let sliderPos = tiredEvalSlider.value
         let sliderVal = round(sliderPos*5)/5
         let realVal = Int(round(sliderPos*5))
-        tiredEvalSliderLabel.text = "How tired do you feel? \(realVal)"
         sender.setValue(sliderVal, animated: true)
+        
+        if(tiredEvalSliderLabel.text != phrase + "\(realVal)"){
+            tiredEvalSliderLabel.text = phrase + "\(realVal)"
+            generator.impactOccurred()
+        }
     }
     
     @IBAction func happyEvalSliderMoved(_ sender: UISlider) {
+        let phrase = "How happy do you feel? "
         let sliderPos = happyEvalSlider.value
         let sliderVal = round(sliderPos*10)/10
         let realVal = Int(round(sliderPos*10)) - 5
-        happyEvalSliderLabel.text = "How happy do you feel? \(realVal)"
         sender.setValue(sliderVal, animated: true)
+
+        if(happyEvalSliderLabel.text != phrase + "\(realVal)"){
+            happyEvalSliderLabel.text = phrase + "\(realVal)"
+            generator.impactOccurred()
+        }
     }
     
     

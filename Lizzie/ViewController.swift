@@ -7,7 +7,7 @@
 // TODO: Add a button that switches between minutes and seconds... or have it automatically switch
 // TODO: improve the quering thing. Since we at most query for times 5 min on each side,
 // We can query for the 10 minute interval then crop. we don't need to requery each time
-// TODO: we should add code so you can't move the left sider further that where the right slider ends
+// TODO: when we upload the markevents we also want to upload when we made the mark event. (so we can see it's relation to the crop
 
 import UIKit
 import Charts
@@ -86,9 +86,6 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
         heartrateChart.leftAxis.labelTextColor = UIColor.white
         heartrateChart!.rightAxis.enabled = false
         heartrateChart.data?.setValueTextColor(UIColor.white)
-        
-        
-        
         
         displayDateFormatter.dateFormat = "MMM d, h:mm a"
         
