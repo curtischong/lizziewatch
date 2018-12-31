@@ -67,6 +67,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
     private var lineChartEntry = [String : [ChartDataEntry]]()
     private var highlight1 : Highlight?
     private var highlight2 : Highlight?
+    private var highlight3 : Highlight?
     // I need to refactor this and use a map
 
     
@@ -173,11 +174,6 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
             activeTypingField = ""
         }
     }
-    
-    
-    
-    
-    
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -269,7 +265,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
     // Mark: Actions
     @IBAction func selectPointsClicked(_ sender: UIButton) {
         sender.isEnabled = false
-        if(!isReaction){
+        if(isReaction){
             eventDurationSlider.isEnabled = false
         }else{
             eventDurationSlider.minimumTrackTintColor = UIColor.lightGray
@@ -279,9 +275,36 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
         timeEndSlider.isEnabled = true
         selectedPoints = true
     }
+    
+    func getAllHighlights() -> [Highlight]{
+        var allHighlights = [Highlight]()
+        if(highlight1 != nil){
+            allHighlights.append(highlight1!)
+        }
+        if(highlight2 != nil){
+            allHighlights.append(highlight2!)
+        }
+        if(highlight3 != nil){
+            allHighlights.append(highlight3!)
+        }
+        return allHighlights
+    }
+    
+    func getNewXForHightlight3() -> Int{
+        let sliderPos = eventDurationSlider.value
+        let numEntries = lineChartEntry["HR"]!.count
+        var closestIdx = Int((Double(sliderPos) * Double(numEntries)))
+        if(closestIdx == numEntries){
+            closestIdx = closestIdx - 1
+        }
+        return closestIdx
+    }
+    
     @IBAction func eventDurationSliderChanged(_ sender: UISlider) {
         if(selectedPoints){
-            
+            let closestIdx = getNewXForHightlight3()
+            highlight3 = Highlight(x: Double(lineChartEntry["HR"]![closestIdx].x), y: lineChartEntry["HR"]![closestIdx].y, dataSetIndex: 0)
+            heartrateChart.highlightValues(getAllHighlights())
         }else{
             eventDurationTextLabel.text = String(format: "%.2f", eventDurationSlider.value * 5.0) + " min"
             updateGraph()
@@ -293,28 +316,24 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
     }
     @IBAction func isReactionSwitch(_ sender: Any) {
         if(isReaction){
+            let closestIdx = getNewXForHightlight3()
+            highlight3 = Highlight(x: Double(lineChartEntry["HR"]![closestIdx].x), y: lineChartEntry["HR"]![closestIdx].y, dataSetIndex: 0)
+            heartrateChart.highlightValues(getAllHighlights())
             isReaction = false
         }else{
+            highlight3 = nil
+            heartrateChart.highlightValues(getAllHighlights())
             isReaction = true
         }
         if(selectedPoints){
             if(isReaction){
-                eventDurationSlider.isEnabled = true
-            }else{
                 eventDurationSlider.isEnabled = false
+            }else{
+                eventDurationSlider.isEnabled = true
             }
         }
     }
     
-    
-    
-    /*
-     let sliderPos = normalEvalSlider.value
-     let sliderVal = round(sliderPos*5)/5
-     let realVal = Int(round(sliderPos*5))
-     normalEvalSliderLabel.text = "\(realVal)"
-     sender.setValue(sliderVal, animated: true)
-     */
     
     @IBAction func timeStartSliderMoved(_ sender: UISlider) {
         let timeStartSliderPos = timeStartSlider.value
@@ -331,15 +350,11 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
             
             //NSLog("Index of the point closest to timeStartSlider: \(closestIdx)")
             let newX = Double(lineChartEntry["HR"]![closestIdx].x)
-            
-            if(highlight2 == nil){
-                highlight1 = Highlight(x: newX, y: lineChartEntry["HR"]![closestIdx].y, dataSetIndex: 0)
-                heartrateChart.highlightValue(highlight1)
+            if(highlight2 != nil && newX == highlight2!.x){
+                heartrateChart.highlightValues(getAllHighlights())
             }else{
-                if(newX != highlight2!.x){
-                    highlight1 = Highlight(x: newX, y: lineChartEntry["HR"]![closestIdx].y, dataSetIndex: 0)
-                    heartrateChart.highlightValues([highlight1!, highlight2!])
-                }
+                highlight1 = Highlight(x: Double(lineChartEntry["HR"]![closestIdx].x), y: lineChartEntry["HR"]![closestIdx].y, dataSetIndex: 0)
+                heartrateChart.highlightValues(getAllHighlights())
             }
         }
     }
@@ -356,17 +371,13 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
             if(closestIdx == numEntries){
                 closestIdx = closestIdx - 1
             }
-            let newX = Double(lineChartEntry["HR"]![closestIdx].x)
             //NSLog("Index of the point closest to timeEndSlider: \(closestIdx)")
-            
-            if(highlight1 == nil){
-                highlight2 = Highlight(x: newX, y: lineChartEntry["HR"]![closestIdx].y, dataSetIndex: 0)
-                heartrateChart.highlightValue(highlight2)
+            let newX = Double(lineChartEntry["HR"]![closestIdx].x)
+            if(highlight1 != nil && newX == highlight1!.x){
+                heartrateChart.highlightValues(getAllHighlights())
             }else{
-                if(newX != highlight1!.x){
-                    highlight2 = Highlight(x: newX, y: lineChartEntry["HR"]![closestIdx].y, dataSetIndex: 0)
-                    heartrateChart.highlightValues([highlight1!, highlight2!])
-                }
+                highlight2 = Highlight(x: Double(lineChartEntry["HR"]![closestIdx].x), y: lineChartEntry["HR"]![closestIdx].y, dataSetIndex: 0)
+                heartrateChart.highlightValues(getAllHighlights())
             }
         }
     }
