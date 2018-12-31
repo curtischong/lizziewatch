@@ -17,26 +17,30 @@
                         <group width="1" alignment="left" id="Py8-6M-P46">
                             <items>
                                 <label alignment="left" text="LastDate" id="lej-7B-Eb4">
+                                    <color key="textColor" red="0.0" green="0.99143940210000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
                                 </label>
                                 <label alignment="left" text="Sync" textAlignment="center" baselineAdjustment="alignCenters" id="wqB-R6-bEy">
+                                    <color key="textColor" red="0.0" green="0.99143940210000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
                                 </label>
                             </items>
                         </group>
                         <group width="1" alignment="right" spacing="5" id="Omy-g0-taR">
                             <items>
-                                <group width="74" alignment="left" id="fzF-uM-nJf">
+                                <group width="40" alignment="left" id="fzF-uM-nJf">
                                     <items>
                                         <label alignment="left" text="Bio" id="8Qo-wJ-bjj">
+                                            <color key="textColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
                                         </label>
                                         <label alignment="left" text="Mark" id="ndt-c8-eZv">
+                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
                                         </label>
                                     </items>
                                 </group>
-                                <label alignment="right" text="--" textAlignment="center" id="q60-id-Pm7">
+                                <label width="83" alignment="right" text="--" textAlignment="center" id="q60-id-Pm7">
                                     <accessibilityTraits key="accessibilityTraits" staticText="YES" notEnabled="YES"/>
                                     <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                     <fontDescription key="font" type="system" weight="medium" pointSize="60"/>
@@ -72,5 +76,5 @@
             <point key="canvasLocation" x="33.580246913580247" y="34.949238578680202"/>
         </scene>
     </scenes>
-    <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+    <color key="tintColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>

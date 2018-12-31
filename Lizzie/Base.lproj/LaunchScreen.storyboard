@@ -22,15 +22,17 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LaunchScreen" translatesAutoresizingMaskIntoConstraints="NO" id="3Pk-DW-gsO">
-                                <rect key="frame" x="87" y="233" width="200" height="200"/>
+                                <rect key="frame" x="87.5" y="233.5" width="200" height="200"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="200" id="HCd-iN-GGV"/>
+                                    <constraint firstAttribute="height" constant="200" id="xLr-XK-WyM"/>
+                                </constraints>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
                         <constraints>
-                            <constraint firstAttribute="trailingMargin" secondItem="3Pk-DW-gsO" secondAttribute="trailing" constant="72" id="Kzc-oy-fZL"/>
-                            <constraint firstItem="3Pk-DW-gsO" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leadingMargin" constant="71" id="bCA-ih-1PO"/>
-                            <constraint firstItem="3Pk-DW-gsO" firstAttribute="top" secondItem="Llm-lL-Icb" secondAttribute="bottom" constant="213" id="biC-UO-hsK"/>
-                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="3Pk-DW-gsO" secondAttribute="bottom" constant="234" id="kMt-Ka-I62"/>
+                            <constraint firstItem="3Pk-DW-gsO" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="90Y-Xa-xUP"/>
+                            <constraint firstItem="3Pk-DW-gsO" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="tfA-qY-V94"/>
                         </constraints>
                     </view>
                 </viewController>
