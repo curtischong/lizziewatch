@@ -64,6 +64,8 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
     private var selectedPoints = false
     private var isReaction = false
     private var activeTypingField = ""
+    private var lineChartEntry = [ChartDataEntry]()
+
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
@@ -76,6 +78,8 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
         super.viewDidLoad()
         NSLog("Setting things up")
         
+
+        bioPoints = queryBioSamples()
         // Colors:
         commentBoxTextView.layer.borderColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1.0).cgColor
         commentBoxTextView.layer.borderWidth = 1.0
@@ -183,40 +187,43 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
     }
     
     func updateGraph(){
-        bioPoints = queryBioSamples()
-        var lineChartEntry = [ChartDataEntry]()
+        lineChartEntry = []
 
-        var lowestAbs = 9999.0
-        var lowestIdx = 0
         for i in 0...(bioPoints!.count - 1){
             //NSLog("Cur Time: \(Double(bioPoints![i].endTime.seconds(from : markEventDate)))")
             let difference = Double(bioPoints![i].endTime.seconds(from : markEventDate))
-            //NSLog("\(difference)")
-            if(abs(difference) < lowestAbs){
-                lowestIdx = i
-                lowestAbs = abs(difference)
+            if(abs(difference) < Double(eventDurationSlider.value) * 5.0 * 60.0){
+                let value = ChartDataEntry(x: difference, y: bioPoints![i].measurement)
+                lineChartEntry.append(value)
             }
-            let value = ChartDataEntry(x: difference, y: bioPoints![i].measurement)
-            lineChartEntry.append(value)
         }
-        NSLog("The closest datapoint to the timeOfMark is \(lowestAbs) seconds away. It is the \(lowestIdx)th idx")
         
         let line = LineChartDataSet(values: lineChartEntry, label: "Heartrate")
         line.colors = [UIColor.red]
         line.drawCirclesEnabled = false
         line.drawValuesEnabled = false
-        line.setDrawHighlightIndicators(false)
+        //line.setDrawHighlightIndicators(false)
+        
+        line.highlightEnabled = true
+        line.setDrawHighlightIndicators(true)
+        line.drawHorizontalHighlightIndicatorEnabled = false
+        //line.setHighlightPerDragEnabled(false)
+        //line.setHighlightPerTapEnabled(false)
+        line.highlightColor = UIColor.white
+        //line.highlightLineWidth = 1
+        
+        //Highlight(float x, int dataSetIndex) { ... }
         
         let data = LineChartData()
         data.addDataSet(line)
         heartrateChart.data = data
-        heartrateChart.highlightValue(x: 0.0, y: bioPoints![lowestIdx].measurement, dataSetIndex: 0, callDelegate: true)
+        //heartrateChart.highlightValue(x: 0.0, y: bioPoints![lowestIdx].measurement, dataSetIndex: 0, callDelegate: true)
         //heartrateChart.chartDescription?.text = "Heartrate"
     }
     
     func queryBioSamples() -> [chartPoint]{
         
-        let numMinutesGap = eventDurationSlider.value * 5.0
+        let numMinutesGap = 5.0
         let endTime = markEventDate.addingTimeInterval(TimeInterval(numMinutesGap * 60.0))
         let startTime = markEventDate.addingTimeInterval(TimeInterval(-numMinutesGap * 60.0))
         
@@ -305,6 +312,21 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
         if(timeStartSliderPos > timeEndSliderPos){
             sender.setValue(timeEndSliderPos, animated: true)
         }
+        
+        /*for i in 0...(lineChartEntry.count - 1){
+            //NSLog("Cur Time: \(Double(bioPoints![i].endTime.seconds(from : markEventDate)))")
+            let difference = Double(bioPoints![i].endTime.seconds(from : markEventDate))
+            if(abs(difference) < Double(eventDurationSlider.value) * 5.0 * 60.0){
+                let value = ChartDataEntry(x: difference, y: bioPoints![i].measurement)
+                lineChartEntry.append(value)
+            }
+        }*/
+        NSLog("x-val: \(lineChartEntry[30].x)")
+        let highlight1 = Highlight(x: Double(lineChartEntry[30].x), y: lineChartEntry[30].y, dataSetIndex: 0)
+        //heartrateChart.highlightValue(highlight)
+
+        let highlight2 = Highlight(x: Double(lineChartEntry[35].x), y: lineChartEntry[35].y, dataSetIndex: 0)
+        heartrateChart.highlightValues([highlight1, highlight2])
     }
     
     @IBAction func timeEndSliderMoved(_ sender: UISlider) {
