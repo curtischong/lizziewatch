@@ -11,7 +11,7 @@ import HealthKit
 import CoreData
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+    class AppDelegate: UIResponder, UIApplicationDelegate {
 
     // MARK: - Properties
 

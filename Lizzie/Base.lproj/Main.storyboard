@@ -290,6 +290,10 @@
                                         <state key="normal" title="Mark Event">
                                             <color key="titleColor" red="0.0" green="0.99143940210000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
+                                        <connections>
+                                            <action selector="markEventButtonPress:" destination="K4m-UN-kIQ" eventType="touchUpInside" id="30f-Xe-FEU"/>
+                                            <action selector="markEventButtonPressed:" destination="S6L-Fo-fmf" eventType="touchUpInside" id="zsK-ui-yAr"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                             </stackView>
@@ -348,6 +352,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TbP-Gt-apH" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="S6L-Fo-fmf" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="-978.39999999999998" y="35.532233883058474"/>
         </scene>
@@ -444,11 +449,11 @@
                                             <action selector="eventDurationSliderChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="cJo-eB-U1S"/>
                                         </connections>
                                     </slider>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QWu-G5-gRf" customClass="LineChartView" customModule="Charts">
+                                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QWu-G5-gRf" customClass="LineChartView" customModule="Charts">
                                         <rect key="frame" x="10" y="148" width="355" height="233"/>
                                         <color key="backgroundColor" red="1" green="0.72469553313764035" blue="0.75450649487102506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                     </view>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="xqq-sW-mlZ">
+                                    <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="xqq-sW-mlZ">
                                         <rect key="frame" x="0.0" y="391" width="375" height="70"/>
                                         <subviews>
                                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="vZV-EL-HuV">
@@ -476,7 +481,7 @@
                                             <constraint firstAttribute="trailing" secondItem="vZV-EL-HuV" secondAttribute="trailing" constant="20" id="zyk-2l-Rck"/>
                                         </constraints>
                                     </stackView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="kOb-B6-Xlc" customClass="EmotionButtonsControl" customModule="Lizzie" customModuleProvider="target">
+                                    <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" distribution="fillProportionally" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="kOb-B6-Xlc" customClass="EmotionButtonsControl" customModule="Lizzie" customModuleProvider="target">
                                         <rect key="frame" x="10" y="471" width="355" height="36"/>
                                     </stackView>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="HSJ-Vm-MaH">

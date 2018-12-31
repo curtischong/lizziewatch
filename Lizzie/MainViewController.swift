@@ -61,7 +61,7 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
         //markEventTable.dataSource = dataSource
         
         // Used only in testing
-        // dropAllRows()
+        //dropAllRows()
         
         //TODO: I need to have a default "last synced" variable stored in system memory. so if the watch isn't on, I still get the date
     }
@@ -410,7 +410,21 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
         }
     }
         
-
+    @IBAction func markEventButtonPress(_ sender: UIButton) {
+        let entity = NSEntityDescription.entity(forEntityName: "MarkEventPhone", in: context)
+        let curMark = NSManagedObject(entity: entity!, insertInto: context)
+        curMark.setValue(Date(), forKey: "timeOfMark")
+        
+        do {
+            try context.save()
+            self.updateMarkEventCnt()
+            loadMarkEventRows()
+            NSLog("Successfully saved the current MarkEvent")
+        } catch let error{
+            NSLog("Couldn't save: the current MarkEvent with  error: \(error)")
+        }
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "evalEmotionSegue"{ // no params to pass as of this version
             if segue.destination is EvalEmotionViewController {
