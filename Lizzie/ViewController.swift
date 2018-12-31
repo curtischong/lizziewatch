@@ -122,6 +122,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
         timeStartSlider.setValue(0.0, animated: true)
         timeEndSlider.setValue(1.0, animated: true)
         
+        
         view.bringSubviewToFront(isReactionSwitch)
         NSLog("Finished Setting things up")
         updateGraph()
