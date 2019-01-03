@@ -57,6 +57,7 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
         updateBioSampleCnt()
         updateMarkEventCnt()
         loadMarkEventRows()
+        NSLog("Main View Loaded")
         // dataSource.movies = ["Terminator","Back To The Future","The Dark Knight"]
         //markEventTable.dataSource = dataSource
         
@@ -122,7 +123,7 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
     }
     
     
-    private func loadMarkEventRows(){
+    func loadMarkEventRows(){
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "MarkEventPhone")
         
         do{
@@ -308,7 +309,7 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
         }
     }
     
-    private func updateBioSampleCnt(){
+    func updateBioSampleCnt(){
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSamplePhone")
         do{
             let result = try context.fetch(request)
@@ -317,7 +318,7 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
             NSLog("Couldn't access CoreDataWatch: \(error)")
         }
     }
-    private func updateMarkEventCnt(){
+    func updateMarkEventCnt(){
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "MarkEventPhone")
         do{
             let result = try context.fetch(request)

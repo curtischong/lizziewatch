@@ -18,3 +18,4 @@ This was done intentionally because I couldn't find a way to pass a parameter to
    - Move coreData scripts into it's own script (for the watch and phone)
  - add tests
  - better error logs
+ - have the workout manager switch between running / normal activity (so the watch can adjust the sensors for better readings

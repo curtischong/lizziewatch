@@ -68,6 +68,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
     private var highlight1 : Highlight?
     private var highlight2 : Highlight?
     private var highlight3 : Highlight?
+    let generator = UIImpactFeedbackGenerator(style: .light)
     // I need to refactor this and use a map
 
     
@@ -277,17 +278,33 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
         selectedPoints = true
     }
     
+    var lastHighlight1 : Highlight? = nil
+    var lastHighlight2 : Highlight? = nil
+    var lastHighlight3 : Highlight? = nil
+    
+    
     func getAllHighlights() -> [Highlight]{
         var allHighlights = [Highlight]()
+        
+        if(highlight1 != lastHighlight1 || highlight2 != lastHighlight2 || highlight3 != lastHighlight3){
+            generator.impactOccurred()
+        }
+        
         if(highlight1 != nil){
+            lastHighlight1 = highlight1!
             allHighlights.append(highlight1!)
         }
         if(highlight2 != nil){
+            lastHighlight2 = highlight2!
             allHighlights.append(highlight2!)
         }
         if(highlight3 != nil){
+            lastHighlight3 = highlight3!
             allHighlights.append(highlight3!)
         }
+        
+        
+        
         return allHighlights
     }
     
@@ -380,6 +397,36 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
                 highlight2 = Highlight(x: Double(lineChartEntry["HR"]![closestIdx].x), y: lineChartEntry["HR"]![closestIdx].y, dataSetIndex: 0)
                 heartrateChart.highlightValues(getAllHighlights())
             }
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        NSLog("Intercepted Segue")
+        if segue.identifier == "unwindSegue2ToMainViewController"{ // no params to pass as of this version
+            if let destinationVC = segue.destination as? MainViewController {
+                destinationVC.updateMarkEventCnt()
+                destinationVC.loadMarkEventRows()
+                //NSLog("")
+            }
+        }else{
+            NSLog("Using unidentified segue: \(String(describing: segue.identifier))")
+        }
+    }
+    
+    
+    
+    @IBAction func deleteEventPressed(_ sender: UIButton) {
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "MarkEventPhone")
+        fetchRequest.predicate = NSPredicate(format: "timeOfMark == %@", markEventDate as NSDate)
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        
+        do{
+            try context.execute(deleteRequest)
+            try context.save()
+            NSLog("Deleted MarkEventPhone with time: \(markEventDate)")
+            performSegue(withIdentifier: "unwindSegue2ToMainViewController", sender: self)
+        }catch let error{
+            NSLog("Couldn't Delete MarkEventPhone with time \(markEventDate) with error: \(error)")
         }
     }
     

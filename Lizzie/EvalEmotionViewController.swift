@@ -35,6 +35,7 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
         
         normalEvalSliderLabel.text = "How normal do you feel? 0"
         normalEvalSlider.setValue(0.0, animated: true)
+        //normalEvalSlider.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
         
         socialEvalSliderLabel.text = "How social do you feel? 0"
         socialEvalSlider.setValue(0.0, animated: true)
