@@ -55,6 +55,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
     @IBOutlet weak var timeStartSlider: UISlider!
     @IBOutlet weak var timeEndSlider: UISlider!
     @IBOutlet weak var isReactionSwitch: UISwitch!
+    @IBOutlet weak var uploadButton: UIButton!
     
     var markEventDate: Date = Date()
     
@@ -264,12 +265,28 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
         return ["HR" : [chartPoint(endTime : Date(), measurement : -1)]]
     }
     
+    private func checkIfCanUpload(){
+        if(eventDurationSlider.value > timeStartSlider.value && eventDurationSlider.value < timeEndSlider.value){
+            uploadButton.isEnabled = true
+            uploadButton.setTitleColor(UIColor.cyan, for: .normal)
+        }else{
+            uploadButton.isEnabled = false
+            uploadButton.setTitleColor(UIColor.lightGray, for: .normal)
+        }
+    }
+    
+    
     // Mark: Actions
     @IBAction func selectPointsClicked(_ sender: UIButton) {
         sender.isEnabled = false
         if(isReaction){
             eventDurationSlider.isEnabled = false
         }else{
+            
+            let closestIdx = getNewXForHightlight3()
+            highlight3 = Highlight(x: Double(lineChartEntry["HR"]![closestIdx].x), y: lineChartEntry["HR"]![closestIdx].y, dataSetIndex: 0)
+            heartrateChart.highlightValues(getAllHighlights())
+            
             eventDurationSlider.minimumTrackTintColor = UIColor.lightGray
             eventDurationSlider.isEnabled = true
         }
@@ -323,6 +340,9 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
             let closestIdx = getNewXForHightlight3()
             highlight3 = Highlight(x: Double(lineChartEntry["HR"]![closestIdx].x), y: lineChartEntry["HR"]![closestIdx].y, dataSetIndex: 0)
             heartrateChart.highlightValues(getAllHighlights())
+            if(!isReaction){
+                checkIfCanUpload()
+            }
         }else{
             eventDurationTextLabel.text = String(format: "%.2f", eventDurationSlider.value * 5.0) + " min"
             updateGraph()
@@ -337,6 +357,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
             let closestIdx = getNewXForHightlight3()
             highlight3 = Highlight(x: Double(lineChartEntry["HR"]![closestIdx].x), y: lineChartEntry["HR"]![closestIdx].y, dataSetIndex: 0)
             heartrateChart.highlightValues(getAllHighlights())
+            checkIfCanUpload()
             isReaction = false
         }else{
             highlight3 = nil
@@ -359,6 +380,10 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
         if(timeStartSliderPos > timeEndSliderPos){
             sender.setValue(timeEndSliderPos, animated: true)
         }else{
+            
+            if(!isReaction){
+                checkIfCanUpload()
+            }
             
             let numEntries = lineChartEntry["HR"]!.count
             var closestIdx = Int((Double(timeStartSliderPos) * Double(numEntries)))
@@ -383,6 +408,10 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
         if(timeEndSliderPos < timeStartSliderPos){
             sender.setValue(timeStartSliderPos, animated: true)
         }else{
+            
+            if(!isReaction){
+                checkIfCanUpload()
+            }
             
             let numEntries = lineChartEntry["HR"]!.count
             var closestIdx = Int((Double(timeEndSliderPos) * Double(numEntries)))
