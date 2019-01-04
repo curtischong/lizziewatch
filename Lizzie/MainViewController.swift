@@ -9,6 +9,7 @@ import UIKit
 import CoreData
 import WatchConnectivity
 import Alamofire
+import HealthKit
 
 //TODO: find a way to show the shared folder and move the healthKitDataPoint to it
 class MainViewController: UIViewController , WCSessionDelegate, UITableViewDelegate{
@@ -58,6 +59,8 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
         updateMarkEventCnt()
         loadMarkEventRows()
         NSLog("Main View Loaded")
+        authenticateForHealthstoreData()
+        getWorkouts()
         // dataSource.movies = ["Terminator","Back To The Future","The Dark Knight"]
         //markEventTable.dataSource = dataSource
         
@@ -457,4 +460,35 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
          performSegue(withIdentifier: "contextualizeMarkEventSegue", sender: timeOfMark)
     }
 
+
+    func getWorkouts(){
+        /*workoutLoader { (workouts, error) in
+            //array.joined(separator:"-")
+            if(workouts != nil){
+                NSLog("found \(workouts!.count) workouts")
+                for workout in workouts!{
+                    NSLog("\(workout.duration)")
+                }
+
+            }else{
+                NSLog("not workouts found")
+            }
+            if(error != nil){
+                NSLog("\(error!)")
+            }
+            //self.tableView.reloadData()
+        }
+    }*/
+        
+        
+        let sampleType = HKSampleType.quantityType(forIdentifier: HKQuantityTypeIdentifier.respiratoryRate)
+        let query = HKSampleQuery.init(sampleType: sampleType!,
+                                       predicate: nil,
+                                       limit: HKObjectQueryNoLimit,
+                                       sortDescriptors: nil) { (query, results, error) in
+                                        print(results)
+        }
+        
+        healthStore.execute(query)
+    }
 }

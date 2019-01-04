@@ -42,6 +42,7 @@
 		E9AC88EA21D7555B008E2D55 /* HttpManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9AC88E921D7555B008E2D55 /* HttpManager.swift */; };
 		E9AC88EC21D75C30008E2D55 /* EvalEmotionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9AC88EB21D75C30008E2D55 /* EvalEmotionViewController.swift */; };
 		E9B9BBF621D843130025BEF2 /* DataStoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B9BBF521D843130025BEF2 /* DataStoreManager.swift */; };
+		E9F4CC2221DDF44200AA724C /* Authenticate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F4CC2121DDF44200AA724C /* Authenticate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -130,6 +131,7 @@
 		E9AC88E921D7555B008E2D55 /* HttpManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpManager.swift; sourceTree = "<group>"; };
 		E9AC88EB21D75C30008E2D55 /* EvalEmotionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvalEmotionViewController.swift; sourceTree = "<group>"; };
 		E9B9BBF521D843130025BEF2 /* DataStoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStoreManager.swift; sourceTree = "<group>"; };
+		E9F4CC2121DDF44200AA724C /* Authenticate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Authenticate.swift; sourceTree = "<group>"; };
 		EA66E66CEE61B8D7980AD7BD /* Pods-Lizzie WatchKit Extension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lizzie WatchKit Extension.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Lizzie WatchKit Extension/Pods-Lizzie WatchKit Extension.debug.xcconfig"; sourceTree = "<group>"; };
 		FC70F0B612DAB175CAE4DD72 /* Pods-Lizzie.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lizzie.release.xcconfig"; path = "Pods/Target Support Files/Pods-Lizzie/Pods-Lizzie.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -216,6 +218,7 @@
 				E98FBA4321D45D4200BF0784 /* BioSamplePhone.xcdatamodeld */,
 				E9AC88E921D7555B008E2D55 /* HttpManager.swift */,
 				E93AFEA021DA846500E34925 /* WorkoutLoader.swift */,
+				E9F4CC2121DDF44200AA724C /* Authenticate.swift */,
 			);
 			path = Lizzie;
 			sourceTree = "<group>";
@@ -551,6 +554,7 @@
 				E9B9BBF621D843130025BEF2 /* DataStoreManager.swift in Sources */,
 				E9AC88EC21D75C30008E2D55 /* EvalEmotionViewController.swift in Sources */,
 				E9AC88EA21D7555B008E2D55 /* HttpManager.swift in Sources */,
+				E9F4CC2221DDF44200AA724C /* Authenticate.swift in Sources */,
 				E959E3B021D6064D003B370E /* MarkEventTableViewCell.swift in Sources */,
 				E97008C121D2F5D2009E4463 /* WatchSessionManager.swift in Sources */,
 				E9AC88E821D72D96008E2D55 /* MarkEventDataPoint.swift in Sources */,

@@ -8,6 +8,7 @@
 // TODO: improve the quering thing. Since we at most query for times 5 min on each side,
 // We can query for the 10 minute interval then crop. we don't need to requery each time
 // TODO: when we upload the markevents we also want to upload when we made the mark event. (so we can see it's relation to the crop
+// TODO: add the fill color for the bottom of the chart slider: datset.fill = ChartFill.fill(withColor: color.withAlphaComponent(0.8))
 
 import UIKit
 import Charts
@@ -99,6 +100,9 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
         heartrateChart.highlightPerTapEnabled = false
         heartrateChart.highlightPerDragEnabled = false
         heartrateChart.pinchZoomEnabled = false
+        heartrateChart.drawBordersEnabled = true
+        heartrateChart.minOffset = 0
+        
         //heartrateChart.isDragEnabled(false)
         //heartrateChart.setHighlightPerDragEnabled(false)
         //heartrateChart!.setHighlightPerTapEnabled(false)

@@ -23,7 +23,9 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSHealthShareUsageDescription</key>
-	<string>Read your Heart Rate and present it on your Apple Watch.</string>
+	<string>Reads Health Data</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>Write Health Data</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
