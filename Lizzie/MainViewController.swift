@@ -16,7 +16,6 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
     
     
     @IBOutlet weak var syncToPhoneStateLabel: UILabel!
-    @IBOutlet weak var bioSampleCntPhone: UILabel!
     @IBOutlet weak var markEventCntPhone: UILabel!
     
     @IBOutlet weak var markEventTable: UITableView!
@@ -55,7 +54,6 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
             session?.delegate = self
             session?.activate()
         }
-        updateBioSampleCnt()
         updateMarkEventCnt()
         loadMarkEventRows()
         NSLog("Main View Loaded")
@@ -74,22 +72,6 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
     }
     
     //MARK: Actions
-    
-    // Saves the bioSamples from the watch to the phone's DataCore
-    private func storeBioSamplePhone(bioSample : HealthKitDataPoint){
-        let entity = NSEntityDescription.entity(forEntityName: "BioSamplePhone", in: context)
-        let healthSample = NSManagedObject(entity: entity!, insertInto: context)
-        healthSample.setValue(bioSample.dataPointName, forKey: "dataPointName")
-        healthSample.setValue(bioSample.startTime, forKey: "startTime")
-        healthSample.setValue(bioSample.endTime, forKey: "endTime")
-        healthSample.setValue(bioSample.measurement, forKey: "measurement")
-        
-        do {
-            try context.save()
-        } catch let error{
-            NSLog("Couldn't save: \(bioSample.printVals()) with  error: \(error)")
-        }
-    }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         fillMarkEvent(timeOfMark : dataSource.markEvents[indexPath.row])
@@ -194,8 +176,6 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
             
             if(eventType == "updateLastSync"){
                 self.updateLastSync(userInfo : userInfo)
-            }else if(eventType == "dataStoreBioSamples"){
-                self.dataStoreBioSamples(userInfo: userInfo)
             }else if(eventType == "dataStoreMarkEvents"){
                 self.dataStoreMarkEvents(userInfo: userInfo)
             }else{
@@ -209,24 +189,6 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
         dateLastSyncLabel.text = userInfo["selectBeforeTime"] as? String
     }
     
-    func dataStoreBioSamples(userInfo : [String : Any]){
-        self.syncToPhoneStateLabel.text = "Syncing"
-        let endTimeOfQuery = userInfo["endTimeOfQuery"] as! Date
-        self.dateLastSyncLabel.text = self.displayDateFormatter.string(from: endTimeOfQuery)
-        
-        let numItems = userInfo["numItems"] as! Int
-        NSLog("Number of items received: \(numItems)")
-        
-        self.storeBioSamplePhone(
-            numSamples : userInfo["numItems"] as! Int,
-            endTimeOfQuery : endTimeOfQuery,
-            samplesNames : userInfo["samplesNames"] as! [String],
-            samplesStartTime : userInfo["samplesStartTime"] as! [Date],
-            samplesEndTime : userInfo["samplesEndTime"] as! [Date],
-            samplesMeasurement : userInfo["samplesMeasurement"] as! [Double]
-        )
-    }
-    
     func dataStoreMarkEvents(userInfo : [String : Any]){
         self.syncToPhoneStateLabel.text = "Syncing"
         let endTimeOfQuery = userInfo["endTimeOfQuery"] as! Date
@@ -237,44 +199,7 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
         
         self.storeMarkEventPhone(timeOfMarks : userInfo["timeOfMarks"] as! [Date], endTimeOfQuery : endTimeOfQuery)
     }
-
     
-    // TODO: decrease lag and potential for crashing by using the batch insert method described here:
-    // https://stackoverflow.com/questions/4145888/ios-coredata-batch-insert
-    private func storeBioSamplePhone(numSamples : Int,
-                                     endTimeOfQuery : Date,
-                                     samplesNames : [String],
-                                     samplesStartTime : [Date],
-                                     samplesEndTime : [Date],
-                                     samplesMeasurement : [Double]){
-        
-        let entity = NSEntityDescription.entity(forEntityName: "BioSamplePhone", in: context)
-        
-        for i in 0..<numSamples {
-            let curBio = NSManagedObject(entity: entity!, insertInto: context)
-            curBio.setValue(samplesNames[i], forKey: "dataPointName")
-            curBio.setValue(samplesStartTime[i], forKey: "startTime")
-            curBio.setValue(samplesEndTime[i], forKey: "endTime")
-            curBio.setValue(samplesMeasurement[i], forKey: "measurement")
-        }
-        
-        do {
-            try context.save()
-            self.updateBioSampleCnt()
-            NSLog("Successfully saved the current BioSample")
-            self.syncToPhoneStateLabel.text = "Synced"
-            
-            // Tell the phone that the transfer finished
-            // TODO: if this fails I might want to ask the phone for another batch
-            // Note: I'm not sure if this force unwrap is safe
-            let dataStorePackage = ["event" : "finishedSyncing",
-                                     "syncDataType": "dataStoreBioSamples",
-                                     "selectBeforeTime": endTimeOfQuery] as [String : Any]
-            session!.transferUserInfo(dataStorePackage)
-        } catch let error{
-            NSLog("Couldn't save: the current BioSample with  error: \(error)")
-        }
-    }
     
     // Stores the received data into the phone's coredata, updates the UI (MarkEvent Table View), and notifies the watch it's done syncing
     private func storeMarkEventPhone(timeOfMarks : [Date], endTimeOfQuery : Date){
@@ -304,15 +229,6 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
         }
     }
     
-    func updateBioSampleCnt(){
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSamplePhone")
-        do{
-            let result = try context.fetch(request)
-            bioSampleCntPhone.text = String(result.count)
-        } catch let error{
-            NSLog("Couldn't access CoreDataWatch: \(error)")
-        }
-    }
     func updateMarkEventCnt(){
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "MarkEventPhone")
         do{
@@ -320,7 +236,9 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
             markEventCntPhone.text = String(result.count)
 
             if(result.count == 0){
-                uploadBioSamplesButton.isHidden = false
+                // TODO: replace this button with something more useful
+                //uploadBioSamplesButton.isHidden = false
+                uploadBioSamplesButton.isHidden = true
                 markEventTable.isHidden = true
             }else{
                 uploadBioSamplesButton.isHidden = true
@@ -332,20 +250,6 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
     }
     
     private func dropAllRows(){
-        //TODO: could merge the do catch... maybe
-        // remove BioSample rows
-        let fetchRequest1 = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSamplePhone")
-        let deleteRequest1 = NSBatchDeleteRequest(fetchRequest: fetchRequest1)
-        
-        do{
-            try context.execute(deleteRequest1)
-            try context.save()
-            NSLog("Deleted BioSamplePhone rows")
-            updateBioSampleCnt()
-        }catch let error{
-            NSLog("Couldn't Delete BioSamplePhone rows with error: \(error)")
-        }
-        
         // remove MarkEvent rows
         let fetchRequest2 = NSFetchRequest<NSFetchRequestResult>(entityName: "MarkEventPhone")
         let deleteRequest2 = NSBatchDeleteRequest(fetchRequest: fetchRequest2)
@@ -455,12 +359,12 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
     
 
     private func castHKUnitToDouble(theSample :HKQuantitySample, theUnit : HKUnit) -> Double{
-        /*if(!theSample.quantity.is(compatibleWith: theUnit)){
-         NSLog("measurement value type of %@ isn't compatible with %@" , theSample.quantityType.identifier, theUnit)
-         return -1.0
-         }else{*/
-        return theSample.quantity.doubleValue(for: theUnit)
-        //}
+        if(!theSample.quantity.is(compatibleWith: theUnit)){
+            NSLog("measurement value type of %@ isn't compatible with %@" , theSample.quantityType.identifier, theUnit)
+            return -1.0
+        }else{
+            return theSample.quantity.doubleValue(for: theUnit)
+        }
     }
     
     

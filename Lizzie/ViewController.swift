@@ -255,11 +255,6 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
         let numMinutesGap = 5.0
         let endTime = markEventDate.addingTimeInterval(TimeInterval(numMinutesGap * 60.0))
         let startTime = markEventDate.addingTimeInterval(TimeInterval(-numMinutesGap * 60.0))
-        
-
-        
-        
-            
         let predicate = HKQuery.predicateForSamples(withStart: startTime.addingTimeInterval(TimeInterval(-numMinutesGap * 60.0)), end: endTime)
         
         let query = HKSampleQuery.init(sampleType: HKSampleType.quantityType(forIdentifier: .heartRate)!,
