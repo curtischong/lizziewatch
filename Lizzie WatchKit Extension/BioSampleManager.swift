@@ -23,6 +23,7 @@ class BioSampleManager {
     // MARK: - Properties
 
     private let healthStore = HKHealthStore()
+    let showHeartrate = true
 
     weak var delegate: BioSampleManagerDelegate?
 
@@ -124,7 +125,9 @@ class BioSampleManager {
         switch sample.quantityType.identifier{
             case "HKQuantityTypeIdentifierHeartRate":
                 measurementValue = castHKUnitToDouble(theSample : sample, theUnit: HKUnit.beatsPerMinute())
-                delegate?.updateHeartRate(didChangeTo: measurementValue)
+                if(showHeartrate){
+                    delegate?.updateHeartRate(didChangeTo: measurementValue)
+                }
                 dataPointName = "HR"
             case "HKQuantityTypeIdentifierVO2Max":
                 measurementValue = castHKUnitToDouble(theSample : sample, theUnit: HKUnit(from: "ml/kg*min"))
@@ -138,11 +141,12 @@ class BioSampleManager {
         let endTime = sample.endDate
         let measurement = measurementValue
 
-        self.storeBioSampleWatch(sampleName : dataPointName, sampleStartTime : startTime, sampleEndTime : endTime, sampleMeasurement : measurement)
+        //self.storeBioSampleWatch(sampleName : dataPointName, sampleStartTime : startTime, sampleEndTime : endTime, sampleMeasurement : measurement)
     }
     
     // TODO: add a test for this function
     // Saves the bioSamples to the watch's DataCore
+    /*
     private func storeBioSampleWatch(sampleName : String, sampleStartTime : Date, sampleEndTime : Date, sampleMeasurement : Double){
         let entity = NSEntityDescription.entity(forEntityName: "BioSampleWatch", in: context)
         let healthSample = NSManagedObject(entity: entity!, insertInto: context)
@@ -156,5 +160,5 @@ class BioSampleManager {
         } catch let error{
             NSLog("Couldn't save object: with attributes: \(sampleStartTime), \(sampleStartTime), \(sampleEndTime), \(sampleMeasurement), with  error: \(error)")
         }
-    }
+    }*/
 }

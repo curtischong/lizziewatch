@@ -30,10 +30,6 @@
                             <items>
                                 <group width="40" alignment="left" id="fzF-uM-nJf">
                                     <items>
-                                        <label alignment="left" text="Bio" id="8Qo-wJ-bjj">
-                                            <color key="textColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                            <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
-                                        </label>
                                         <label alignment="left" text="Mark" id="ndt-c8-eZv">
                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
@@ -63,7 +59,6 @@
                         </button>
                     </items>
                     <connections>
-                        <outlet property="bioSampleCntWatch" destination="8Qo-wJ-bjj" id="kcB-NH-p3s"/>
                         <outlet property="controlButton" destination="iNm-FD-Dqu" id="eMe-9U-iM4"/>
                         <outlet property="dateOfSync" destination="lej-7B-Eb4" id="oZ9-rn-Vea"/>
                         <outlet property="heartRateLabel" destination="q60-id-Pm7" id="gxC-k9-Omc"/>

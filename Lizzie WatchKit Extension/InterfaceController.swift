@@ -19,7 +19,7 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
     @IBOutlet var controlButton: WKInterfaceButton!
     @IBOutlet var markEventButton: WKInterfaceButton!
     
-    @IBOutlet var bioSampleCntWatch: WKInterfaceLabel!
+
     @IBOutlet var markEventCntWatch: WKInterfaceLabel!
     @IBOutlet var syncingStateLabel: WKInterfaceLabel!
     @IBOutlet var dateOfSync: WKInterfaceLabel!
@@ -200,13 +200,13 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
                 let selectBeforeTime = Date() as NSDate
                 NSLog("Syncing data before time: \(selectBeforeTime)")
                 dateOfSync.setText(displayDateFormatter.string(from: selectBeforeTime as Date))
-                let request1 = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSampleWatch")
-                request1.predicate = NSPredicate(format: "endTime < %@", selectBeforeTime)
+                //let request1 = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSampleWatch")
+                //request1.predicate = NSPredicate(format: "endTime < %@", selectBeforeTime)
                 let request2 = NSFetchRequest<NSFetchRequestResult>(entityName: "MarkEventWatch")
                 request2.predicate = NSPredicate(format: "timeOfMark < %@", selectBeforeTime)
                 
                 var bothEmpty = true
-                do{
+                /*do{
                     let result1 = try context.fetch(request1)
                     let numItems = result1.count
                     if(numItems > 0 ){
@@ -240,7 +240,7 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
                     }
                 } catch let error{
                     NSLog("Couldn't fetch BioSampleWatch with error: \(error)")
-                }
+                }*/
                 // Now send the MarkEvents
                 do{
                     let result2 = try context.fetch(request2)
@@ -331,7 +331,7 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
     }
     
     private func updateBioSampleCnt(){
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSampleWatch")
+        /*let request = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSampleWatch")
         do{
             let result = try context.fetch(request)
             bioSampleCntWatch.setText(String(result.count))
@@ -340,7 +340,7 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
             }
         } catch let error{
             NSLog("Couldn't access CoreDataWatch: \(error)")
-        }
+        }*/
     }
     private func updateMarkEventCnt(){
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "MarkEventWatch")
