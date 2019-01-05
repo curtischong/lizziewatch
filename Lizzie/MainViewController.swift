@@ -464,16 +464,45 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
     }
 
     
-    
+
+    private func castHKUnitToDouble(theSample :HKQuantitySample, theUnit : HKUnit) -> Double{
+        /*if(!theSample.quantity.is(compatibleWith: theUnit)){
+         NSLog("measurement value type of %@ isn't compatible with %@" , theSample.quantityType.identifier, theUnit)
+         return -1.0
+         }else{*/
+        return theSample.quantity.doubleValue(for: theUnit)
+        //}
+    }
     
     
     private func manage_samples(samples: [HKQuantitySample]) {
-        //1. Verify that the energy quantity type is still available to HealthKit.
+        for sample in samples{
+            var measurementValue = -1.0
+            var dataPointName = "-1"
+            switch sample.quantityType.identifier{
+            case "HKQuantityTypeIdentifierHeartRate":
+                measurementValue = castHKUnitToDouble(theSample : sample, theUnit: HKUnit.beatsPerMinute())
+                dataPointName = "HR"
+            case "HKQuantityTypeIdentifierVO2Max":
+                measurementValue = castHKUnitToDouble(theSample : sample, theUnit: HKUnit(from: "ml/kg*min"))
+                dataPointName = "O2"
+            default:
+                //TODO: find a better way to report this error
+                NSLog("Can't find a quantity type for: %@", sample.quantityType.identifier)
+            }
+        
+            let startTime = sample.startDate
+            let endTime = sample.endDate
+            let measurement = measurementValue
+            
+            NSLog("\(dataPointName) ... \(startTime) ... \(endTime) ... \(measurement) ... ")
+        }
     }
     
     
 
     func getWorkouts(){
+        NSLog("Querying for healthkit datapoints")
         let startDate = NSDate()
         let endDate = startDate.addingTimeInterval(-3600)
         
@@ -485,14 +514,23 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
                                        limit: HKObjectQueryNoLimit,
                                        sortDescriptors: nil) { (query, results, error) in
                                         
+                                        if(error != nil){
+                                            NSLog("couldn't get healthquery data with error: \(error)")
+                                        }
                                         
                                         guard let samples = results as? [HKQuantitySample] else {
                                             fatalError("An error occured fetching the user's tracked food. In your app, try to handle this error gracefully. The error was: \(error?.localizedDescription)");
                                         }
-                                        
+                                        NSLog("found \(samples.count) health samples")
                                         self.manage_samples(samples : samples)
-        
-        healthStore.execute(query)
         }
+        healthStore.execute(query)
     }
+}
+extension HKUnit {
+    
+    static func beatsPerMinute() -> HKUnit {
+        return HKUnit.count().unitDivided(by: HKUnit.minute())
+    }
+    
 }

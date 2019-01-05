@@ -16,6 +16,7 @@ import Alamofire
 import SwiftyJSON
 import WatchConnectivity
 import CoreData
+import HealthKit
 
 
 struct chartPoint{
@@ -86,7 +87,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
         NSLog("Setting things up")
         
 
-        bioPoints = queryBioSamples()
+        queryBioSamples()
         // Colors:
         commentBoxTextView.layer.borderColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1.0).cgColor
         commentBoxTextView.layer.borderWidth = 1.0
@@ -112,7 +113,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
         // IOS Setup
         eventTextField.delegate = self
         eventTextField.placeholder = self.displayDateFormatter.string(from: markEventDate)
-
+        
         // Textview
         commentBoxTextView.delegate = self
         commentBoxTextView.text = "Comments"
@@ -131,7 +132,6 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
         
         view.bringSubviewToFront(isReactionSwitch)
         NSLog("Finished Setting things up")
-        updateGraph()
     }
     
     // textview functions
@@ -234,39 +234,85 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
         //heartrateChart.chartDescription?.text = "Heartrate"
     }
     
-    func queryBioSamples() -> [String : [chartPoint]]{
+    
+    
+    
+    
+    private func castHKUnitToDouble(theSample :HKQuantitySample, theUnit : HKUnit) -> Double{
+        /*if(!theSample.quantity.is(compatibleWith: theUnit)){
+         NSLog("measurement value type of %@ isn't compatible with %@" , theSample.quantityType.identifier, theUnit)
+         return -1.0
+         }else{*/
+        return theSample.quantity.doubleValue(for: theUnit)
+        //}
+    }
+    
+    
+    
+    
+    func queryBioSamples(){
         
         let numMinutesGap = 5.0
         let endTime = markEventDate.addingTimeInterval(TimeInterval(numMinutesGap * 60.0))
         let startTime = markEventDate.addingTimeInterval(TimeInterval(-numMinutesGap * 60.0))
         
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSamplePhone")
-        //"endTime => %@ AND endTime <= %@ AND (dataPointName == HR OR dataPointName == X)"
-        //TODO: add breathing?
-        request.predicate = NSPredicate(format: "dataPointName == %@ AND startTime >= %@ AND endTime <= %@", "HR", startTime as NSDate, endTime as NSDate)
+
         
-        do{
-            let result = try context.fetch(request)
-            let numItems = result.count
-            NSLog("Found \(numItems) items for the Chart")
-            if(numItems > 0 ){
-                var HRPoints = Array<chartPoint>()
-                
-                for sample in result as! [NSManagedObject] {
-                    let curChartPoint = chartPoint(
-                        endTime : sample.value(forKey: "endTime") as! Date,
-                        measurement : sample.value(forKey: "measurement") as! Double
-                    )
-                    HRPoints.append(curChartPoint)
-                    //NSLog("\(sample.value(forKey: "endTime"))")
-                }
-                HRPoints = HRPoints.sorted{ $1.endTime > $0.endTime }
-                return ["HR" : HRPoints]
-            }
-        }catch let error{
-            NSLog("Couldn't read BioSamples between the times: \(startTime) and \(endTime) with error: \(error)")
+        
+            
+        let predicate = HKQuery.predicateForSamples(withStart: startTime.addingTimeInterval(TimeInterval(-numMinutesGap * 60.0)), end: endTime)
+        
+        let query = HKSampleQuery.init(sampleType: HKSampleType.quantityType(forIdentifier: .heartRate)!,
+                                       predicate: predicate,
+                                       limit: HKObjectQueryNoLimit,
+                                       sortDescriptors: nil) { (query, results, error) in
+                                        
+                                        if(error != nil){
+                                            NSLog("couldn't get healthquery data with error: \(error!)")
+                                        }
+                                        
+                                        guard let samples = results as? [HKQuantitySample] else {
+                                            fatalError("An error occured fetching the user's tracked food. In your app, try to handle this error gracefully. The error was: \(error!.localizedDescription)");
+                                        }
+                                        NSLog("found \(samples.count) health samples")
+                                        
+                                        var HRPoints = Array<chartPoint>()
+                                        if(samples.count > 0){
+                                            for sample in samples{
+                                                var measurementValue = -1.0
+                                                var dataPointName = "-1"
+                                                switch sample.quantityType.identifier{
+                                                case "HKQuantityTypeIdentifierHeartRate":
+                                                    measurementValue = self.castHKUnitToDouble(theSample : sample, theUnit: HKUnit.beatsPerMinute())
+                                                    dataPointName = "HR"
+                                                case "HKQuantityTypeIdentifierVO2Max":
+                                                    measurementValue = self.castHKUnitToDouble(theSample : sample, theUnit: HKUnit(from: "ml/kg*min"))
+                                                    dataPointName = "O2"
+                                                default:
+                                                    //TODO: find a better way to report this error
+                                                    NSLog("Can't find a quantity type for: %@", sample.quantityType.identifier)
+                                                }
+                                                
+                                                
+                                                let sampleEndTime = sample.endDate
+                                                let sampleMeasurement = measurementValue
+                                                
+                                                if(sampleEndTime > startTime && sampleEndTime < endTime){
+                                                    let curChartPoint = chartPoint(
+                                                        endTime : sampleEndTime,
+                                                        measurement : sampleMeasurement
+                                                    )
+                                                    HRPoints.append(curChartPoint)
+                                                }
+                                            }
+                                        }else{
+                                            HRPoints.append(chartPoint(endTime : Date(), measurement : -1))
+                                        }
+                                        HRPoints = HRPoints.sorted{ $1.endTime > $0.endTime }
+                                        self.bioPoints = ["HR" : HRPoints]
+                                        self.updateGraph()
         }
-        return ["HR" : [chartPoint(endTime : Date(), measurement : -1)]]
+        healthStore.execute(query)
     }
     
     private func checkIfCanUpload(){
@@ -282,21 +328,28 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
     
     // Mark: Actions
     @IBAction func selectPointsClicked(_ sender: UIButton) {
-        sender.isEnabled = false
-        if(isReaction){
-            eventDurationSlider.isEnabled = false
+        // since heartrate is the most frequent datapoint we can safely assume that if
+        // there are no heartrate samples, then there are no other samples
+        
+        if(bioPoints["HR"]!.count > 0){
+            sender.isEnabled = false
+            if(isReaction){
+                eventDurationSlider.isEnabled = false
+            }else{
+                
+                let closestIdx = getNewXForHightlight3()
+                highlight3 = Highlight(x: Double(lineChartEntry["HR"]![closestIdx].x), y: lineChartEntry["HR"]![closestIdx].y, dataSetIndex: 0)
+                heartrateChart.highlightValues(getAllHighlights())
+                
+                eventDurationSlider.minimumTrackTintColor = UIColor.lightGray
+                eventDurationSlider.isEnabled = true
+            }
+            timeStartSlider.isEnabled = true
+            timeEndSlider.isEnabled = true
+            selectedPoints = true
         }else{
-            
-            let closestIdx = getNewXForHightlight3()
-            highlight3 = Highlight(x: Double(lineChartEntry["HR"]![closestIdx].x), y: lineChartEntry["HR"]![closestIdx].y, dataSetIndex: 0)
-            heartrateChart.highlightValues(getAllHighlights())
-            
-            eventDurationSlider.minimumTrackTintColor = UIColor.lightGray
-            eventDurationSlider.isEnabled = true
+            NSLog("No Heartrate data! Can't select points")
         }
-        timeStartSlider.isEnabled = true
-        timeEndSlider.isEnabled = true
-        selectedPoints = true
     }
     
     var lastHighlight1 : Highlight? = nil

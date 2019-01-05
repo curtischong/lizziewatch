@@ -9,33 +9,13 @@
 import Foundation
 import HealthKit
 
-/*
-func authenticateForHealthstoreData(){
-    var shareTypes = Set<HKSampleType>()
-    shareTypes.insert(HKSampleType.workoutType())
-    
-    var readTypes = Set<HKObjectType>()
-    readTypes.insert(HKObjectType.workoutType())//,
-                     //HKQuantityType.quantityType(forIdentifier: .respiratoryRate))
-    
-    healthStore.requestAuthorization(toShare: shareTypes, read: readTypes) { (success, error) -> Void in
-        if success {
-            print("success")
-        } else {
-            print("failure")
-        }
-        
-        if let error = error { print(error) }
-    }
-}*/
-
 let healthStore = HKHealthStore()
 
 
 func authenticateForHealthstoreData() {
         // Create health store.
     if #available(iOS 11.0, *) {
-        NSLog("can read vo2max!")
+        NSLog("can read all healthStore Datapoints!")
         // Check if there is health data available.
         if (!HKHealthStore.isHealthDataAvailable()) {
             print("No health data is available.")
@@ -79,7 +59,7 @@ func authenticateForHealthstoreData() {
             // Delegate success.
         }
     } else {
-        NSLog("can't read vo2max :(")
+        NSLog("can't read all healthStore Datapoints. App won't read any healthstore Datapoints")
         // Fallback on earlier versions
     }
 }
