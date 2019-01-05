@@ -97,8 +97,6 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
                 }else{
                     self.sendDataStore()
                 }
-           // }
-            
         }else{
             NSLog("ERROR the activation state is not activated")
         }

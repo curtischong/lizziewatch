@@ -8,24 +8,43 @@
 
 import Foundation
 
-
-struct defaultsKeys {
-    static let keyOne = "firstStringKey"
-    static let keyTwo = "secondStringKey"
+struct ConfigObj {
+    var dateLastSyncedWithWatch : Date?//= "firstStringKey"
+    var dateLastSyncedWithServer : Date?// = "secondStringKey"
+    
+    init(dateLastSyncedWithWatch: Date? = nil, dateLastSyncedWithServer: Date? = nil) {
+        self.dateLastSyncedWithWatch = dateLastSyncedWithWatch
+        self.dateLastSyncedWithServer = dateLastSyncedWithServer
+    }
 }
 
-func setSettings(){
+func setSettings(curConfigObj : ConfigObj){
+    //defaults.set("Another String Value", forKey: appContextFormatter.string( from: curConfigObj.dateLastSyncedWithServer!))
+    let appContextFormatter = DateFormatter()
+    appContextFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
     let defaults = UserDefaults.standard
-    defaults.set("Some String Value", forKey: defaultsKeys.keyOne)
-    defaults.set("Another String Value", forKey: defaultsKeys.keyTwo)
+    if(curConfigObj.dateLastSyncedWithWatch != nil){
+        defaults.set(appContextFormatter.string( from: curConfigObj.dateLastSyncedWithWatch!), forKey: "dateLastSyncedWithWatch")
+    }
+    if(curConfigObj.dateLastSyncedWithServer != nil){
+        defaults.set(appContextFormatter.string( from: curConfigObj.dateLastSyncedWithServer!), forKey: "dateLastSyncedWithServer")
+    }
 }
 
-func getSettings(){
+func getSettings() -> ConfigObj{
+    //defaults.set("Another String Value", forKey: appContextFormatter.string( from: curConfigObj.dateLastSyncedWithServer!))
+    let appContextFormatter = DateFormatter()
+    appContextFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+    
+    
+    var newConfigObj = ConfigObj()
+    
     let defaults = UserDefaults.standard
-    if let stringOne = defaults.string(forKey: defaultsKeys.keyOne) {
-        print(stringOne) // Some String Value
+    if let dateLastSyncedWithWatch = defaults.string(forKey: "dateLastSyncedWithWatch") {
+        newConfigObj.dateLastSyncedWithWatch = appContextFormatter.date(from: dateLastSyncedWithWatch)
     }
-    if let stringTwo = defaults.string(forKey: defaultsKeys.keyTwo) {
-        print(stringTwo) // Another String Value
+    if let dateLastSyncedWithServer = defaults.string(forKey: "dateLastSyncedWithServer") {
+        newConfigObj.dateLastSyncedWithServer = appContextFormatter.date(from: dateLastSyncedWithServer)
     }
+    return newConfigObj
 }

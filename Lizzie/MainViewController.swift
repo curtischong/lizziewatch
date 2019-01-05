@@ -62,6 +62,19 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
         authenticateForHealthstoreData()
 
         getWorkouts()
+        
+        
+        let appSettings = getSettings()
+        if(appSettings.dateLastSyncedWithWatch != nil){
+            dateLastSyncLabel.text = displayDateFormatter.string(from: appSettings.dateLastSyncedWithWatch!)
+        }
+        
+        
+        
+        
+        
+        
+        
         // dataSource.movies = ["Terminator","Back To The Future","The Dark Knight"]
         //markEventTable.dataSource = dataSource
         
@@ -92,20 +105,6 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         fillMarkEvent(timeOfMark : dataSource.markEvents[indexPath.row])
     }
-    
-    //prepareForSegue:sender:
-    
-    /*
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        let alertController = UIAlertController(title: "Hint", message: "You have selected row \(indexPath.row).", preferredStyle: .alert)
-        
-        let alertAction = UIAlertAction(title: "Ok", style: .cancel, handler: nil)
-        
-        alertController.addAction(alertAction)
-        
-        present(alertController, animated: true, completion: nil)
-    }*/
     
     func removeMarkEvent(timeOfMark : Date){
         //TODO: google for an alternative to BatchDelete
@@ -300,6 +299,9 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
             self.updateMarkEventCnt()
             NSLog("Successfully saved the current MarkEvent")
             self.syncToPhoneStateLabel.text = "Synced"
+
+            let appSettings = ConfigObj(dateLastSyncedWithWatch : endTimeOfQuery)
+            setSettings(curConfigObj : appSettings)
             
             // TODO: note: the concerns raised above applies to here too
             let dataStorePackage = ["event" : "finishedSyncing",
@@ -464,97 +466,14 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
     
     
     
-    /*
-    private func manage_samples(workout: HKWorkout) {
+    
+    private func manage_samples(samples: [HKQuantitySample]) {
         //1. Verify that the energy quantity type is still available to HealthKit.
-        guard let energyQuantityType = HKSampleType.quantityType(
-            forIdentifier: .activeEnergyBurned) else {
-                fatalError("*** Energy Burned Type Not Available ***")
-        }
-        
-        //2. Create a sample for each PrancerciseWorkoutInterval
-        let samples: [HKSample] = workout.in { interval in
-            let calorieQuantity = HKQuantity(unit: .kilocalorie(),
-                                             doubleValue: .quantity.doubleValue(.kilocalorie())
-            
-            return HKCumulativeQuantitySeriesSample(type: energyQuantityType,
-                                                    quantity: calorieQuantity,
-                                                    start: interval.start,
-                                                    end: interval.end)
-        })
-    }*/
-
-    
-    
+    }
     
     
 
     func getWorkouts(){
-        /*workoutLoader { (workouts, error) in
-            //array.joined(separator:"-")
-            if(workouts != nil){
-                NSLog("found \(workouts!.count) workouts")
-                for workout in workouts!{
-                    NSLog("\(workout.duration)")
-                }
-
-            }else{
-                NSLog("not workouts found")
-            }
-            if(error != nil){
-                NSLog("\(error!)")
-            }
-            //self.tableView.reloadData()
-    
-    }*/
-        
-        /*
-         let startDate = NSDate()
-         let endDate = start.dateByAddingTimeInterval(-3600)
-         
-         let predicate = HKQuery.predicateForSamplesWithStartDate(startDate, endDate: endDate, options: .StrictStartDate)
-        */
-        
-        
-        
-        //let sampleType = HKSampleType.quantityType(forIdentifier: HKQuantityTypeIdentifier.respiratoryRate)
-        /*
-        let query = HKSampleQuery.init(sampleType: .workoutType(),
-                                       predicate: nil,
-                                       limit: HKObjectQueryNoLimit,
-                                       sortDescriptors: nil) { (query, results, error) in
-                                        
-                                        
-                                        if let results = results {
-                                            for result in results {
-                                                if let workout = result as? HKWorkout {
-                                                    // Here's a HKWorkout object
-                                                    self.manage_samples(workout : workout)
-                                                }
-                                            }
-                                        }
-                                        else {
-                                            // No results were returned, check the error
-                                            NSLog("\(error!)")
-                                        }
-                                        
-                                        
-                                        //
-                                        
-                                        if(results == nil){
-                                            NSLog("no workout results returned")
-                                        }else{
-                                            if(results!.count > 0){
-                                                manage_samples(workout: results!)
-                                            }else{
-                                                NSLog("found 0 samples")
-                                            }
-                                        }
-                                        //
-        }
-        
-        healthStore.execute(query)*/
-        
         let startDate = NSDate()
         let endDate = startDate.addingTimeInterval(-3600)
         
@@ -571,23 +490,9 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
                                             fatalError("An error occured fetching the user's tracked food. In your app, try to handle this error gracefully. The error was: \(error?.localizedDescription)");
                                         }
                                         
-                                        
-                                        NSLog("\(samples.count)")
-                                        
-                                        
-                                        
-                                        /*
-                                         if(results == nil){
-                                         NSLog("no workout results returned")
-                                         }else{
-                                         if(results!.count > 0){
-                                         manage_samples(workout: results!)
-                                         }else{
-                                         NSLog("found 0 samples")
-                                         }
-                                         }*/
-        }
+                                        self.manage_samples(samples : samples)
         
         healthStore.execute(query)
+        }
     }
 }
