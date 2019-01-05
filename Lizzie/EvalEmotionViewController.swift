@@ -27,15 +27,13 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
     @IBOutlet weak var commentBoxTextView: UITextView!
     
     private var timeStartFillingForm : Date?
-    private var normalSliderRealVal = -100
-    private var socialSliderRealVal = -100
-    private var exhaustedSliderRealVal = -100
-    private var tiredSliderRealVal = -100
-    private var happySliderRealVal = -100
+    private var normalSliderRealVal = 0
+    private var socialSliderRealVal = 0
+    private var exhaustedSliderRealVal = 0
+    private var tiredSliderRealVal = 0
+    private var happySliderRealVal = 0
     
-    
-    
-    
+    let appContextFormatter = DateFormatter()
     
     
     let generator = UIImpactFeedbackGenerator(style: .light)
@@ -45,6 +43,7 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        appContextFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         timeStartFillingForm = Date()
         normalEvalSliderLabel.text = "How normal do you feel? 0"
         normalEvalSlider.setValue(0.0, animated: true)
@@ -182,18 +181,18 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
     
     @IBAction func uploadResponseButtonPressed(_ sender: Any) {
         let parameters: Parameters = [
-            "timeStartFillingForm": timeStartFillingForm! ,
-            "timeEndFillingForm": Date(),
-            "normalEval": normalEvalSliderLabel,
-            "socialEval": socialEvalSliderLabel,
-            "exhaustedEval": exhaustedEvalSliderLabel,
-            "tiredEval": tiredEvalSliderLabel,
-            "happyEval": happyEvalSliderLabel,
+            "timeStartFillingForm": appContextFormatter.string(from: timeStartFillingForm!),
+            "timeEndFillingForm": appContextFormatter.string(from: Date()),
+            "normalEval": String(normalSliderRealVal),
+            "socialEval": String(socialSliderRealVal),
+            "exhaustedEval": String(exhaustedSliderRealVal),
+            "tiredEval": String(tiredSliderRealVal),
+            "happyEval": String(happySliderRealVal),
             "comments" : commentBoxTextView.text
         ]
         //let config = readConfig()
         //print(config["ip"])
-        
+        let ctx = self
         
         AF.request("http://10.8.0.2:9000/upload_emotion_evaluation",
                    method: .post,
@@ -201,17 +200,37 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
                    encoding: JSONEncoding()
             ).responseJSON { response in
                 
-                print("Request: \(String(describing: response.request))")   // original url request
-                print("Response: \(String(describing: response.response))") // http url response
-                print("Result: \(response.result)")                         // response serialization result
+                NSLog("response received")
+                ctx.performSegue(withIdentifier: "unwindSegueToMainViewController", sender: ctx)
+                //TODO: FIX THIS CALLBACK THING
                 
-                /*if let json = response.result.value {
-                 print("JSON: \(json)") // serialized json response
-                 }
-                 
-                 if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
-                 print("Data: \(utf8Text)") // original server data as UTF8 string
-                 }*/
+                
+                /*print("asdasd")
+                print(response.request)
+                if let status = response.response?.statusCode {
+                    switch(status){
+                    case 200:
+                        print("example success")
+                    default:
+                        print("error with response status: \(status)")
+                    }
+                }
+                
+                
+                print("ioioi")
+                if let result = response.result.value {
+                    let JSON = result as! NSDictionary
+                    print(JSON)
+                }else{
+                    print(response.result)
+                }*/
+                
+                
+                
+                
+                //print("Request: \(String(describing: response.request))")   // original url request
+                //print("Response: \(String(describing: response.response))") // http url response
+                
         }
     }
 }

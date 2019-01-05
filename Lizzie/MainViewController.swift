@@ -388,7 +388,7 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
             let endTime = sample.endDate
             let measurement = measurementValue
             
-            NSLog("\(dataPointName) ... \(startTime) ... \(endTime) ... \(measurement) ... ")
+            //NSLog("\(dataPointName) ... \(startTime) ... \(endTime) ... \(measurement) ... ")
         }
     }
     
