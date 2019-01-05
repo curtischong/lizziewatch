@@ -60,6 +60,7 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
         loadMarkEventRows()
         NSLog("Main View Loaded")
         authenticateForHealthstoreData()
+
         getWorkouts()
         // dataSource.movies = ["Terminator","Back To The Future","The Dark Knight"]
         //markEventTable.dataSource = dataSource
@@ -460,6 +461,33 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
          performSegue(withIdentifier: "contextualizeMarkEventSegue", sender: timeOfMark)
     }
 
+    
+    
+    
+    /*
+    private func manage_samples(workout: HKWorkout) {
+        //1. Verify that the energy quantity type is still available to HealthKit.
+        guard let energyQuantityType = HKSampleType.quantityType(
+            forIdentifier: .activeEnergyBurned) else {
+                fatalError("*** Energy Burned Type Not Available ***")
+        }
+        
+        //2. Create a sample for each PrancerciseWorkoutInterval
+        let samples: [HKSample] = workout.in { interval in
+            let calorieQuantity = HKQuantity(unit: .kilocalorie(),
+                                             doubleValue: .quantity.doubleValue(.kilocalorie())
+            
+            return HKCumulativeQuantitySeriesSample(type: energyQuantityType,
+                                                    quantity: calorieQuantity,
+                                                    start: interval.start,
+                                                    end: interval.end)
+        })
+    }*/
+
+    
+    
+    
+    
 
     func getWorkouts(){
         /*workoutLoader { (workouts, error) in
@@ -477,16 +505,87 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
                 NSLog("\(error!)")
             }
             //self.tableView.reloadData()
-        }
+    
     }*/
         
+        /*
+         let startDate = NSDate()
+         let endDate = start.dateByAddingTimeInterval(-3600)
+         
+         let predicate = HKQuery.predicateForSamplesWithStartDate(startDate, endDate: endDate, options: .StrictStartDate)
+        */
         
-        let sampleType = HKSampleType.quantityType(forIdentifier: HKQuantityTypeIdentifier.respiratoryRate)
-        let query = HKSampleQuery.init(sampleType: sampleType!,
+        
+        
+        //let sampleType = HKSampleType.quantityType(forIdentifier: HKQuantityTypeIdentifier.respiratoryRate)
+        /*
+        let query = HKSampleQuery.init(sampleType: .workoutType(),
                                        predicate: nil,
                                        limit: HKObjectQueryNoLimit,
                                        sortDescriptors: nil) { (query, results, error) in
-                                        print(results)
+                                        
+                                        
+                                        if let results = results {
+                                            for result in results {
+                                                if let workout = result as? HKWorkout {
+                                                    // Here's a HKWorkout object
+                                                    self.manage_samples(workout : workout)
+                                                }
+                                            }
+                                        }
+                                        else {
+                                            // No results were returned, check the error
+                                            NSLog("\(error!)")
+                                        }
+                                        
+                                        
+                                        //
+                                        
+                                        if(results == nil){
+                                            NSLog("no workout results returned")
+                                        }else{
+                                            if(results!.count > 0){
+                                                manage_samples(workout: results!)
+                                            }else{
+                                                NSLog("found 0 samples")
+                                            }
+                                        }
+                                        //
+        }
+        
+        healthStore.execute(query)*/
+        
+        let startDate = NSDate()
+        let endDate = startDate.addingTimeInterval(-3600)
+        
+        let predicate = HKQuery.predicateForSamples(withStart: endDate as Date, end: startDate as Date)
+        
+        
+        let query = HKSampleQuery.init(sampleType: HKSampleType.quantityType(forIdentifier: .heartRate)!,
+                                       predicate: predicate,
+                                       limit: HKObjectQueryNoLimit,
+                                       sortDescriptors: nil) { (query, results, error) in
+                                        
+                                        
+                                        guard let samples = results as? [HKQuantitySample] else {
+                                            fatalError("An error occured fetching the user's tracked food. In your app, try to handle this error gracefully. The error was: \(error?.localizedDescription)");
+                                        }
+                                        
+                                        
+                                        NSLog("\(samples.count)")
+                                        
+                                        
+                                        
+                                        /*
+                                         if(results == nil){
+                                         NSLog("no workout results returned")
+                                         }else{
+                                         if(results!.count > 0){
+                                         manage_samples(workout: results!)
+                                         }else{
+                                         NSLog("found 0 samples")
+                                         }
+                                         }*/
         }
         
         healthStore.execute(query)

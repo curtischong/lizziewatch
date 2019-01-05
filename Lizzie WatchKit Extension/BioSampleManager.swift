@@ -51,6 +51,8 @@ class BioSampleManager {
         
     }
     
+    // https://stackoverflow.com/questions/46835438/how-to-save-an-array-of-hkquantitysamples-heart-rate-to-a-workout
+    
     func buildQuery(HKIdentifier : HKQuantityTypeIdentifier){
         // queries for a specific HK sample
         guard let quantityType = HKObjectType.quantityType(forIdentifier: HKIdentifier) else { return }
@@ -131,8 +133,6 @@ class BioSampleManager {
                 //TODO: find a better way to report this error
                 NSLog("Can't find a quantity type for: %@", sample.quantityType.identifier)
         }
-        
-        // WE DON'T NEED THE HEALTHKITDATAPOINT CLASS WE CAN JUST PASS IN ARRAYS. LESS TYPE CONVERSION = MORE BATTERY SAVED
 
         let startTime = sample.startDate
         let endTime = sample.endDate

@@ -29,6 +29,7 @@
 		BF7B3D8538CA396EB3585705 /* Pods_Lizzie_WatchKit_App.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F3E209A9B3ADEA685359A2F /* Pods_Lizzie_WatchKit_App.framework */; };
 		E919691F21CF3F1A00E3D1BF /* EmotionSelectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E919691E21CF3F1A00E3D1BF /* EmotionSelectionController.swift */; };
 		E93AFEA121DA846500E34925 /* WorkoutLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E93AFEA021DA846500E34925 /* WorkoutLoader.swift */; };
+		E941BE7021E09765009D366A /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = E941BE6F21E09765009D366A /* AppSettings.swift */; };
 		E94A211221D997480072740B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BE25AFF11D4F33B100DAF094 /* Assets.xcassets */; };
 		E959E3AE21D603AC003B370E /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = E959E3AD21D603AC003B370E /* DataSource.swift */; };
 		E959E3B021D6064D003B370E /* MarkEventTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E959E3AF21D6064D003B370E /* MarkEventTableViewCell.swift */; };
@@ -120,6 +121,7 @@
 		D30E5E4D7CB82428D89F6B8D /* Pods-Lizzie.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lizzie.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Lizzie/Pods-Lizzie.debug.xcconfig"; sourceTree = "<group>"; };
 		E919691E21CF3F1A00E3D1BF /* EmotionSelectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmotionSelectionController.swift; sourceTree = "<group>"; };
 		E93AFEA021DA846500E34925 /* WorkoutLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutLoader.swift; sourceTree = "<group>"; };
+		E941BE6F21E09765009D366A /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		E959E3AD21D603AC003B370E /* DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSource.swift; sourceTree = "<group>"; };
 		E959E3AF21D6064D003B370E /* MarkEventTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkEventTableViewCell.swift; sourceTree = "<group>"; };
 		E97008C021D2F5D2009E4463 /* WatchSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchSessionManager.swift; sourceTree = "<group>"; };
@@ -206,6 +208,7 @@
 				BE3FDBDE1D576BC1009165A8 /* Supporting Files */,
 				BE25AFEA1D4F33B100DAF094 /* AppDelegate.swift */,
 				E98FBA3321D430FC00BF0784 /* MainViewController.swift */,
+				E941BE6F21E09765009D366A /* AppSettings.swift */,
 				E959E3AD21D603AC003B370E /* DataSource.swift */,
 				E9B9BBF521D843130025BEF2 /* DataStoreManager.swift */,
 				E9AC88E721D72D96008E2D55 /* MarkEventDataPoint.swift */,
@@ -560,6 +563,7 @@
 				E9AC88E821D72D96008E2D55 /* MarkEventDataPoint.swift in Sources */,
 				BE25AFEB1D4F33B100DAF094 /* AppDelegate.swift in Sources */,
 				E959E3AE21D603AC003B370E /* DataSource.swift in Sources */,
+				E941BE7021E09765009D366A /* AppSettings.swift in Sources */,
 				E98FBA3421D430FC00BF0784 /* MainViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
