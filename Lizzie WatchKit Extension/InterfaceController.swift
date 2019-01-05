@@ -57,9 +57,6 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
         
         session.delegate = self
         session.activate()
-        
-        // FOR TESTING PURPOSES
-        dropAllBioSampleRows()
     }
     //TODO: change the color of the Sync state for each diff state
     
@@ -80,7 +77,7 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
         }
     }
     @IBAction func toggleShowHRButton(_ value: Bool) {
-        
+        workoutManager.showUpdates(shouldShowHR : value)
     }
     
     // DataCore
@@ -146,21 +143,6 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
             }
         }else {
             NSLog("transfer failed with error \(String(describing: error))")
-        }
-    }
-    
-    private func dropAllBioSampleRows(selectBeforeTime : NSDate){
-        NSLog("told to drop bio rows")
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSampleWatch")
-        fetchRequest.predicate = NSPredicate(format: "endTime < %@", selectBeforeTime)
-        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
-        
-        do{
-            try context.execute(deleteRequest)
-            try context.save()
-            NSLog("Deleted BioSampleWatch rows")
-        }catch let error{
-            NSLog("Couldn't Delete BioSampleWatch rows before this date: \(selectBeforeTime) with error: \(error)")
         }
     }
     

@@ -32,7 +32,6 @@ protocol WorkoutManagerDelegate: class {
 
     func workoutManager(_ manager: WorkoutManager, didChangeStateTo newState: WorkoutState)
     func workoutManager(_ manager: WorkoutManager, didChangeHeartRateTo newHeartRate: Double)
-    func notifyUpdateBioSampleCnt()
 
 }
 
@@ -76,14 +75,17 @@ class WorkoutManager: NSObject {
 
         // Create workout session.
         do {
+            NSLog("created workout session")
             session = try HKWorkoutSession(configuration: workoutConfiguration)
             session!.delegate = self
         } catch {
             fatalError("Unable to create Workout Session!")
         }
 
+        NSLog("trying to start workout session")
         // Start workout session.
         healthStore.start(session!)
+        //bioSampleManager.start()
 
         // Update state to started and inform delegates.
         state = .started
@@ -138,6 +140,11 @@ extension WorkoutManager: HKWorkoutSessionDelegate {
         print("Did generate \(event)")
     }
     
+    func showUpdates(shouldShowHR : Bool){
+        bioSampleManager.showHeartrate = shouldShowHR
+        NSLog("changed show heartrate to \(shouldShowHR)")
+    }
+    
 }
 
 // MARK: BioSample Delegate
@@ -148,9 +155,4 @@ extension WorkoutManager: BioSampleManagerDelegate {
     func updateHeartRate(didChangeTo newHeartRate: Double) {
         delegate?.workoutManager(self, didChangeHeartRateTo: newHeartRate)
     }
-    
-    func notifyUpdateBioSampleCnt() {
-        delegate?.notifyUpdateBioSampleCnt()
-    }
-
 }

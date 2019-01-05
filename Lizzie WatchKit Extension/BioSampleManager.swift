@@ -14,7 +14,6 @@ typealias HKQueryUpdateHandler = ((HKAnchoredObjectQuery, [HKSample]?, [HKDelete
 
 protocol BioSampleManagerDelegate: class {
     func updateHeartRate(didChangeTo newHeartRate: Double)
-    func notifyUpdateBioSampleCnt()
 }
 
 @available(watchOSApplicationExtension 4.0, *)
@@ -23,7 +22,7 @@ class BioSampleManager {
     // MARK: - Properties
 
     private let healthStore = HKHealthStore()
-    let showHeartrate = true
+    var showHeartrate = true
 
     weak var delegate: BioSampleManagerDelegate?
 
@@ -46,10 +45,9 @@ class BioSampleManager {
 
     func start() {
         // Configure heart rate quantity type.
+        NSLog("sent HK queries!")
         buildQuery(HKIdentifier: HKQuantityTypeIdentifier.heartRate)
         buildQuery(HKIdentifier: HKQuantityTypeIdentifier.vo2Max)
-        
-        
     }
     
     // https://stackoverflow.com/questions/46835438/how-to-save-an-array-of-hkquantitysamples-heart-rate-to-a-workout
