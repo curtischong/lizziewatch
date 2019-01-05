@@ -26,17 +26,22 @@
                                 </label>
                             </items>
                         </group>
-                        <group width="1" alignment="right" spacing="5" id="Omy-g0-taR">
+                        <group width="1" alignment="left" id="yJE-vu-sBm">
                             <items>
-                                <group width="40" alignment="left" id="fzF-uM-nJf">
-                                    <items>
-                                        <label alignment="left" text="Mark" id="ndt-c8-eZv">
-                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
-                                        </label>
-                                    </items>
-                                </group>
-                                <label width="83" alignment="right" text="--" textAlignment="center" id="q60-id-Pm7">
+                                <switch width="123" alignment="left" value="YES" title="Show HR" id="xoz-CF-T22">
+                                    <connections>
+                                        <action selector="toggleShowHRButton:" destination="AgC-eL-Hgc" id="1Pt-fP-uWt"/>
+                                    </connections>
+                                </switch>
+                                <label alignment="left" text="Mark" textAlignment="center" id="ndt-c8-eZv">
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
+                                </label>
+                            </items>
+                        </group>
+                        <group width="129" alignment="right" spacing="5" id="Omy-g0-taR">
+                            <items>
+                                <label width="97" alignment="right" text="--" textAlignment="center" id="q60-id-Pm7">
                                     <accessibilityTraits key="accessibilityTraits" staticText="YES" notEnabled="YES"/>
                                     <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                     <fontDescription key="font" type="system" weight="medium" pointSize="60"/>
@@ -49,7 +54,7 @@
                         </group>
                         <button width="1" height="33" alignment="center" title="Start" id="iNm-FD-Dqu">
                             <connections>
-                                <action selector="didTapButton" destination="AgC-eL-Hgc" id="Gdw-ou-Tb4"/>
+                                <action selector="startWorkoutButton" destination="AgC-eL-Hgc" id="Gdw-ou-Tb4"/>
                             </connections>
                         </button>
                         <button width="1" height="32" alignment="left" title="Mark Event" id="JRJ-Z8-l9b">
@@ -68,7 +73,7 @@
                     </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="33.580246913580247" y="34.949238578680202"/>
+            <point key="canvasLocation" x="33.580246913580247" y="34.517766497461928"/>
         </scene>
     </scenes>
     <color key="tintColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

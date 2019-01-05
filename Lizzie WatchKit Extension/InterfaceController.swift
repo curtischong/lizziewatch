@@ -49,7 +49,6 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
         workoutManager.delegate = self
     
         displayDateFormatter.dateFormat = "MMM d, h:mm a"
-        self.updateBioSampleCnt()
         self.updateMarkEventCnt()
     }
     
@@ -58,6 +57,9 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
         
         session.delegate = self
         session.activate()
+        
+        // FOR TESTING PURPOSES
+        dropAllBioSampleRows()
     }
     //TODO: change the color of the Sync state for each diff state
     
@@ -65,7 +67,7 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
     // MARK: - Actions
 
     //TODO: rename this method
-    @IBAction func didTapButton() {
+    @IBAction func startWorkoutButton() {
         switch workoutManager.state {
         case .started:
             // Stop current workout.
@@ -77,7 +79,10 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
             break
         }
     }
-
+    @IBAction func toggleShowHRButton(_ value: Bool) {
+        
+    }
+    
     // DataCore
     
     // Connectivity
@@ -122,9 +127,7 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
                             let eventName = trans.userInfo["event"] as! String
                             let selectBeforeTime = trans.userInfo["endTimeOfQuery"] as! NSDate
                             NSLog("Deleting data before time: \(selectBeforeTime)")
-                            if(eventName == "dataStoreBioSamples"){
-                                self.dropAllBioSampleRows(selectBeforeTime : selectBeforeTime)
-                            }else if(eventName == "dataStoreMarkEvents"){
+                            if(eventName == "dataStoreMarkEvents"){
                                 self.dropAllMarkEventRows(selectBeforeTime : selectBeforeTime)
                             }else{
                                 NSLog("Can't remove rows of unknown event: \(eventName)")
@@ -156,7 +159,6 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
             try context.execute(deleteRequest)
             try context.save()
             NSLog("Deleted BioSampleWatch rows")
-            updateBioSampleCnt()
         }catch let error{
             NSLog("Couldn't Delete BioSampleWatch rows before this date: \(selectBeforeTime) with error: \(error)")
         }
@@ -192,55 +194,17 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
     }
     
     private func sendDataStore(){
-        // I'm pretty sure the session on the watch side is ALWAYS on. bc it assumes the phone is on
-        //if let validSession = session {
         if(!syncingStateBool){
             if(session.outstandingUserInfoTransfers.count == 0){
                 setSyncingState(newSyncState : true)
                 let selectBeforeTime = Date() as NSDate
                 NSLog("Syncing data before time: \(selectBeforeTime)")
                 dateOfSync.setText(displayDateFormatter.string(from: selectBeforeTime as Date))
-                //let request1 = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSampleWatch")
-                //request1.predicate = NSPredicate(format: "endTime < %@", selectBeforeTime)
                 let request2 = NSFetchRequest<NSFetchRequestResult>(entityName: "MarkEventWatch")
                 request2.predicate = NSPredicate(format: "timeOfMark < %@", selectBeforeTime)
                 
                 var bothEmpty = true
-                /*do{
-                    let result1 = try context.fetch(request1)
-                    let numItems = result1.count
-                    if(numItems > 0 ){
-                        bothEmpty = false
-                        var samplesNames = Array<String>()
-                        var samplesStartTime = Array<Date>()
-                        var samplesEndTime = Array<Date>()
-                        var samplesMeasurement = Array<Double>()
 
-                    
-                        for sample in result1 as! [NSManagedObject] {
-                            // This casting is weird / might use battery. find a way to change it
-                            samplesNames.append(sample.value(forKey: "dataPointName") as! String)
-                            samplesStartTime.append(sample.value(forKey: "startTime") as! Date)
-                            samplesEndTime.append(sample.value(forKey: "endTime") as! Date)
-                            samplesMeasurement.append(sample.value(forKey: "measurement") as! Double)
-                        }
-                        
-                        let dataStorePackage1 = ["event" : "dataStoreBioSamples",
-                                                 "samplesNames": samplesNames,
-                                                 "samplesStartTime": samplesStartTime,
-                                                 "samplesEndTime": samplesEndTime,
-                                                 "samplesMeasurement": samplesMeasurement,
-                                                 "endTimeOfQuery" : selectBeforeTime,
-                                                 "numItems" : numItems] as [String : Any]
-                        
-                        NSLog("Syncing \(result1.count) items")
-                        session.transferUserInfo(dataStorePackage1)
-                    }else{
-                        NSLog("Turns out there are no BioSampleWatch rows")
-                    }
-                } catch let error{
-                    NSLog("Couldn't fetch BioSampleWatch with error: \(error)")
-                }*/
                 // Now send the MarkEvents
                 do{
                     let result2 = try context.fetch(request2)
@@ -310,9 +274,7 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
                 }
                 
                 // sometimes the transfers randomly dissapear. This is why I'm not removing them in the transfer loop
-                if(syncDataType == "dataStoreBioSamples"){
-                    self.dropAllBioSampleRows(selectBeforeTime : userInfo["selectBeforeTime"] as! NSDate)
-                }else if(syncDataType == "dataStoreMarkEvents"){
+                if(syncDataType == "dataStoreMarkEvents"){
                     self.dropAllMarkEventRows(selectBeforeTime : userInfo["selectBeforeTime"] as! NSDate)
                 }
                 
@@ -330,18 +292,6 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
         }
     }
     
-    private func updateBioSampleCnt(){
-        /*let request = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSampleWatch")
-        do{
-            let result = try context.fetch(request)
-            bioSampleCntWatch.setText(String(result.count))
-            if(result.count != 0){
-                syncingStateLabel.setText("Not Synced")
-            }
-        } catch let error{
-            NSLog("Couldn't access CoreDataWatch: \(error)")
-        }*/
-    }
     private func updateMarkEventCnt(){
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "MarkEventWatch")
         do{
@@ -386,9 +336,6 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
 
 @available(watchOSApplicationExtension 4.0, *)
 extension InterfaceController: WorkoutManagerDelegate {
-    func notifyUpdateBioSampleCnt() {
-        updateBioSampleCnt()
-    }
     
     func workoutManager(_ manager: WorkoutManager, didChangeStateTo newState: WorkoutState) {
         // Update title of control button.

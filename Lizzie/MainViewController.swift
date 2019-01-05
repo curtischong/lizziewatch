@@ -69,19 +69,8 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
             dateLastSyncLabel.text = displayDateFormatter.string(from: appSettings.dateLastSyncedWithWatch!)
         }
         
-        
-        
-        
-        
-        
-        
-        // dataSource.movies = ["Terminator","Back To The Future","The Dark Knight"]
-        //markEventTable.dataSource = dataSource
-        
         // Used only in testing
         //dropAllRows()
-        
-        //TODO: I need to have a default "last synced" variable stored in system memory. so if the watch isn't on, I still get the date
     }
     
     //MARK: Actions

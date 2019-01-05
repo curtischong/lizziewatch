@@ -14,12 +14,6 @@
       location = "group:Lizzie WatchKit Extension/MarkEventWatch+CoreDataProperties.swift">
    </FileRef>
    <FileRef
-      location = "group:Lizzie WatchKit Extension/BioSampleWatch+CoreDataClass.swift">
-   </FileRef>
-   <FileRef
-      location = "group:Lizzie WatchKit Extension/BioSampleWatch+CoreDataProperties.swift">
-   </FileRef>
-   <FileRef
       location = "group:Lizzie/BioSamplePhone+CoreDataClass.swift">
    </FileRef>
    <FileRef
