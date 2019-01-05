@@ -39,6 +39,9 @@
                                         <state key="normal" title="Upload Response">
                                             <color key="titleColor" red="0.0" green="0.99143940210000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
+                                        <connections>
+                                            <action selector="uploadResponseButtonPressed:" destination="XhB-HF-MDQ" eventType="touchUpInside" id="uZs-1L-yDF"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                             </stackView>

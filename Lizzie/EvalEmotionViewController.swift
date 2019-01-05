@@ -8,6 +8,7 @@
 
 import UIKit
 import AudioToolbox
+import Alamofire
 
 class EvalEmotionViewController: UIViewController, UITextViewDelegate {
 
@@ -25,6 +26,18 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
     
     @IBOutlet weak var commentBoxTextView: UITextView!
     
+    private var timeStartFillingForm : Date?
+    private var normalSliderRealVal = -100
+    private var socialSliderRealVal = -100
+    private var exhaustedSliderRealVal = -100
+    private var tiredSliderRealVal = -100
+    private var happySliderRealVal = -100
+    
+    
+    
+    
+    
+    
     let generator = UIImpactFeedbackGenerator(style: .light)
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -32,7 +45,7 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        timeStartFillingForm = Date()
         normalEvalSliderLabel.text = "How normal do you feel? 0"
         normalEvalSlider.setValue(0.0, animated: true)
         //normalEvalSlider.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
@@ -107,11 +120,11 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
         let phrase = "How normal do you feel? "
         let sliderPos = normalEvalSlider.value
         let sliderVal = round(sliderPos*5)/5
-        let realVal = Int(round(sliderPos*5))
+        normalSliderRealVal = Int(round(sliderPos*5))
         sender.setValue(sliderVal, animated: true)
         
-        if(normalEvalSliderLabel.text != phrase + "\(realVal)"){
-            normalEvalSliderLabel.text = phrase + "\(realVal)"
+        if(normalEvalSliderLabel.text != phrase + "\(normalSliderRealVal)"){
+            normalEvalSliderLabel.text = phrase + "\(normalSliderRealVal)"
             generator.impactOccurred()
         }
     }
@@ -119,11 +132,11 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
         let phrase = "How social do you feel? "
         let sliderPos = socialEvalSlider.value
         let sliderVal = round(sliderPos*5)/5
-        let realVal = Int(round(sliderPos*5))
+        socialSliderRealVal = Int(round(sliderPos*5))
         sender.setValue(sliderVal, animated: true)
         
-        if(socialEvalSliderLabel.text != phrase + "\(realVal)"){
-            socialEvalSliderLabel.text = phrase + "\(realVal)"
+        if(socialEvalSliderLabel.text != phrase + "\(socialSliderRealVal)"){
+            socialEvalSliderLabel.text = phrase + "\(socialSliderRealVal)"
             generator.impactOccurred()
         }
     }
@@ -132,11 +145,11 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
         let phrase = "How exhausted do you feel? "
         let sliderPos = exhaustedEvalSlider.value
         let sliderVal = round(sliderPos*5)/5
-        let realVal = Int(round(sliderPos*5))
+        exhaustedSliderRealVal = Int(round(sliderPos*5))
         sender.setValue(sliderVal, animated: true)
         
-        if(exhaustedEvalSliderLabel.text != phrase + "\(realVal)"){
-            exhaustedEvalSliderLabel.text = phrase + "\(realVal)"
+        if(exhaustedEvalSliderLabel.text != phrase + "\(exhaustedSliderRealVal)"){
+            exhaustedEvalSliderLabel.text = phrase + "\(exhaustedSliderRealVal)"
             generator.impactOccurred()
         }
     }
@@ -145,11 +158,11 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
         let phrase = "How tired do you feel? "
         let sliderPos = tiredEvalSlider.value
         let sliderVal = round(sliderPos*5)/5
-        let realVal = Int(round(sliderPos*5))
+        tiredSliderRealVal = Int(round(sliderPos*5))
         sender.setValue(sliderVal, animated: true)
         
-        if(tiredEvalSliderLabel.text != phrase + "\(realVal)"){
-            tiredEvalSliderLabel.text = phrase + "\(realVal)"
+        if(tiredEvalSliderLabel.text != phrase + "\(tiredSliderRealVal)"){
+            tiredEvalSliderLabel.text = phrase + "\(tiredSliderRealVal)"
             generator.impactOccurred()
         }
     }
@@ -158,24 +171,47 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
         let phrase = "How happy do you feel? "
         let sliderPos = happyEvalSlider.value
         let sliderVal = round(sliderPos*10)/10
-        let realVal = Int(round(sliderPos*10)) - 5
+        happySliderRealVal = Int(round(sliderPos*10)) - 5
         sender.setValue(sliderVal, animated: true)
 
-        if(happyEvalSliderLabel.text != phrase + "\(realVal)"){
-            happyEvalSliderLabel.text = phrase + "\(realVal)"
+        if(happyEvalSliderLabel.text != phrase + "\(happySliderRealVal)"){
+            happyEvalSliderLabel.text = phrase + "\(happySliderRealVal)"
             generator.impactOccurred()
         }
     }
     
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    @IBAction func uploadResponseButtonPressed(_ sender: Any) {
+        let parameters: Parameters = [
+            "timeStartFillingForm": timeStartFillingForm! ,
+            "timeEndFillingForm": Date(),
+            "normalEval": normalEvalSliderLabel,
+            "socialEval": socialEvalSliderLabel,
+            "exhaustedEval": exhaustedEvalSliderLabel,
+            "tiredEval": tiredEvalSliderLabel,
+            "happyEval": happyEvalSliderLabel,
+            "comments" : commentBoxTextView.text
+        ]
+        //let config = readConfig()
+        //print(config["ip"])
+        
+        
+        AF.request("http://10.8.0.2:9000/upload_emotion_evaluation",
+                   method: .post,
+                   parameters: parameters,
+                   encoding: JSONEncoding()
+            ).responseJSON { response in
+                
+                print("Request: \(String(describing: response.request))")   // original url request
+                print("Response: \(String(describing: response.response))") // http url response
+                print("Result: \(response.result)")                         // response serialization result
+                
+                /*if let json = response.result.value {
+                 print("JSON: \(json)") // serialized json response
+                 }
+                 
+                 if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
+                 print("Data: \(utf8Text)") // original server data as UTF8 string
+                 }*/
+        }
     }
-    */
-
 }
