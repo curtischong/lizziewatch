@@ -32,6 +32,7 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
     private var exhaustedSliderRealVal = 0
     private var tiredSliderRealVal = 0
     private var happySliderRealVal = 0
+    private let commentBoxPlaceholder = "Comments"
     
     let appContextFormatter = DateFormatter()
     
@@ -67,7 +68,7 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
         commentBoxTextView.layer.cornerRadius = 5
         
         commentBoxTextView.delegate = self
-        commentBoxTextView.text = "Comments"
+        commentBoxTextView.text = commentBoxPlaceholder
         commentBoxTextView.textColor = UIColor.lightGray
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -91,7 +92,7 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
     
     func textViewDidEndEditing(_ textView: UITextView) {
         if commentBoxTextView.text.isEmpty {
-            commentBoxTextView.text = "Comments?"
+            commentBoxTextView.text = commentBoxPlaceholder
             commentBoxTextView.textColor = UIColor.lightGray
         }
     }
@@ -180,6 +181,10 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
     }
     
     @IBAction func uploadResponseButtonPressed(_ sender: Any) {
+        var commentsToSend = commentBoxTextView.text
+        if(commentsToSend == commentBoxPlaceholder){
+            commentsToSend = ""
+        }
         let parameters: Parameters = [
             "timeStartFillingForm": appContextFormatter.string(from: timeStartFillingForm!),
             "timeEndFillingForm": appContextFormatter.string(from: Date()),
@@ -188,7 +193,7 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
             "exhaustedEval": String(exhaustedSliderRealVal),
             "tiredEval": String(tiredSliderRealVal),
             "happyEval": String(happySliderRealVal),
-            "comments" : commentBoxTextView.text
+            "comments" : commentsToSend! as String
         ]
         //let config = readConfig()
         //print(config["ip"])

@@ -84,6 +84,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        uploadButton.isEnabled = false
         NSLog("Setting things up")
         
 
@@ -256,7 +257,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
         let endTime = markEventDate.addingTimeInterval(TimeInterval(numMinutesGap * 60.0))
         let startTime = markEventDate.addingTimeInterval(TimeInterval(-numMinutesGap * 60.0))
         let predicate = HKQuery.predicateForSamples(withStart: startTime.addingTimeInterval(TimeInterval(-numMinutesGap * 60.0)), end: endTime)
-        
+        let ctx = self
         let query = HKSampleQuery.init(sampleType: HKSampleType.quantityType(forIdentifier: .heartRate)!,
                                        predicate: predicate,
                                        limit: HKObjectQueryNoLimit,
@@ -278,10 +279,10 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
                                                 var dataPointName = "-1"
                                                 switch sample.quantityType.identifier{
                                                 case "HKQuantityTypeIdentifierHeartRate":
-                                                    measurementValue = self.castHKUnitToDouble(theSample : sample, theUnit: HKUnit.beatsPerMinute())
+                                                    measurementValue = ctx.castHKUnitToDouble(theSample : sample, theUnit: HKUnit.beatsPerMinute())
                                                     dataPointName = "HR"
                                                 case "HKQuantityTypeIdentifierVO2Max":
-                                                    measurementValue = self.castHKUnitToDouble(theSample : sample, theUnit: HKUnit(from: "ml/kg*min"))
+                                                    measurementValue = ctx.castHKUnitToDouble(theSample : sample, theUnit: HKUnit(from: "ml/kg*min"))
                                                     dataPointName = "O2"
                                                 default:
                                                     //TODO: find a better way to report this error
@@ -304,8 +305,8 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
                                             HRPoints.append(chartPoint(endTime : Date(), measurement : -1))
                                         }
                                         HRPoints = HRPoints.sorted{ $1.endTime > $0.endTime }
-                                        self.bioPoints = ["HR" : HRPoints]
-                                        self.updateGraph()
+                                        ctx.bioPoints = ["HR" : HRPoints]
+                                        ctx.updateGraph()
         }
         healthStore.execute(query)
     }
@@ -328,7 +329,9 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
         
         if(bioPoints["HR"]!.count > 0){
             sender.isEnabled = false
+            uploadButton.isEnabled = true
             if(isReaction){
+                
                 eventDurationSlider.isEnabled = false
             }else{
                 
