@@ -326,17 +326,18 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
 
     func queryBioSamples(appSettings : ConfigObj){
         NSLog("Querying for healthkit datapoints")
-        let startDate = Date()
-        var endDate = Date()
+        let endDate = Date()
+        var startDate = Date()
         if(appSettings.dateLastSyncedWithServer == nil){
+            NSLog("The app has never synced with the server. Sending all the biopoints from the last week")
             // select all the data from the past week for good measure
-            endDate = startDate.addingTimeInterval(-24 * 60 * 60 * 7)
+            startDate = endDate.addingTimeInterval(-24 * 60 * 60 * 7)
         }else{
             // query for points an hour before the last sync bc points may start before the endDate of the query
-            endDate = appSettings.dateLastSyncedWithServer!.addingTimeInterval(-60 * 60)
+            startDate = appSettings.dateLastSyncedWithServer!.addingTimeInterval(-60 * 60)
         }
         
-        let predicate = HKQuery.predicateForSamples(withStart: endDate as Date, end: startDate as Date)
+        let predicate = HKQuery.predicateForSamples(withStart: startDate as Date, end: endDate as Date)
         
         
         let ctx = self
@@ -418,7 +419,7 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
             "measurements": json(from : measurements) as Any,
         ]
         let ctx = self
-        AF.request("http://10.8.0.2:9000/upload_mark_event",
+        AF.request("http://10.8.0.2:9000/upload_bio_samples",
                    method: .post,
                    parameters: parameters,
                    encoding: JSONEncoding()
