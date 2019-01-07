@@ -526,6 +526,10 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
     
     
     @IBAction func deleteEventPressed(_ sender: UIButton) {
+        deleteCurrentMarkEvent()
+    }
+    
+    func deleteCurrentMarkEvent(){
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "MarkEventPhone")
         fetchRequest.predicate = NSPredicate(format: "timeOfMark == %@", markEventDate as NSDate)
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
@@ -539,7 +543,6 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
             NSLog("Couldn't Delete MarkEventPhone with time \(markEventDate) with error: \(error)")
         }
     }
-    
     
     func json(from object: [Any]) -> String? {
         guard let data = try? JSONSerialization.data(withJSONObject: object, options: []) else {
@@ -572,29 +575,41 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
         
         print("\(json(from : evaluateEmotionBar.getButtonStates())!)")
         
+        var isReactionBool = 0
+        if(isReaction){
+            isReactionBool = 1
+        }
+        
         let parameters: Parameters = [
-            "timeStartFillingForm": appContextFormatter.string(from: timeStartFillingForm!),
-            "timeEndFillingForm": appContextFormatter.string(from: Date()),
+            "timeStartFillingForm": String(Double(round(1000*timeStartFillingForm!.timeIntervalSince1970)/1000)),
+            "timeEndFillingForm": String(Double(round(1000*Date().timeIntervalSince1970)/1000)),
             "timeOfMark": appContextFormatter.string(from: markEventDate),
-            "isReaction": String(isReaction),
-            "anticipationStart": appContextFormatter.string(from: highlight1Date), // The server only uses this value if isReaction = false
-            "TimeOfEvent": appContextFormatter.string(from: timeOfEvent),
-            "reactionEnd": appContextFormatter.string(from: highlight2Date),
+            "isReaction": String(isReactionBool),
+            // The server only uses anticipationStart if isReaction = false
+            "anticipationStart": String(Double(round(1000*highlight1Date.timeIntervalSince1970)/1000)),
+            "TimeOfEvent": String(Double(round(1000*timeOfEvent.timeIntervalSince1970)/1000)),
+            "reactionEnd": String(Double(round(1000*highlight2Date.timeIntervalSince1970)/1000)),
             "emotionsFelt" : json(from : evaluateEmotionBar.getButtonStates()) as Any,
             "comments" : commentsToSend! as String,
-            "typeBiometricsViewed" : json(from : typesOfBiometrics) as Any //TODO: add more biometrics to view
+            // for future reference we need to define what each index means: for now 0 means HR
+            "typeBiometricsViewed" : json(from : [0]) as Any //TODO: add more biometrics to view
         ]
         
-        
+        let ctx = self
         AF.request("http://10.8.0.2:9000/upload_mark_event",
                    method: .post,
                    parameters: parameters,
                    encoding: JSONEncoding()
             ).responseJSON { response in
                 
+                NSLog("markEventSent! deleting MarkEvent")
+                ctx.deleteCurrentMarkEvent()
+                ctx.performSegue(withIdentifier: "unwindSegue2ToMainViewController", sender: ctx)
+            /*
             print("Request: \(String(describing: response.request))")   // original url request
             print("Response: \(String(describing: response.response))") // http url response
             print("Result: \(response.result)")                         // response serialization result
+            */
             
             /*if let json = response.result.value {
                 print("JSON: \(json)") // serialized json response
