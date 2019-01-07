@@ -86,7 +86,6 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
     private var highlight3Date : Date?*/
     private var timeStartFillingForm : Date?
     let generator = UIImpactFeedbackGenerator(style: .light)
-    let appContextFormatter = DateFormatter()
     private let commentBoxPlaceholder = "Comments"
     // I need to refactor this and use a map
 
@@ -108,7 +107,6 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
         
         uploadButton.setTitleColor(UIColor.lightGray, for: .normal)
         uploadButton.isEnabled = false
-        appContextFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         NSLog("Setting things up")
         
         timeStartFillingForm = Date()
@@ -282,6 +280,10 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
         let numMinutesGap = 5.0
         let endTime = markEventDate.addingTimeInterval(TimeInterval(numMinutesGap * 60.0))
         let startTime = markEventDate.addingTimeInterval(TimeInterval(-numMinutesGap * 60.0))
+        // We are selecting all points in the last 60 minutes because the query checks for points that falls
+        // within the start and end times of the query. Since we are only displaying the endtimes of the points,
+        // we need to select more points because some points can start before the starttime but have an
+        // end time that ends after the starttime in the query
         let predicate = HKQuery.predicateForSamples(withStart: startTime.addingTimeInterval(TimeInterval(-numMinutesGap * 60.0)), end: endTime)
         let ctx = self
         let query = HKSampleQuery.init(sampleType: HKSampleType.quantityType(forIdentifier: .heartRate)!,
@@ -294,7 +296,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
                                         }
                                         
                                         guard let samples = results as? [HKQuantitySample] else {
-                                            fatalError("An error occured fetching the user's tracked food. In your app, try to handle this error gracefully. The error was: \(error!.localizedDescription)");
+                                            fatalError("Couldn't cast the HKQuantities into an array with error: \(error!)");
                                         }
                                         NSLog("found \(samples.count) health samples")
                                         
@@ -583,7 +585,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
         let parameters: Parameters = [
             "timeStartFillingForm": String(Double(round(1000*timeStartFillingForm!.timeIntervalSince1970)/1000)),
             "timeEndFillingForm": String(Double(round(1000*Date().timeIntervalSince1970)/1000)),
-            "timeOfMark": appContextFormatter.string(from: markEventDate),
+            "timeOfMark": String(Double(round(1000*markEventDate.timeIntervalSince1970)/1000)),
             "isReaction": String(isReactionBool),
             // The server only uses anticipationStart if isReaction = false
             "anticipationStart": String(Double(round(1000*highlight1Date.timeIntervalSince1970)/1000)),
@@ -620,4 +622,14 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
             }*/
         }
     }
+}
+
+//TODO: move this elsewhere.
+// I'm really press on time rn
+extension HKUnit {
+    
+    static func beatsPerMinute() -> HKUnit {
+        return HKUnit.count().unitDivided(by: HKUnit.minute())
+    }
+    
 }

@@ -58,14 +58,14 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
         loadMarkEventRows()
         NSLog("Main View Loaded")
         authenticateForHealthstoreData()
-
-        getWorkouts()
         
         
         let appSettings = getSettings()
         if(appSettings.dateLastSyncedWithWatch != nil){
             dateLastSyncLabel.text = displayDateFormatter.string(from: appSettings.dateLastSyncedWithWatch!)
         }
+        
+        queryBioSamples(appSettings : appSettings)
         
         // Used only in testing
         //dropAllRows()
@@ -264,51 +264,8 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
         }
     }
     
-    /*
+    
     // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-    
-    
-    // THESE FUNCTIONS ARE ALL WRONG WE NEED TO SEND MORE THAN ONE SAMPLE AT ONCE
-    // ANOTHER THING, we don't send markEvents. we send the handeled version of those
-    private func sendBioSampleSnapshot(bioSample: HealthKitDataPoint) {
-        
-        let parameters: Parameters = [
-            "dataPointName": bioSample.dataPointName,
-            "startTime": bioSample.startTime,
-            "endTime": bioSample.endTime,
-            "measurement": bioSample.measurement
-        ]
-        //let config = readConfig()
-        //print(config["ip"])
-        
-        // NOTE: I AM SENDING THIS TO MY LOCAL SERVER ATM
-        // IF THIS REQUEST DOESN'T WORK MAKE SURE YOU ARE CONNECTED TO THE VPN
-        AF.request("http://10.8.0.2:9000/watch_bio_snapshot",
-                   method: .post,
-                   parameters: parameters,
-                   encoding: JSONEncoding()
-            ).responseJSON { response in
-                
-                print("Request: \(String(describing: response.request))")   // original url request
-                print("Response: \(String(describing: response.response))") // http url response
-                print("Result: \(response.result)")                         // response serialization result
-                
-                /*if let json = response.result.value {
-                 print("JSON: \(json)") // serialized json response
-                 }
-                 
-                 if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
-                 print("Data: \(utf8Text)") // original server data as UTF8 string
-                 }*/
-        }
-    }
         
     @IBAction func markEventButtonPress(_ sender: UIButton) {
         let entity = NSEntityDescription.entity(forEntityName: "MarkEventPhone", in: context)
@@ -366,64 +323,108 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
             return theSample.quantity.doubleValue(for: theUnit)
         }
     }
-    
-    
-    private func manage_samples(samples: [HKQuantitySample]) {
-        for sample in samples{
-            var measurementValue = -1.0
-            var dataPointName = "-1"
-            switch sample.quantityType.identifier{
-            case "HKQuantityTypeIdentifierHeartRate":
-                measurementValue = castHKUnitToDouble(theSample : sample, theUnit: HKUnit.beatsPerMinute())
-                dataPointName = "HR"
-            case "HKQuantityTypeIdentifierVO2Max":
-                measurementValue = castHKUnitToDouble(theSample : sample, theUnit: HKUnit(from: "ml/kg*min"))
-                dataPointName = "O2"
-            default:
-                //TODO: find a better way to report this error
-                NSLog("Can't find a quantity type for: %@", sample.quantityType.identifier)
-            }
-        
-            let startTime = sample.startDate
-            let endTime = sample.endDate
-            let measurement = measurementValue
-            
-            //NSLog("\(dataPointName) ... \(startTime) ... \(endTime) ... \(measurement) ... ")
-        }
-    }
-    
-    
 
-    func getWorkouts(){
+    func queryBioSamples(appSettings : ConfigObj){
         NSLog("Querying for healthkit datapoints")
-        let startDate = NSDate()
-        let endDate = startDate.addingTimeInterval(-3600)
+        let startDate = Date()
+        var endDate = Date()
+        if(appSettings.dateLastSyncedWithServer == nil){
+            // select all the data from the past week for good measure
+            endDate = startDate.addingTimeInterval(-24 * 60 * 60 * 7)
+        }else{
+            // query for points an hour before the last sync bc points may start before the endDate of the query
+            endDate = appSettings.dateLastSyncedWithServer!.addingTimeInterval(-60 * 60)
+        }
         
         let predicate = HKQuery.predicateForSamples(withStart: endDate as Date, end: startDate as Date)
         
         
+        let ctx = self
         let query = HKSampleQuery.init(sampleType: HKSampleType.quantityType(forIdentifier: .heartRate)!,
                                        predicate: predicate,
                                        limit: HKObjectQueryNoLimit,
                                        sortDescriptors: nil) { (query, results, error) in
                                         
                                         if(error != nil){
-                                            NSLog("couldn't get healthquery data with error: \(error)")
+                                            NSLog("couldn't get healthquery data with error: \(error!)")
                                         }
                                         
                                         guard let samples = results as? [HKQuantitySample] else {
-                                            fatalError("An error occured fetching the user's tracked food. In your app, try to handle this error gracefully. The error was: \(error?.localizedDescription)");
+                                            fatalError("Couldn't cast the HKQuantities into an array with error: \(error!)");
                                         }
                                         NSLog("found \(samples.count) health samples")
-                                        self.manage_samples(samples : samples)
+                                        
+                                        var dataPointNames = Array<String>()
+                                        var startTimes = Array<String>()
+                                        var endTimes = Array<String>()
+                                        var measurements = Array<String>()
+                                        
+                                        if(samples.count > 0){
+                                            for sample in samples{
+                                                var measurementValue = -1.0
+                                                var dataPointName = "-1"
+                                                switch sample.quantityType.identifier{
+                                                case "HKQuantityTypeIdentifierHeartRate":
+                                                    measurementValue = ctx.castHKUnitToDouble(theSample : sample, theUnit: HKUnit.beatsPerMinute())
+                                                    dataPointName = "HR"
+                                                case "HKQuantityTypeIdentifierVO2Max":
+                                                    measurementValue = ctx.castHKUnitToDouble(theSample : sample, theUnit: HKUnit(from: "ml/kg*min"))
+                                                    dataPointName = "O2"
+                                                default:
+                                                    //TODO: find a better way to report this error
+                                                    NSLog("Can't find a quantity type for: %@", sample.quantityType.identifier)
+                                                }
+                                                
+                                                let sampleEndTime = sample.endDate
+                                                let sampleStartTime = sample.startDate
+                                                
+                                                let sampleEndTimeString = String(Double(round(1000*sampleEndTime.timeIntervalSince1970)/1000))
+                                                let sampleStartTimeString = String(Double(round(1000*sampleStartTime.timeIntervalSince1970)/1000))
+                                                
+                                                if(sampleEndTime > startDate && sampleEndTime < endDate){
+                                                    dataPointNames.append(dataPointName)
+                                                    startTimes.append(sampleStartTimeString)
+                                                    endTimes.append(sampleEndTimeString)
+                                                    measurements.append(String(measurementValue))
+                                                }
+                                            }
+                                        }
+                                        if(dataPointNames.count == 0){
+                                            NSLog("No samples found in query. Not sending anything to server")
+                                        }else{
+                                            ctx.uploadBioSamples(dataPointNames : dataPointNames,
+                                                                 startTimes : startTimes,
+                                                                 endTimes : endTimes,
+                                                                 measurements : measurements)
+                                        }
         }
-        healthStore.execute(query)
-    }
-}
-extension HKUnit {
-    
-    static func beatsPerMinute() -> HKUnit {
-        return HKUnit.count().unitDivided(by: HKUnit.minute())
+    healthStore.execute(query)
     }
     
+    func json(from object: [Any]) -> String? {
+        guard let data = try? JSONSerialization.data(withJSONObject: object, options: []) else {
+            return nil
+        }
+        return String(data: data, encoding: String.Encoding.utf8)
+    }
+    
+    func uploadBioSamples(dataPointNames : Array<String>, startTimes : Array<String>, endTimes : Array<String>, measurements : Array<String>){
+    
+        
+        let parameters: Parameters = [
+            "dataPointNames": json(from : dataPointNames) as Any,
+            "startTimes": json(from : startTimes) as Any,
+            "endTimes": json(from : endTimes) as Any,
+            "measurements": json(from : measurements) as Any,
+        ]
+        let ctx = self
+        AF.request("http://10.8.0.2:9000/upload_mark_event",
+                   method: .post,
+                   parameters: parameters,
+                   encoding: JSONEncoding()
+            ).responseJSON { response in
+                
+                NSLog("markEventSent! updating dateLastSyncedWithServer")
+        }
+    }
 }
