@@ -22,8 +22,6 @@ import UIKit
                                   UIColor(red:1.00, green:0.54, blue:0.00, alpha:1.0),
                                   UIColor(red:1.00, green:0.0, blue:0.00, alpha:1.0)]
     
-    //TODO: add the tripple emotion state code
-    //TODO: remove the useless slider pod
     //MARK: Initialization
     
     override init(frame: CGRect) {
@@ -73,8 +71,6 @@ import UIKit
             
             // Add constraints
             button.translatesAutoresizingMaskIntoConstraints = false
-            //button.heightAnchor.constraint(equalToConstant: starSize.height).isActive = true
-            //button.widthAnchor.constraint(equalToConstant: starSize.width).isActive = true
             
             // Set the accessibility label
             button.accessibilityLabel = "Set \(index + 1) star rating"
@@ -88,7 +84,8 @@ import UIKit
             // Add the new button to the rating button array
             ratingButtons.append(button)
         }
-        
-        //updateButtonSelectionStates()
+    }
+    func getButtonStates() -> [Int]{
+        return selectedEmotions
     }
 }

@@ -9,6 +9,13 @@
 // We can query for the 10 minute interval then crop. we don't need to requery each time
 // TODO: when we upload the markevents we also want to upload when we made the mark event. (so we can see it's relation to the crop
 // TODO: add the fill color for the bottom of the chart slider: datset.fill = ChartFill.fill(withColor: color.withAlphaComponent(0.8))
+//NOTE: when we send the dates to the server, the range between the crops is INCLUSIVE.
+
+
+// Documentation
+// highlight 1 is the left crop line
+// highlight 2 is the right crop line
+// highlight 3 is the middle crop line
 
 import UIKit
 import Charts
@@ -59,6 +66,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
     @IBOutlet weak var isReactionSwitch: UISwitch!
     @IBOutlet weak var uploadButton: UIButton!
     
+    @IBOutlet weak var evaluateEmotionBar: EmotionButtonsControl!
     var markEventDate: Date = Date()
     
     private let displayDateFormatter = DateFormatter()
@@ -68,10 +76,18 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
     private var isReaction = false
     private var activeTypingField = ""
     private var lineChartEntry = [String : [ChartDataEntry]]()
+    //private var lineChartEntryDates = [String : [Date]]()
     private var highlight1 : Highlight?
     private var highlight2 : Highlight?
     private var highlight3 : Highlight?
+    private let typesOfBiometrics = ["HR"]
+    /*private var highlight1Date : Date?
+    private var highlight2Date : Date?
+    private var highlight3Date : Date?*/
+    private var timeStartFillingForm : Date?
     let generator = UIImpactFeedbackGenerator(style: .light)
+    let appContextFormatter = DateFormatter()
+    private let commentBoxPlaceholder = "Comments"
     // I need to refactor this and use a map
 
     
@@ -84,10 +100,18 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        /*// setting it to negative 100 weeks so we notice if something's wrong
+        highlight1Date = Date().addingTimeInterval(-700 * 24 * 60 * 60)
+        highlight2Date = Date().addingTimeInterval(-700 * 24 * 60 * 60)
+        highlight3Date = Date().addingTimeInterval(-700 * 24 * 60 * 60)*/
+        
+        uploadButton.setTitleColor(UIColor.lightGray, for: .normal)
         uploadButton.isEnabled = false
+        appContextFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         NSLog("Setting things up")
         
-
+        timeStartFillingForm = Date()
         queryBioSamples()
         // Colors:
         commentBoxTextView.layer.borderColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1.0).cgColor
@@ -117,7 +141,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
         
         // Textview
         commentBoxTextView.delegate = self
-        commentBoxTextView.text = "Comments"
+        commentBoxTextView.text = commentBoxPlaceholder
         commentBoxTextView.textColor = UIColor.lightGray
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -153,7 +177,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
     
     func textViewDidEndEditing(_ textView: UITextView) {
         if commentBoxTextView.text.isEmpty {
-            commentBoxTextView.text = "Comments?"
+            commentBoxTextView.text = commentBoxPlaceholder
             commentBoxTextView.textColor = UIColor.lightGray
         }
     }
@@ -201,17 +225,20 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
     
     func updateGraph(){
         //ineChartEntry["HR"] = []()
-        var tempArr : [ChartDataEntry] = []
+        var tempArr1 : [ChartDataEntry] = []
+        //var tempArr2 : [Date] = []
         for i in 0...(bioPoints["HR"]!.count - 1){
             //NSLog("Cur Time: \(Double(bioPoints!["HR"]![i].endTime.seconds(from : markEventDate)))")
             let difference = Double(bioPoints["HR"]![i].endTime.seconds(from : markEventDate))
             if(abs(difference) < Double(eventDurationSlider.value) * 5.0 * 60.0){
                 let value = ChartDataEntry(x: difference, y: bioPoints["HR"]![i].measurement)
-                tempArr.append(value)
+                tempArr1.append(value)
+                //tempArr2.append(bioPoints["HR"]![i].endTime)
             }
         }
         
-        lineChartEntry["HR"] = tempArr
+        lineChartEntry["HR"] = tempArr1
+        //lineChartEntryDates["HR"] = tempArr2
         
         let line = LineChartDataSet(values: lineChartEntry["HR"], label: "Heartrate")
         line.colors = [UIColor.red]
@@ -252,7 +279,6 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
     
     
     func queryBioSamples(){
-        
         let numMinutesGap = 5.0
         let endTime = markEventDate.addingTimeInterval(TimeInterval(numMinutesGap * 60.0))
         let startTime = markEventDate.addingTimeInterval(TimeInterval(-numMinutesGap * 60.0))
@@ -350,10 +376,10 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
         }
     }
     
+    // The sole purpose of the lastHighlight is to see if the highlights moved to see if we need to vibrate
     var lastHighlight1 : Highlight? = nil
     var lastHighlight2 : Highlight? = nil
     var lastHighlight3 : Highlight? = nil
-    
     
     func getAllHighlights() -> [Highlight]{
         var allHighlights = [Highlight]()
@@ -515,20 +541,52 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
     }
     
     
-    
+    func json(from object: [Any]) -> String? {
+        guard let data = try? JSONSerialization.data(withJSONObject: object, options: []) else {
+            return nil
+        }
+        return String(data: data, encoding: String.Encoding.utf8)
+    }
 
     @IBAction func sendBioSnapshot(_ sender: Any) {
         
+        // This says: find the x value of the highlight (which is conveniently the number of seconds away from the timeOfMark)
+        // Then add that time from the time of the timeOfMark
+        let highlight1Date = markEventDate.addingTimeInterval(TimeInterval(highlight1!.x))
+        let highlight2Date = markEventDate.addingTimeInterval(TimeInterval(highlight2!.x))
+        var highlight3Date = Date()
+        
+        
+        
+        var timeOfEvent = highlight3Date
+        if(isReaction){
+            timeOfEvent = highlight1Date
+        }else{
+            highlight3Date = markEventDate.addingTimeInterval(TimeInterval(highlight3!.x))
+        }
+        
+        var commentsToSend = commentBoxTextView.text
+        if(commentsToSend == commentBoxPlaceholder){
+            commentsToSend = ""
+        }
+        
+        print("\(json(from : evaluateEmotionBar.getButtonStates())!)")
+        
         let parameters: Parameters = [
-            "timestart": "1233",
-            "timeend":"123",
-            "heartrate": "232323"
+            "timeStartFillingForm": appContextFormatter.string(from: timeStartFillingForm!),
+            "timeEndFillingForm": appContextFormatter.string(from: Date()),
+            "timeOfMark": appContextFormatter.string(from: markEventDate),
+            "isReaction": String(isReaction),
+            "anticipationStart": appContextFormatter.string(from: highlight1Date), // The server only uses this value if isReaction = false
+            "TimeOfEvent": appContextFormatter.string(from: timeOfEvent),
+            "reactionEnd": appContextFormatter.string(from: highlight2Date),
+            "emotionsFelt" : json(from : evaluateEmotionBar.getButtonStates()) as Any,
+            "comments" : commentsToSend! as String,
+            "typeBiometricsViewed" : json(from : typesOfBiometrics) as Any //TODO: add more biometrics to view
         ]
-        //let config = readConfig()
-        //print(config["ip"])
         
         
-        AF.request("http://10.8.0.2:9000/watch_bio_snapshot",
+        AF.request("http://10.8.0.2:9000/upload_mark_event",
                    method: .post,
                    parameters: parameters,
                    encoding: JSONEncoding()

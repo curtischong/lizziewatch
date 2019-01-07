@@ -542,6 +542,7 @@
                     </view>
                     <connections>
                         <outlet property="commentBoxTextView" destination="HSJ-Vm-MaH" id="vIC-J5-DAB"/>
+                        <outlet property="evaluateEmotionBar" destination="kOb-B6-Xlc" id="zQc-Qq-Wqw"/>
                         <outlet property="eventDurationSlider" destination="zoF-KU-7vC" id="sWX-uN-vHj"/>
                         <outlet property="eventDurationTextLabel" destination="egH-qb-5gY" id="gn0-Bx-Zfo"/>
                         <outlet property="eventTextField" destination="N7K-nA-gcy" id="mwl-FC-srO"/>
