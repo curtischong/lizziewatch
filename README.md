@@ -1,15 +1,15 @@
 # Lizzie watch
 
 <p align="center">
-  <img src="http://chongcurtis.com/photos/photos/inner_lizzie.gif" alt="A photo of the proposed locations."/>
+  <img src="http://chongcurtis.com/photos/inner_lizzie.gif" alt="A photo of the proposed locations."/>
 </p>
 
 I entered college believing I could finally siphon time away from school and work on a few passion projects. Unfortunately, assignment after assignment quickly proved otherwise. So to save time, I’m working an AI to:
 
-⋅⋅* Estimate how long tasks take.
-⋅⋅* Evaluate the emotional impact calendar events have on my day.
-⋅⋅* Tell me to take a breath before I say things I immediately want to take back.
-⋅⋅* Choose the best song on Spotify to get me into the zone.
+  * Estimate how long tasks take.
+  * Evaluate the emotional impact calendar events have on my day.
+  * Tell me to take a breath before I say things I immediately want to take back.
+  * Choose the best song on Spotify to get me into the zone.
 
 So far, I’ve built a Golang server that archives biometric data from an Apple Watch, pulls data from all of my calendar events, to do lists, and messenger conversations into a central InfluxDB database.
 
