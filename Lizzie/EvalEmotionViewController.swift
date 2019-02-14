@@ -199,7 +199,7 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
         //print(config["ip"])
         let ctx = self
         
-        AF.request("http://10.8.0.2:9000/upload_emotion_evaluation",
+        AF.request("http://10.8.0.1:9000/upload_emotion_evaluation",
                    method: .post,
                    parameters: parameters,
                    encoding: JSONEncoding()

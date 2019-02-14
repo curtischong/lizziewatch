@@ -598,7 +598,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
         ]
         
         let ctx = self
-        AF.request("http://10.8.0.2:9000/upload_mark_event",
+        AF.request("http://10.8.0.1:9000/upload_mark_event",
                    method: .post,
                    parameters: parameters,
                    encoding: JSONEncoding()

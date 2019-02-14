@@ -57,15 +57,15 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
         updateMarkEventCnt()
         loadMarkEventRows()
         NSLog("Main View Loaded")
-        authenticateForHealthstoreData()
         
         
         let appSettings = getSettings()
         if(appSettings.dateLastSyncedWithWatch != nil){
             dateLastSyncLabel.text = displayDateFormatter.string(from: appSettings.dateLastSyncedWithWatch!)
         }
-        
-        queryBioSamples(appSettings : appSettings)
+        if (authenticateForHealthstoreData()){
+            queryBioSamples(appSettings : appSettings)
+        }
         
         // Used only in testing
         //dropAllRows()
@@ -419,7 +419,7 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
             "measurements": json(from : measurements) as Any,
         ]
         let ctx = self
-        AF.request("http://10.8.0.2:9000/upload_bio_samples",
+        AF.request("http://10.8.0.1:9000/upload_bio_samples",
                    method: .post,
                    parameters: parameters,
                    encoding: JSONEncoding()
