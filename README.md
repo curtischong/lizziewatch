@@ -1,4 +1,26 @@
 # Lizzie watch
+
+<p align="center">
+  <img src="http://chongcurtis.com/photos/inner_lizzie.gif" alt="A photo of the proposed locations."/>
+</p>
+
+I entered college believing I could finally siphon time away from school and work on a few passion projects. Unfortunately, assignment after assignment quickly proved otherwise. So to save time, I’m working an AI to:
+
+  * Estimate how long tasks take.
+  * Evaluate the emotional impact calendar events have on my day.
+  * Tell me to take a breath before I say things I immediately want to take back.
+  * Choose the best song on Spotify to get me into the zone.
+
+So far, I’ve built a Golang server that archives biometric data from an Apple Watch, pulls data from all of my calendar events, to do lists, and messenger conversations into a central InfluxDB database.
+
+To record how different events shape my mood, I use the app to create a labelled dataset of how different events affect my bimetrics and mood. When an event happens, I pull up the app and crop the timeline that describes when the event happened. Then I tag the event with any of Robert Plutchik’s eight basic emotions (Fear, Joy, Anger, Sadness, Disgust, Suprise, Contempt, Interest) and ramble on about what happened in a comment box before sending the data to my server.
+
+To top off the entire project, these services are protected under my OpenVPN network to keep those who want to run `DROP MEASUREMENT bioSamples` at bay.
+
+To move the project forward, I’m building dashboard services to query my data in a chrome extension so I can see metadata about my life every time I open a new tab.
+
+### Technical Things:
+
 *disclaimer: this repo was adapted from https://github.com/thomaspaulmann/HeartControl by Thomas Paulmann. His base repo fixed a fundamental authentication error I had as I was developing the app*
 
 Lizzie's WatchOS app is the core of my emotional database. By taking advantage of Apple's workouts API, I am able to query for a sample every 5 seconds... compared to healthkit's default of 5/10 minutes.
