@@ -13,7 +13,7 @@ let healthStore = HKHealthStore()
 
 
 func authenticateForHealthstoreData() -> Bool{
-        // Create health store.
+    // Create health store.
     if #available(iOS 11.0, *) {
         NSLog("can read all healthStore Datapoints!")
         // Check if there is health data available.
@@ -30,12 +30,12 @@ func authenticateForHealthstoreData() -> Bool{
         
         
         // Create quantity type for heart rate.
-    
-            guard let vo2MaxQuantityType = HKQuantityType.quantityType(forIdentifier: .vo2Max) else {
-                print("Unable to create quantity type for vo2Max.")
-                return false
-            }
-    
+        
+        guard let vo2MaxQuantityType = HKQuantityType.quantityType(forIdentifier: .vo2Max) else {
+            print("Unable to create quantity type for vo2Max.")
+            return false
+        }
+        
         
         guard let distanceWalkingRunningQuantityType = HKQuantityType.quantityType(forIdentifier: .distanceWalkingRunning) else {
             print("Unable to create quantity type for distanceWalkingRunning.")

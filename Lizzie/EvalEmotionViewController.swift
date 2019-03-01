@@ -33,8 +33,7 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
     private var tiredSliderRealVal = 0
     private var happySliderRealVal = 0
     private let commentBoxPlaceholder = "Comments"
-    
-    let appContextFormatter = DateFormatter()
+    let httpManager = HttpManager()
     
     
     let generator = UIImpactFeedbackGenerator(style: .light)
@@ -44,7 +43,6 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        appContextFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         timeStartFillingForm = Date()
         normalEvalSliderLabel.text = "How normal do you feel? 0"
         normalEvalSlider.setValue(0.0, animated: true)
@@ -181,61 +179,21 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
     }
     
     @IBAction func uploadResponseButtonPressed(_ sender: Any) {
+        
         var commentsToSend = commentBoxTextView.text
         if(commentsToSend == commentBoxPlaceholder){
             commentsToSend = ""
         }
-        let parameters: Parameters = [
-            "timeStartFillingForm": appContextFormatter.string(from: timeStartFillingForm!),
-            "timeEndFillingForm": appContextFormatter.string(from: Date()),
-            "normalEval": String(normalSliderRealVal),
-            "socialEval": String(socialSliderRealVal),
-            "exhaustedEval": String(exhaustedSliderRealVal),
-            "tiredEval": String(tiredSliderRealVal),
-            "happyEval": String(happySliderRealVal),
-            "comments" : commentsToSend! as String
-        ]
-        //let config = readConfig()
-        //print(config["ip"])
-        let ctx = self
         
-        AF.request("http://10.8.0.1:9000/upload_emotion_evaluation",
-                   method: .post,
-                   parameters: parameters,
-                   encoding: JSONEncoding()
-            ).responseJSON { response in
-                
-                NSLog("response received")
-                ctx.performSegue(withIdentifier: "unwindSegueToMainViewController", sender: ctx)
-                //TODO: FIX THIS CALLBACK THING
-                
-                
-                /*print("asdasd")
-                print(response.request)
-                if let status = response.response?.statusCode {
-                    switch(status){
-                    case 200:
-                        print("example success")
-                    default:
-                        print("error with response status: \(status)")
-                    }
-                }
-                
-                
-                print("ioioi")
-                if let result = response.result.value {
-                    let JSON = result as! NSDictionary
-                    print(JSON)
-                }else{
-                    print(response.result)
-                }*/
-                
-                
-                
-                
-                //print("Request: \(String(describing: response.request))")   // original url request
-                //print("Response: \(String(describing: response.response))") // http url response
-                
-        }
+        let emotionEvalObj = EmotionEvalObj(timeStartFillingForm: timeStartFillingForm!,
+                                            timeEndFillingForm: Date(),
+                                            normalEval: normalSliderRealVal,
+                                            socialEval: socialSliderRealVal,
+                                            exhaustedEval: exhaustedSliderRealVal,
+                                            tiredEval: tiredSliderRealVal,
+                                            happyEval: happySliderRealVal,
+                                            comments: commentsToSend! as String)
+        httpManager.uploadEmotionEvaluation(emotionEvalObj : emotionEvalObj)
+        self.performSegue(withIdentifier: "unwindSegueToMainViewController", sender: self)
     }
 }

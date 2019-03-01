@@ -12,7 +12,11 @@ import Alamofire
 class HttpManager{
     
     let SERVER_IP = "http://10.8.0.1:9000/"
+    let appContextFormatter = DateFormatter()
     
+    init(){
+        appContextFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+    }
     
     func json(from object: [Any]) -> String? {
         guard let data = try? JSONSerialization.data(withJSONObject: object, options: []) else {
@@ -57,34 +61,64 @@ class HttpManager{
                 NSLog("markEventSent! updating dateLastSyncedWithServer")
         }
     }
-
-    func uploadMarkEvent(name : String,
-                        desc : String,
-                        timeOfMark : Date,
-                        markTypeIsReaction : Bool,
-                        startTimeLeadingToEvent : Date,
-                        timeOfEvent : Date,
-                        endTimeOfReaction : Date){
-        let parameters: Parameters = [
-            "name" : name,
-            "desc" : desc,
-            "timeOfMark" : timeOfMark,
-            "markTypeIsReaction" : markTypeIsReaction,
-            "startTimeLeadingToEvent" : startTimeLeadingToEvent,
-            "timeOfEvent" : timeOfEvent,
-            "endTimeOfReaction" : endTimeOfReaction
-        ]
+    
+    func uploadMarkEvent(){
         
-        //TODO: change the ip to the ip of the server
-        AF.request(SERVER_IP + "watch_mark_event",
+    }
+    
+    func uploadEmotionEvaluation(emotionEvalObj : EmotionEvalObj){
+        
+        let parameters: Parameters = [
+            "timeStartFillingForm": appContextFormatter.string(from: emotionEvalObj.timeStartFillingForm),
+            "timeEndFillingForm": appContextFormatter.string(from: emotionEvalObj.timeEndFillingForm),
+            "normalEval": String(emotionEvalObj.normalEval),
+            "socialEval": String(emotionEvalObj.socialEval),
+            "exhaustedEval": String(emotionEvalObj.exhaustedEval),
+            "tiredEval": String(emotionEvalObj.tiredEval),
+            "happyEval": String(emotionEvalObj.happyEval),
+            "comments" : emotionEvalObj.comments
+        ]
+        //let config = readConfig()
+        //print(config["ip"])
+        let ctx = self
+        
+        AF.request("http://10.8.0.1:9000/upload_emotion_evaluation",
                    method: .post,
                    parameters: parameters,
                    encoding: JSONEncoding()
             ).responseJSON { response in
                 
-                print("Request: \(String(describing: response.request))")   // original url request
-                print("Response: \(String(describing: response.response))") // http url response
-                print("Result: \(response.result)")                         // response serialization result
+                NSLog("response received")
+                //TODO: FIX THIS CALLBACK THING
+                
+                
+                /*print("asdasd")
+                 print(response.request)
+                 if let status = response.response?.statusCode {
+                 switch(status){
+                 case 200:
+                 print("example success")
+                 default:
+                 print("error with response status: \(status)")
+                 }
+                 }
+                 
+                 
+                 print("ioioi")
+                 if let result = response.result.value {
+                 let JSON = result as! NSDictionary
+                 print(JSON)
+                 }else{
+                 print(response.result)
+                 }*/
+                
+                
+                
+                
+                //print("Request: \(String(describing: response.request))")   // original url request
+                //print("Response: \(String(describing: response.response))") // http url response
+                
         }
     }
+    
 }
