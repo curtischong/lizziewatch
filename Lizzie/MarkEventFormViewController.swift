@@ -19,7 +19,6 @@
 
 import UIKit
 import Charts
-import Alamofire
 import SwiftyJSON
 import WatchConnectivity
 import CoreData
@@ -95,6 +94,7 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
     let generator = UIImpactFeedbackGenerator(style: .light)
     private let commentBoxPlaceholder = "Comments"
     let httpManager = HttpManager()
+    let dataManager = DataManager()
     // I need to refactor this and use a map
 
     
@@ -540,18 +540,8 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
     }
     
     func deleteCurrentMarkEvent(){
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "MarkEventPhone")
-        fetchRequest.predicate = NSPredicate(format: "timeOfMark == %@", markEventDate as NSDate)
-        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
-        
-        do{
-            try context.execute(deleteRequest)
-            try context.save()
-            NSLog("Deleted MarkEventPhone with time: \(markEventDate)")
-            performSegue(withIdentifier: "unwindSegue2ToMainViewController", sender: self)
-        }catch let error{
-            NSLog("Couldn't Delete MarkEventPhone with time \(markEventDate) with error: \(error)")
-        }
+        dataManager.deleteMarkEvent(timeOfMark: markEventDate)
+        performSegue(withIdentifier: "unwindSegue2ToMainViewController", sender: self)
     }
     
     func json(from object: [Any]) -> String? {

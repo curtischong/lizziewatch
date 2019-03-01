@@ -38,6 +38,7 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
     let displayDateFormatter = DateFormatter()
     let settingsManager = SettingsManager()
     let httpManager = HttpManager()
+    let hkManager = HKManager()
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -64,11 +65,12 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
             dateLastSyncLabel.text = displayDateFormatter.string(from: settingsManager.dateLastSyncedWithWatch!)
         }
         if (authenticateForHealthstoreData()){
-            queryBioSamples()
+            hkManager.queryBioSamples()
         }
         
         // Used only in testing
-        //dropAllRows()
+        //dataManager.dropAllRows()
+        //updateMarkEventCnt()
     }
     
     //MARK: Actions
@@ -249,21 +251,6 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
         }
     }
     
-    private func dropAllRows(){
-        // remove MarkEvent rows
-        let fetchRequest2 = NSFetchRequest<NSFetchRequestResult>(entityName: "MarkEventPhone")
-        let deleteRequest2 = NSBatchDeleteRequest(fetchRequest: fetchRequest2)
-        
-        do{
-            try context.execute(deleteRequest2)
-            try context.save()
-            NSLog("Deleted MarkEventPhone rows")
-            updateMarkEventCnt()
-        }catch let error{
-            NSLog("Couldn't Delete MarkEventPhone rows with error: \(error)")
-        }
-    }
-    
     
     // MARK: - Navigation
         
@@ -322,40 +309,6 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
         }else{
             return theSample.quantity.doubleValue(for: theUnit)
         }
-    }
-
-    func queryBioSamples(){
-        NSLog("Querying for healthkit datapoints")
-        let endDate = Date()
-        var startDate = Date()
-        if(settingsManager.dateLastSyncedWithServer == nil){
-            NSLog("The app has never synced with the server. Sending all the biopoints from the last week")
-            // select all the data from the past week for good measure
-            startDate = endDate.addingTimeInterval(-24 * 60 * 60 * 7)
-        }else{
-            // query for points an hour before the last sync bc points may start before the endDate of the query
-            startDate = settingsManager.dateLastSyncedWithServer!.addingTimeInterval(-60 * 60)
-        }
-        
-        let predicate = HKQuery.predicateForSamples(withStart: startDate as Date, end: endDate as Date)
-        
-
-        let query = HKSampleQuery.init(sampleType: HKSampleType.quantityType(forIdentifier: .heartRate)!,
-                                       predicate: predicate,
-                                       limit: HKObjectQueryNoLimit,
-                                       sortDescriptors: nil) { (query, results, error) in
-                                        
-                                        if(error != nil){
-                                            NSLog("couldn't get healthquery data with error: \(error!)")
-                                        }
-                                        
-                                        guard let samples = results as? [HKQuantitySample] else {
-                                            fatalError("Couldn't cast the HKQuantities into an array with error: \(error!)");
-                                        }
-                                        NSLog("found \(samples.count) health samples")
-                                        self.handleBioSamples(samples : samples, startDate : startDate, endDate : endDate)
-        }
-        healthStore.execute(query)
     }
     
     func handleBioSamples(samples : [HKQuantitySample], startDate : Date, endDate : Date){
