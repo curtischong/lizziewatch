@@ -7,3 +7,10 @@
 //
 
 import Foundation
+
+class MarkEventObj{
+    var timeOfMark : Date
+    init(timeOfMark : Date){
+        self.timeOfMark = timeOfMark
+    }
+}

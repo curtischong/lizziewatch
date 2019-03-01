@@ -9,7 +9,7 @@
 import UIKit
 
 
-@IBDesignable class EmotionButtonsControl: UIStackView {
+@IBDesignable class EmotionSelectionElement: UIStackView {
     private var buttonEmotions = ["Fear","Joy","Anger","Sad","Disgust","Suprise","Contempt","Interest"]
     lazy var numEmotions = 8
     private var ratingButtons = [UIButton]()
@@ -76,7 +76,7 @@ import UIKit
             button.accessibilityLabel = "Set \(index + 1) star rating"
             
             // Setup the button action
-            button.addTarget(self, action: #selector(EmotionButtonsControl.ratingButtonTapped(button:)), for: .touchUpInside)
+            button.addTarget(self, action: #selector(EmotionSelectionElement.ratingButtonTapped(button:)), for: .touchUpInside)
             
             // Add the button to the stack
             addArrangedSubview(button)

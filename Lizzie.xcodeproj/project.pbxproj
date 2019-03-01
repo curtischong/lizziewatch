@@ -10,7 +10,7 @@
 		17E5281C62D31E883EC70454 /* Pods_Lizzie.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A231769E61B0E68BF2E44C4C /* Pods_Lizzie.framework */; };
 		1FD61320C6EB25C7ECA82551 /* Pods_Lizzie_WatchKit_Extension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 541683A8F3B7B20733B7C94B /* Pods_Lizzie_WatchKit_Extension.framework */; };
 		BE25AFEB1D4F33B100DAF094 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE25AFEA1D4F33B100DAF094 /* AppDelegate.swift */; };
-		BE25AFED1D4F33B100DAF094 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE25AFEC1D4F33B100DAF094 /* ViewController.swift */; };
+		BE25AFED1D4F33B100DAF094 /* MarkEventFormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE25AFEC1D4F33B100DAF094 /* MarkEventFormViewController.swift */; };
 		BE25AFF01D4F33B100DAF094 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BE25AFEE1D4F33B100DAF094 /* Main.storyboard */; };
 		BE25AFF21D4F33B100DAF094 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BE25AFF11D4F33B100DAF094 /* Assets.xcassets */; };
 		BE25AFF51D4F33B100DAF094 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BE25AFF31D4F33B100DAF094 /* LaunchScreen.storyboard */; };
@@ -27,9 +27,7 @@
 		BE70700D1D57A29500E41B95 /* AuthorizationManger.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE70700C1D57A29500E41B95 /* AuthorizationManger.swift */; };
 		BEB5C5BB1D4F656D00BBF490 /* BioSampleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB5C5BA1D4F656D00BBF490 /* BioSampleManager.swift */; };
 		BF7B3D8538CA396EB3585705 /* Pods_Lizzie_WatchKit_App.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F3E209A9B3ADEA685359A2F /* Pods_Lizzie_WatchKit_App.framework */; };
-		E919691F21CF3F1A00E3D1BF /* EmotionSelectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E919691E21CF3F1A00E3D1BF /* EmotionSelectionController.swift */; };
 		E93AFEA121DA846500E34925 /* WorkoutLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E93AFEA021DA846500E34925 /* WorkoutLoader.swift */; };
-		E941BE7021E09765009D366A /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = E941BE6F21E09765009D366A /* AppSettings.swift */; };
 		E94A211221D997480072740B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BE25AFF11D4F33B100DAF094 /* Assets.xcassets */; };
 		E959E3AE21D603AC003B370E /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = E959E3AD21D603AC003B370E /* DataSource.swift */; };
 		E959E3B021D6064D003B370E /* MarkEventTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E959E3AF21D6064D003B370E /* MarkEventTableViewCell.swift */; };
@@ -46,6 +44,8 @@
 		E9FA28D32229CA740018213B /* BioSampleObj.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9FA28D22229CA740018213B /* BioSampleObj.swift */; };
 		E9FA28D52229CAF70018213B /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9FA28D42229CAF70018213B /* DataManager.swift */; };
 		E9FA28D72229D37F0018213B /* MarkEventObj.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9FA28D62229D37F0018213B /* MarkEventObj.swift */; };
+		E9FA28D92229D4FB0018213B /* EmotionSelectionElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9FA28D82229D4FB0018213B /* EmotionSelectionElement.swift */; };
+		E9FA28DB2229D5760018213B /* SettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9FA28DA2229D5760018213B /* SettingsManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -99,7 +99,7 @@
 		A231769E61B0E68BF2E44C4C /* Pods_Lizzie.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Lizzie.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE25AFE71D4F33B100DAF094 /* Lizzie.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lizzie.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE25AFEA1D4F33B100DAF094 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		BE25AFEC1D4F33B100DAF094 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		BE25AFEC1D4F33B100DAF094 /* MarkEventFormViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkEventFormViewController.swift; sourceTree = "<group>"; };
 		BE25AFEF1D4F33B100DAF094 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		BE25AFF11D4F33B100DAF094 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BE25AFF41D4F33B100DAF094 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -121,9 +121,7 @@
 		BE70700C1D57A29500E41B95 /* AuthorizationManger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthorizationManger.swift; sourceTree = "<group>"; };
 		BEB5C5BA1D4F656D00BBF490 /* BioSampleManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BioSampleManager.swift; sourceTree = "<group>"; };
 		D30E5E4D7CB82428D89F6B8D /* Pods-Lizzie.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lizzie.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Lizzie/Pods-Lizzie.debug.xcconfig"; sourceTree = "<group>"; };
-		E919691E21CF3F1A00E3D1BF /* EmotionSelectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmotionSelectionController.swift; sourceTree = "<group>"; };
 		E93AFEA021DA846500E34925 /* WorkoutLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutLoader.swift; sourceTree = "<group>"; };
-		E941BE6F21E09765009D366A /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		E959E3AD21D603AC003B370E /* DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSource.swift; sourceTree = "<group>"; };
 		E959E3AF21D6064D003B370E /* MarkEventTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkEventTableViewCell.swift; sourceTree = "<group>"; };
 		E97008C021D2F5D2009E4463 /* WatchSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchSessionManager.swift; sourceTree = "<group>"; };
@@ -138,6 +136,8 @@
 		E9FA28D22229CA740018213B /* BioSampleObj.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BioSampleObj.swift; sourceTree = "<group>"; };
 		E9FA28D42229CAF70018213B /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DataManager.swift; path = /Users/curtis/Desktop/Lizzie/Lizzie/DataManager.swift; sourceTree = "<absolute>"; };
 		E9FA28D62229D37F0018213B /* MarkEventObj.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkEventObj.swift; sourceTree = "<group>"; };
+		E9FA28D82229D4FB0018213B /* EmotionSelectionElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmotionSelectionElement.swift; sourceTree = "<group>"; };
+		E9FA28DA2229D5760018213B /* SettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManager.swift; sourceTree = "<group>"; };
 		EA66E66CEE61B8D7980AD7BD /* Pods-Lizzie WatchKit Extension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lizzie WatchKit Extension.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Lizzie WatchKit Extension/Pods-Lizzie WatchKit Extension.debug.xcconfig"; sourceTree = "<group>"; };
 		FC70F0B612DAB175CAE4DD72 /* Pods-Lizzie.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lizzie.release.xcconfig"; path = "Pods/Target Support Files/Pods-Lizzie/Pods-Lizzie.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -214,15 +214,15 @@
 				E9FA28D42229CAF70018213B /* DataManager.swift */,
 				E9AC88E921D7555B008E2D55 /* HttpManager.swift */,
 				E98FBA3321D430FC00BF0784 /* MainViewController.swift */,
-				E941BE6F21E09765009D366A /* AppSettings.swift */,
+				BE25AFEC1D4F33B100DAF094 /* MarkEventFormViewController.swift */,
+				E9AC88EB21D75C30008E2D55 /* EvalEmotionViewController.swift */,
+				E9FA28D82229D4FB0018213B /* EmotionSelectionElement.swift */,
+				E9FA28DA2229D5760018213B /* SettingsManager.swift */,
 				E9FA28D22229CA740018213B /* BioSampleObj.swift */,
 				E9FA28D62229D37F0018213B /* MarkEventObj.swift */,
 				E959E3AD21D603AC003B370E /* DataSource.swift */,
 				BE25AFEE1D4F33B100DAF094 /* Main.storyboard */,
 				E9AC88E721D72D96008E2D55 /* MarkEventDataPoint.swift */,
-				BE25AFEC1D4F33B100DAF094 /* ViewController.swift */,
-				E919691E21CF3F1A00E3D1BF /* EmotionSelectionController.swift */,
-				E9AC88EB21D75C30008E2D55 /* EvalEmotionViewController.swift */,
 				E959E3AF21D6064D003B370E /* MarkEventTableViewCell.swift */,
 				BE25AFF31D4F33B100DAF094 /* LaunchScreen.storyboard */,
 				E98FBA4321D45D4200BF0784 /* BioSamplePhone.xcdatamodeld */,
@@ -556,10 +556,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				E98FBA2921D4216600BF0784 /* HealthKitDataPoint.swift in Sources */,
-				BE25AFED1D4F33B100DAF094 /* ViewController.swift in Sources */,
+				E9FA28DB2229D5760018213B /* SettingsManager.swift in Sources */,
+				BE25AFED1D4F33B100DAF094 /* MarkEventFormViewController.swift in Sources */,
 				E93AFEA121DA846500E34925 /* WorkoutLoader.swift in Sources */,
 				E9FA28D32229CA740018213B /* BioSampleObj.swift in Sources */,
-				E919691F21CF3F1A00E3D1BF /* EmotionSelectionController.swift in Sources */,
 				E9FA28D72229D37F0018213B /* MarkEventObj.swift in Sources */,
 				E98FBA4521D45D4200BF0784 /* BioSamplePhone.xcdatamodeld in Sources */,
 				E9FA28D52229CAF70018213B /* DataManager.swift in Sources */,
@@ -571,7 +571,7 @@
 				E9AC88E821D72D96008E2D55 /* MarkEventDataPoint.swift in Sources */,
 				BE25AFEB1D4F33B100DAF094 /* AppDelegate.swift in Sources */,
 				E959E3AE21D603AC003B370E /* DataSource.swift in Sources */,
-				E941BE7021E09765009D366A /* AppSettings.swift in Sources */,
+				E9FA28D92229D4FB0018213B /* EmotionSelectionElement.swift in Sources */,
 				E98FBA3421D430FC00BF0784 /* MainViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

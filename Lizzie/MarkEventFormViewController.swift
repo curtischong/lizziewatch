@@ -49,7 +49,7 @@ extension Date {
 }
 
 
-class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
+class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
 
     //MARK: Properties
     //@IBOutlet weak var eventTextLabel: UILabel!
@@ -66,7 +66,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
     @IBOutlet weak var isReactionSwitch: UISwitch!
     @IBOutlet weak var uploadButton: UIButton!
     
-    @IBOutlet weak var evaluateEmotionBar: EmotionButtonsControl!
+    @IBOutlet weak var evaluateEmotionBar: EmotionSelectionElement!
     var markEventDate: Date = Date()
     
     private let displayDateFormatter = DateFormatter()

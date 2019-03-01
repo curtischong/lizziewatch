@@ -36,6 +36,7 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
     var session: WCSession?
     let appContextFormatter = DateFormatter()
     let displayDateFormatter = DateFormatter()
+    let settingsManager = SettingsManager()
     let httpManager = HttpManager()
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -59,13 +60,11 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
         loadMarkEventRows()
         NSLog("Main View Loaded")
         
-        
-        let appSettings = getSettings()
-        if(appSettings.dateLastSyncedWithWatch != nil){
-            dateLastSyncLabel.text = displayDateFormatter.string(from: appSettings.dateLastSyncedWithWatch!)
+        if(settingsManager.dateLastSyncedWithWatch != nil){
+            dateLastSyncLabel.text = displayDateFormatter.string(from: settingsManager.dateLastSyncedWithWatch!)
         }
         if (authenticateForHealthstoreData()){
-            queryBioSamples(appSettings : appSettings)
+            queryBioSamples()
         }
         
         // Used only in testing
@@ -215,8 +214,8 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
             NSLog("Successfully saved the current MarkEvent")
             self.syncToPhoneStateLabel.text = "Synced"
 
-            let appSettings = ConfigObj(dateLastSyncedWithWatch : endTimeOfQuery)
-            setSettings(curConfigObj : appSettings)
+            settingsManager.dateLastSyncedWithWatch = endTimeOfQuery
+            settingsManager.saveSettings()
             
             // TODO: note: the concerns raised above applies to here too
             let dataStorePackage = ["event" : "finishedSyncing",
@@ -289,7 +288,7 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
                 
             }
         }else if(segue.identifier == "contextualizeMarkEventSegue"){
-            if let destinationVC = segue.destination as? ViewController {
+            if let destinationVC = segue.destination as? MarkEventFormViewController {
                 destinationVC.markEventDate = sender as! Date
                 NSLog("sending this date: \( sender as! Date)")
             }
@@ -325,17 +324,17 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
         }
     }
 
-    func queryBioSamples(appSettings : ConfigObj){
+    func queryBioSamples(){
         NSLog("Querying for healthkit datapoints")
         let endDate = Date()
         var startDate = Date()
-        if(appSettings.dateLastSyncedWithServer == nil){
+        if(settingsManager.dateLastSyncedWithServer == nil){
             NSLog("The app has never synced with the server. Sending all the biopoints from the last week")
             // select all the data from the past week for good measure
             startDate = endDate.addingTimeInterval(-24 * 60 * 60 * 7)
         }else{
             // query for points an hour before the last sync bc points may start before the endDate of the query
-            startDate = appSettings.dateLastSyncedWithServer!.addingTimeInterval(-60 * 60)
+            startDate = settingsManager.dateLastSyncedWithServer!.addingTimeInterval(-60 * 60)
         }
         
         let predicate = HKQuery.predicateForSamples(withStart: startDate as Date, end: endDate as Date)
