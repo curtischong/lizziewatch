@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:/Users/curtis/Desktop/Lizzie/Lizzie/DataManager.swift">
+   </FileRef>
+   <FileRef
       location = "group:Lizzie/MarkEventPhone+CoreDataClass.swift">
    </FileRef>
    <FileRef

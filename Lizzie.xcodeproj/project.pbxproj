@@ -42,8 +42,10 @@
 		E9AC88E821D72D96008E2D55 /* MarkEventDataPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9AC88E721D72D96008E2D55 /* MarkEventDataPoint.swift */; };
 		E9AC88EA21D7555B008E2D55 /* HttpManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9AC88E921D7555B008E2D55 /* HttpManager.swift */; };
 		E9AC88EC21D75C30008E2D55 /* EvalEmotionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9AC88EB21D75C30008E2D55 /* EvalEmotionViewController.swift */; };
-		E9B9BBF621D843130025BEF2 /* DataStoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B9BBF521D843130025BEF2 /* DataStoreManager.swift */; };
 		E9F4CC2221DDF44200AA724C /* Authenticate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F4CC2121DDF44200AA724C /* Authenticate.swift */; };
+		E9FA28D32229CA740018213B /* BioSampleObj.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9FA28D22229CA740018213B /* BioSampleObj.swift */; };
+		E9FA28D52229CAF70018213B /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9FA28D42229CAF70018213B /* DataManager.swift */; };
+		E9FA28D72229D37F0018213B /* MarkEventObj.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9FA28D62229D37F0018213B /* MarkEventObj.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -132,8 +134,10 @@
 		E9AC88E721D72D96008E2D55 /* MarkEventDataPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkEventDataPoint.swift; sourceTree = "<group>"; };
 		E9AC88E921D7555B008E2D55 /* HttpManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpManager.swift; sourceTree = "<group>"; };
 		E9AC88EB21D75C30008E2D55 /* EvalEmotionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvalEmotionViewController.swift; sourceTree = "<group>"; };
-		E9B9BBF521D843130025BEF2 /* DataStoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStoreManager.swift; sourceTree = "<group>"; };
 		E9F4CC2121DDF44200AA724C /* Authenticate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Authenticate.swift; sourceTree = "<group>"; };
+		E9FA28D22229CA740018213B /* BioSampleObj.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BioSampleObj.swift; sourceTree = "<group>"; };
+		E9FA28D42229CAF70018213B /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DataManager.swift; path = /Users/curtis/Desktop/Lizzie/Lizzie/DataManager.swift; sourceTree = "<absolute>"; };
+		E9FA28D62229D37F0018213B /* MarkEventObj.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkEventObj.swift; sourceTree = "<group>"; };
 		EA66E66CEE61B8D7980AD7BD /* Pods-Lizzie WatchKit Extension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lizzie WatchKit Extension.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Lizzie WatchKit Extension/Pods-Lizzie WatchKit Extension.debug.xcconfig"; sourceTree = "<group>"; };
 		FC70F0B612DAB175CAE4DD72 /* Pods-Lizzie.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lizzie.release.xcconfig"; path = "Pods/Target Support Files/Pods-Lizzie/Pods-Lizzie.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -207,10 +211,13 @@
 			children = (
 				BE3FDBDE1D576BC1009165A8 /* Supporting Files */,
 				BE25AFEA1D4F33B100DAF094 /* AppDelegate.swift */,
+				E9FA28D42229CAF70018213B /* DataManager.swift */,
+				E9AC88E921D7555B008E2D55 /* HttpManager.swift */,
 				E98FBA3321D430FC00BF0784 /* MainViewController.swift */,
 				E941BE6F21E09765009D366A /* AppSettings.swift */,
+				E9FA28D22229CA740018213B /* BioSampleObj.swift */,
+				E9FA28D62229D37F0018213B /* MarkEventObj.swift */,
 				E959E3AD21D603AC003B370E /* DataSource.swift */,
-				E9B9BBF521D843130025BEF2 /* DataStoreManager.swift */,
 				BE25AFEE1D4F33B100DAF094 /* Main.storyboard */,
 				E9AC88E721D72D96008E2D55 /* MarkEventDataPoint.swift */,
 				BE25AFEC1D4F33B100DAF094 /* ViewController.swift */,
@@ -219,7 +226,6 @@
 				E959E3AF21D6064D003B370E /* MarkEventTableViewCell.swift */,
 				BE25AFF31D4F33B100DAF094 /* LaunchScreen.storyboard */,
 				E98FBA4321D45D4200BF0784 /* BioSamplePhone.xcdatamodeld */,
-				E9AC88E921D7555B008E2D55 /* HttpManager.swift */,
 				E93AFEA021DA846500E34925 /* WorkoutLoader.swift */,
 				E9F4CC2121DDF44200AA724C /* Authenticate.swift */,
 			);
@@ -552,9 +558,11 @@
 				E98FBA2921D4216600BF0784 /* HealthKitDataPoint.swift in Sources */,
 				BE25AFED1D4F33B100DAF094 /* ViewController.swift in Sources */,
 				E93AFEA121DA846500E34925 /* WorkoutLoader.swift in Sources */,
+				E9FA28D32229CA740018213B /* BioSampleObj.swift in Sources */,
 				E919691F21CF3F1A00E3D1BF /* EmotionSelectionController.swift in Sources */,
+				E9FA28D72229D37F0018213B /* MarkEventObj.swift in Sources */,
 				E98FBA4521D45D4200BF0784 /* BioSamplePhone.xcdatamodeld in Sources */,
-				E9B9BBF621D843130025BEF2 /* DataStoreManager.swift in Sources */,
+				E9FA28D52229CAF70018213B /* DataManager.swift in Sources */,
 				E9AC88EC21D75C30008E2D55 /* EvalEmotionViewController.swift in Sources */,
 				E9AC88EA21D7555B008E2D55 /* HttpManager.swift in Sources */,
 				E9F4CC2221DDF44200AA724C /* Authenticate.swift in Sources */,

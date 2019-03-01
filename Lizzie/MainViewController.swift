@@ -36,6 +36,7 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
     var session: WCSession?
     let appContextFormatter = DateFormatter()
     let displayDateFormatter = DateFormatter()
+    let httpManager = HttpManager()
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -339,8 +340,7 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
         
         let predicate = HKQuery.predicateForSamples(withStart: startDate as Date, end: endDate as Date)
         
-        
-        let ctx = self
+
         let query = HKSampleQuery.init(sampleType: HKSampleType.quantityType(forIdentifier: .heartRate)!,
                                        predicate: predicate,
                                        limit: HKObjectQueryNoLimit,
@@ -354,78 +354,45 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
                                             fatalError("Couldn't cast the HKQuantities into an array with error: \(error!)");
                                         }
                                         NSLog("found \(samples.count) health samples")
-                                        
-                                        var dataPointNames = Array<String>()
-                                        var startTimes = Array<String>()
-                                        var endTimes = Array<String>()
-                                        var measurements = Array<String>()
-                                        
-                                        if(samples.count > 0){
-                                            for sample in samples{
-                                                var measurementValue = -1.0
-                                                var dataPointName = "-1"
-                                                switch sample.quantityType.identifier{
-                                                case "HKQuantityTypeIdentifierHeartRate":
-                                                    measurementValue = ctx.castHKUnitToDouble(theSample : sample, theUnit: HKUnit.beatsPerMinute())
-                                                    dataPointName = "HR"
-                                                case "HKQuantityTypeIdentifierVO2Max":
-                                                    measurementValue = ctx.castHKUnitToDouble(theSample : sample, theUnit: HKUnit(from: "ml/kg*min"))
-                                                    dataPointName = "O2"
-                                                default:
-                                                    //TODO: find a better way to report this error
-                                                    NSLog("Can't find a quantity type for: %@", sample.quantityType.identifier)
-                                                }
-                                                
-                                                let sampleEndTime = sample.endDate
-                                                let sampleStartTime = sample.startDate
-                                                
-                                                let sampleEndTimeString = String(Double(round(1000*sampleEndTime.timeIntervalSince1970)/1000))
-                                                let sampleStartTimeString = String(Double(round(1000*sampleStartTime.timeIntervalSince1970)/1000))
-                                                
-                                                if(sampleEndTime > startDate && sampleEndTime < endDate){
-                                                    dataPointNames.append(dataPointName)
-                                                    startTimes.append(sampleStartTimeString)
-                                                    endTimes.append(sampleEndTimeString)
-                                                    measurements.append(String(measurementValue))
-                                                }
-                                            }
-                                        }
-                                        if(dataPointNames.count == 0){
-                                            NSLog("No samples found in query. Not sending anything to server")
-                                        }else{
-                                            ctx.uploadBioSamples(dataPointNames : dataPointNames,
-                                                                 startTimes : startTimes,
-                                                                 endTimes : endTimes,
-                                                                 measurements : measurements)
-                                        }
+                                        self.handleBioSamples(samples : samples, startDate : startDate, endDate : endDate)
         }
-    healthStore.execute(query)
+        healthStore.execute(query)
     }
     
-    func json(from object: [Any]) -> String? {
-        guard let data = try? JSONSerialization.data(withJSONObject: object, options: []) else {
-            return nil
-        }
-        return String(data: data, encoding: String.Encoding.utf8)
-    }
-    
-    func uploadBioSamples(dataPointNames : Array<String>, startTimes : Array<String>, endTimes : Array<String>, measurements : Array<String>){
-    
+    func handleBioSamples(samples : [HKQuantitySample], startDate : Date, endDate : Date){
+        var bioSamples = Array<BioSampleObj>()
         
-        let parameters: Parameters = [
-            "dataPointNames": json(from : dataPointNames) as Any,
-            "startTimes": json(from : startTimes) as Any,
-            "endTimes": json(from : endTimes) as Any,
-            "measurements": json(from : measurements) as Any,
-        ]
-        let ctx = self
-        AF.request("http://10.8.0.1:9000/upload_bio_samples",
-                   method: .post,
-                   parameters: parameters,
-                   encoding: JSONEncoding()
-            ).responseJSON { response in
+        if(samples.count > 0){
+            for sample in samples{
+                var measurementValue = -1.0
+                var type = "-1"
+                switch sample.quantityType.identifier{
+                case "HKQuantityTypeIdentifierHeartRate":
+                    measurementValue = castHKUnitToDouble(theSample : sample, theUnit: HKUnit.beatsPerMinute())
+                    type = "HR"
+                case "HKQuantityTypeIdentifierVO2Max":
+                    measurementValue = castHKUnitToDouble(theSample : sample, theUnit: HKUnit(from: "ml/kg*min"))
+                    type = "O2"
+                default:
+                    //TODO: find a better way to report this error
+                    NSLog("Can't find a quantity type for: %@", sample.quantityType.identifier)
+                }
                 
-                NSLog("markEventSent! updating dateLastSyncedWithServer")
+                let sampleEndTime = sample.endDate
+                let sampleStartTime = sample.startDate
+                
+                if(sampleEndTime > startDate && sampleEndTime < endDate){
+                    bioSamples.append(BioSampleObj(
+                        type: type,
+                        startTime : sampleStartTime,
+                        endTime : sampleEndTime,
+                        measurement : measurementValue))
+                }
+            }
         }
-    }
+        if(bioSamples.count == 0){
+            NSLog("No samples found in query. Not sending anything to server")
+        }else{
+            self.httpManager.uploadBioSamples(bioSamples : bioSamples)
+        }    }
 }
