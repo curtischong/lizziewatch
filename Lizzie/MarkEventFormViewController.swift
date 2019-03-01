@@ -25,6 +25,15 @@ import WatchConnectivity
 import CoreData
 import HealthKit
 
+//TODO: move this elsewhere.
+// I'm really press on time rn
+extension HKUnit {
+    
+    static func beatsPerMinute() -> HKUnit {
+        return HKUnit.count().unitDivided(by: HKUnit.minute())
+    }
+    
+}
 
 struct chartPoint{
     let endTime : Date
@@ -81,12 +90,11 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
     private var highlight2 : Highlight?
     private var highlight3 : Highlight?
     private let typesOfBiometrics = ["HR"]
-    /*private var highlight1Date : Date?
-    private var highlight2Date : Date?
-    private var highlight3Date : Date?*/
+
     private var timeStartFillingForm : Date?
     let generator = UIImpactFeedbackGenerator(style: .light)
     private let commentBoxPlaceholder = "Comments"
+    let httpManager = HttpManager()
     // I need to refactor this and use a map
 
     
@@ -555,6 +563,7 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
 
     @IBAction func sendBioSnapshot(_ sender: Any) {
         
+        
         // This says: find the x value of the highlight (which is conveniently the number of seconds away from the timeOfMark)
         // Then add that time from the time of the timeOfMark
         let highlight1Date = markEventDate.addingTimeInterval(TimeInterval(highlight1!.x))
@@ -577,59 +586,22 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         
         print("\(json(from : evaluateEmotionBar.getButtonStates())!)")
         
-        var isReactionBool = 0
-        if(isReaction){
-            isReactionBool = 1
-        }
         
-        let parameters: Parameters = [
-            "timeStartFillingForm": String(Double(round(1000*timeStartFillingForm!.timeIntervalSince1970)/1000)),
-            "timeEndFillingForm": String(Double(round(1000*Date().timeIntervalSince1970)/1000)),
-            "timeOfMark": String(Double(round(1000*markEventDate.timeIntervalSince1970)/1000)),
-            "isReaction": String(isReactionBool),
-            // The server only uses anticipationStart if isReaction = false
-            "anticipationStart": String(Double(round(1000*highlight1Date.timeIntervalSince1970)/1000)),
-            "TimeOfEvent": String(Double(round(1000*timeOfEvent.timeIntervalSince1970)/1000)),
-            "reactionEnd": String(Double(round(1000*highlight2Date.timeIntervalSince1970)/1000)),
-            "emotionsFelt" : json(from : evaluateEmotionBar.getButtonStates()) as Any,
-            "comments" : commentsToSend! as String,
-            // for future reference we need to define what each index means: for now 0 means HR
-            "typeBiometricsViewed" : json(from : [0]) as Any //TODO: add more biometrics to view
-        ]
         
-        let ctx = self
-        AF.request("http://10.8.0.1:9000/upload_mark_event",
-                   method: .post,
-                   parameters: parameters,
-                   encoding: JSONEncoding()
-            ).responseJSON { response in
-                
-                NSLog("markEventSent! deleting MarkEvent")
-                ctx.deleteCurrentMarkEvent()
-                ctx.performSegue(withIdentifier: "unwindSegue2ToMainViewController", sender: ctx)
-            /*
-            print("Request: \(String(describing: response.request))")   // original url request
-            print("Response: \(String(describing: response.response))") // http url response
-            print("Result: \(response.result)")                         // response serialization result
-            */
-            
-            /*if let json = response.result.value {
-                print("JSON: \(json)") // serialized json response
-            }
-            
-            if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
-                print("Data: \(utf8Text)") // original server data as UTF8 string
-            }*/
-        }
+        
+        let markEventObj = MarkEventObj(timeStartFillingForm: timeStartFillingForm!,
+                                        timeEndFillingForm: Date(),
+                                        timeOfMark: markEventDate,
+                                        isReaction: isReaction,
+                                        anticipationStart: highlight1Date,
+                                        timeOfEvent: timeOfEvent,
+                                        reactionEnd: highlight2Date,
+                                        emotionsFelt: evaluateEmotionBar.getButtonStates(),
+                                        comments: commentsToSend!,
+                                        typeBiometricsViewed: [0])
+        httpManager.uploadMarkEvent(markEventObj: markEventObj)
+        self.deleteCurrentMarkEvent()
+        self.performSegue(withIdentifier: "unwindSegue2ToMainViewController", sender: self)
+        
     }
-}
-
-//TODO: move this elsewhere.
-// I'm really press on time rn
-extension HKUnit {
-    
-    static func beatsPerMinute() -> HKUnit {
-        return HKUnit.count().unitDivided(by: HKUnit.minute())
-    }
-    
 }

@@ -62,8 +62,65 @@ class HttpManager{
         }
     }
     
-    func uploadMarkEvent(){
+    func convertDate(date : Date) -> String{
+        return String(Double(round(1000*date.timeIntervalSince1970)/1000))
+    }
+    
+    func uploadMarkEvent(markEventObj : MarkEventObj){
         
+        var timeStartFillingForm = convertDate(date: markEventObj.timeStartFillingForm)
+        var timeEndFillingForm = convertDate(date: markEventObj.timeEndFillingForm)
+        var timeOfMark = convertDate(date: markEventObj.timeOfMark)
+        
+        var isReaction = "0"
+        if(markEventObj.isReaction){
+            isReaction = "1"
+        }
+        
+        var anticipationStart = convertDate(date: markEventObj.anticipationStart)
+        var timeOfEvent = convertDate(date: markEventObj.timeOfEvent)
+        var reactionEnd = convertDate(date: markEventObj.reactionEnd)
+        var emotionsFelt = markEventObj.emotionsFelt
+        var comments = markEventObj.comments
+        var typeBiometricsViewed = json(from : markEventObj.typeBiometricsViewed) as Any
+        
+        let parameters: Parameters = [
+            "timeStartFillingForm": timeStartFillingForm,
+            "timeEndFillingForm": timeEndFillingForm,
+            "timeOfMark": timeOfMark,
+            "isReaction": isReaction,
+            // The server only uses anticipationStart if isReaction = false
+            "anticipationStart": anticipationStart,
+            "timeOfEvent": timeOfEvent,
+            "reactionEnd": reactionEnd,
+            "emotionsFelt" : emotionsFelt,
+            "comments" : comments,
+            // for future reference we need to define what each index means: for now 0 means HR
+            "typeBiometricsViewed" : typeBiometricsViewed //TODO: add more biometrics to view
+        ]
+        
+        let ctx = self
+        AF.request(SERVER_IP + "upload_mark_event",
+                   method: .post,
+                   parameters: parameters,
+                   encoding: JSONEncoding()
+            ).responseJSON { response in
+                
+                NSLog("markEventSent! deleting MarkEvent")
+                /*
+                 print("Request: \(String(describing: response.request))")   // original url request
+                 print("Response: \(String(describing: response.response))") // http url response
+                 print("Result: \(response.result)")                         // response serialization result
+                 */
+                
+                /*if let json = response.result.value {
+                 print("JSON: \(json)") // serialized json response
+                 }
+                 
+                 if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
+                 print("Data: \(utf8Text)") // original server data as UTF8 string
+                 }*/
+        }
     }
     
     func uploadEmotionEvaluation(emotionEvalObj : EmotionEvalObj){
@@ -80,7 +137,7 @@ class HttpManager{
         ]
         //let config = readConfig()
         //print(config["ip"])
-        let ctx = self
+        //let ctx = self
         
         AF.request("http://10.8.0.1:9000/upload_emotion_evaluation",
                    method: .post,
