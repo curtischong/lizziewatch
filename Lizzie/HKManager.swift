@@ -8,27 +8,19 @@
 
 import Foundation
 import HealthKit
+
 class HKManager{
     let settingsManager = SettingsManager()
     init(){
         
     }
-    func queryBioSamples(){
-        NSLog("Querying for healthkit datapoints")
-        let endDate = Date()
-        var startDate = Date()
-        if(settingsManager.dateLastSyncedWithServer == nil){
-            NSLog("The app has never synced with the server. Sending all the biopoints from the last week")
-            // select all the data from the past week for good measure
-            startDate = endDate.addingTimeInterval(-24 * 60 * 60 * 7)
-        }else{
-            // query for points an hour before the last sync bc points may start before the endDate of the query
-            startDate = settingsManager.dateLastSyncedWithServer!.addingTimeInterval(-60 * 60)
-        }
+    
+    
+    func queryBioSamples(startDate : Date, endDate : Date) -> [HKQuantitySample]{
         
         let predicate = HKQuery.predicateForSamples(withStart: startDate as Date, end: endDate as Date)
         
-        
+        var retSamples : [HKQuantitySample] = []
         let query = HKSampleQuery.init(sampleType: HKSampleType.quantityType(forIdentifier: .heartRate)!,
                                        predicate: predicate,
                                        limit: HKObjectQueryNoLimit,
@@ -41,10 +33,11 @@ class HKManager{
                                         guard let samples = results as? [HKQuantitySample] else {
                                             fatalError("Couldn't cast the HKQuantities into an array with error: \(error!)");
                                         }
-                                        NSLog("found \(samples.count) health samples")
-                                        self.handleBioSamples(samples : samples, startDate : startDate, endDate : endDate)
+                                        NSLog("found \(retSamples.count) health samples")
+                                        retSamples = samples
         }
         healthStore.execute(query)
+        return retSamples
     }
     
     func loadWorkouts(completion: @escaping (([HKWorkout]?, Error?) -> Swift.Void)){

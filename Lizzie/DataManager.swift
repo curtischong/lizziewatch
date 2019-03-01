@@ -18,7 +18,23 @@ class DataManager{
         //markEventEntity = NSEntityDescription.entity(forEntityName: "MarkEventPhone", in: context)
     }
     
-    func deleteMarkEvent(timeOfMark : Date){
+    func insertMarkEvents(timeOfMarks : [Date]) -> Bool{
+        let entity = NSEntityDescription.entity(forEntityName: "MarkEventPhone", in: context)
+        for eventMark in timeOfMarks {
+            let curMark = NSManagedObject(entity: entity!, insertInto: context)
+            curMark.setValue(eventMark, forKey: "timeOfMark")
+        }
+        do {
+            try context.save()
+            NSLog("Successfully saved the current MarkEvent")
+            return true
+        } catch let error{
+            NSLog("Couldn't save: the current EventMark with  error: \(error)")
+            return false
+        }
+    }
+    
+    func deleteMarkEvent(timeOfMark : Date) -> Bool{
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "MarkEventPhone")
         fetchRequest.predicate = NSPredicate(format: "timeOfMark == %@", timeOfMark as NSDate)
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
@@ -27,9 +43,44 @@ class DataManager{
             try context.execute(deleteRequest)
             try context.save()
             NSLog("Deleted MarkEventPhone with time: \(timeOfMark)")
+            return true
         }catch let error{
             NSLog("Couldn't Delete MarkEventPhone with time \(timeOfMark) with error: \(error)")
+            return false
         }
+    }
+    
+    
+    func getAllEntities(entityName : String, predicate : NSPredicate?, sortDescriptors : [NSSortDescriptor]) -> [NSManagedObject]{
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
+        
+        if predicate != nil{
+            request.predicate = predicate
+        }
+        if sortDescriptors.count > 0{
+            request.sortDescriptors = sortDescriptors
+        }
+        
+        do{
+            let result = try context.fetch(request)
+            return result as! [NSManagedObject]
+        } catch let error{
+            NSLog("Couldn't load Skill rows with error: \(error)")
+            return []
+        }
+    }
+    
+    func getAllMarkEvents() -> [MarkEventObj]{
+        let sortDescriptor = NSSortDescriptor(key: "timeLearned", ascending: false)
+        
+        let entities = getAllEntities(entityName : "Skill", predicate: nil, sortDescriptors : [sortDescriptor])
+        
+        var allEntities : [MarkEventObj] = []
+        for entity in entities{
+            allEntities.append(MarkEventObj(timeOfMark : entity.value(forKey: "timeOfMark") as! Date))
+            
+        }
+        return allEntities
     }
     
     func dropAllRows(){

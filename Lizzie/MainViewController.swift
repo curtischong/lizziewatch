@@ -6,9 +6,7 @@
 
 
 import UIKit
-import CoreData
 import WatchConnectivity
-import Alamofire
 import HealthKit
 
 //TODO: find a way to show the shared folder and move the healthKitDataPoint to it
@@ -39,6 +37,7 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
     let settingsManager = SettingsManager()
     let httpManager = HttpManager()
     let hkManager = HKManager()
+    let dataManager = DataManager()
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -65,7 +64,21 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
             dateLastSyncLabel.text = displayDateFormatter.string(from: settingsManager.dateLastSyncedWithWatch!)
         }
         if (authenticateForHealthstoreData()){
-            hkManager.queryBioSamples()
+            
+            NSLog("Querying for healthkit datapoints")
+            let endDate = Date()
+            var startDate = Date()
+            if(settingsManager.dateLastSyncedWithServer == nil){
+                NSLog("The app has never synced with the server. Sending all the biopoints from the last week")
+                // select all the data from the past week for good measure
+                startDate = endDate.addingTimeInterval(-24 * 60 * 60 * 7)
+            }else{
+                // query for points an hour before the last sync bc points may start before the endDate of the query
+                startDate = settingsManager.dateLastSyncedWithServer!.addingTimeInterval(-60 * 60)
+            }
+            
+            let samples = hkManager.queryBioSamples(startDate : startDate, endDate : endDate)
+            self.handleBioSamples(samples : samples, startDate : startDate, endDate : endDate)
         }
         
         // Used only in testing
@@ -76,69 +89,15 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
     //MARK: Actions
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        fillMarkEvent(timeOfMark : dataSource.markEvents[indexPath.row])
+        fillMarkEvent(timeOfMark : dataSource.markEvents[indexPath.row].timeOfMark)
     }
-    
-    func removeMarkEvent(timeOfMark : Date){
-        //TODO: google for an alternative to BatchDelete
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "MarkEventPhone")
-        fetchRequest.predicate = NSPredicate(format: "timeOfMark == %@", timeOfMark as NSDate)
-        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
-        
-        do{
-            try context.execute(deleteRequest)
-            try context.save()
-            NSLog("Deleted MarkEventPhone with timeOfMark: \(appContextFormatter.string(from: timeOfMark)) ")
-            
-            //not sure if the mainview controller reloads
-            //updateMarkEventCnt()
-            //loadMarkEventRows()
-        }catch let error{
-            NSLog("Couldn't Delete MarkEventPhone of time\(appContextFormatter.string(from: timeOfMark)) with error: \(error)")
-        }
-    }
-    
     
     func loadMarkEventRows(){
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "MarkEventPhone")
-        
-        do{
-            let result = try context.fetch(request)
-            var markEvents = Array<Date>()
-            
-            for sample in result as! [NSManagedObject] {
-                markEvents.append(sample.value(forKey: "timeOfMark") as! Date)
-            }
-            markEvents = markEvents.sorted{ $0 > $1 }
-            dataSource.markEvents = markEvents
-            markEventTable.dataSource = dataSource
-            markEventTable.reloadData()
-        } catch let error{
-            NSLog("Couldn't load MarkEventPhone rows with error: \(error)")
-        }
+        let markEvents = dataManager.getAllMarkEvents()
+        dataSource.markEvents = markEvents
+        markEventTable.dataSource = dataSource
+        markEventTable.reloadData()
 
-    }
-    
-    // Saves the bioSamples the phone's DataCore to the server
-    private func uploadBioSample(){
-        
-    }
-    
-    
-    private func fetchHeartrate(){
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "BioSamplePhone")
-        //request.predicate = NSPredicate(format: "age = %@", "12")
-        request.returnsObjectsAsFaults = false
-        do {
-            let result = try context.fetch(request)
-            for data in result as! [NSManagedObject] {
-            print(data.value(forKey: "username") as! String)
-        }
-        
-        } catch let error{
-        
-            print("Failed Fetching Heartrate \(error)")
-        }
     }
     
     @IBAction func syncWatchData(_ sender: Any) {
@@ -192,6 +151,7 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
     }
     
     func dataStoreMarkEvents(userInfo : [String : Any]){
+        self.updateMarkEventCnt()
         self.syncToPhoneStateLabel.text = "Syncing"
         let endTimeOfQuery = userInfo["endTimeOfQuery"] as! Date
         self.dateLastSyncLabel.text = self.displayDateFormatter.string(from: endTimeOfQuery)
@@ -205,29 +165,19 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
     
     // Stores the received data into the phone's coredata, updates the UI (MarkEvent Table View), and notifies the watch it's done syncing
     private func storeMarkEventPhone(timeOfMarks : [Date], endTimeOfQuery : Date){
-        let entity = NSEntityDescription.entity(forEntityName: "MarkEventPhone", in: context)
-        for eventMark in timeOfMarks {
-            let curMark = NSManagedObject(entity: entity!, insertInto: context)
-            curMark.setValue(eventMark, forKey: "timeOfMark")
-        }
-        do {
-            try context.save()
-            self.updateMarkEventCnt()
-            NSLog("Successfully saved the current MarkEvent")
+        if(dataManager.insertMarkEvents(timeOfMarks : timeOfMarks)){
             self.syncToPhoneStateLabel.text = "Synced"
-
+            
             settingsManager.dateLastSyncedWithWatch = endTimeOfQuery
             settingsManager.saveSettings()
             
             // TODO: note: the concerns raised above applies to here too
             let dataStorePackage = ["event" : "finishedSyncing",
-                                     "syncDataType": "dataStoreMarkEvents",
-                                     "selectBeforeTime": endTimeOfQuery] as [String : Any]
+                                    "syncDataType": "dataStoreMarkEvents",
+                                    "selectBeforeTime": endTimeOfQuery] as [String : Any]
             
             session!.transferUserInfo(dataStorePackage)
             loadMarkEventRows()
-        } catch let error{
-            NSLog("Couldn't save: the current EventMark with  error: \(error)")
         }
     }
     

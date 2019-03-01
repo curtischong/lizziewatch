@@ -540,8 +540,9 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
     }
     
     func deleteCurrentMarkEvent(){
-        dataManager.deleteMarkEvent(timeOfMark: markEventDate)
-        performSegue(withIdentifier: "unwindSegue2ToMainViewController", sender: self)
+        if(dataManager.deleteMarkEvent(timeOfMark: markEventDate)){
+            performSegue(withIdentifier: "unwindSegue2ToMainViewController", sender: self)
+        }
     }
     
     func json(from object: [Any]) -> String? {

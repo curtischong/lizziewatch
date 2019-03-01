@@ -42,4 +42,19 @@ class MarkEventObj{
         self.comments = comments
         self.typeBiometricsViewed = typeBiometricsViewed
     }
+    
+    init(timeOfMark : Date){
+        let curDate = Date()
+        
+        self.timeStartFillingForm = curDate
+        self.timeEndFillingForm = curDate
+        self.timeOfMark = timeOfMark
+        self.isReaction = true
+        self.anticipationStart = curDate
+        self.timeOfEvent = curDate
+        self.reactionEnd = curDate
+        self.emotionsFelt = [0,0,0,0,0,0,0,0]
+        self.comments = ""
+        self.typeBiometricsViewed = [0]
+    }
 }
