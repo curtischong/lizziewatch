@@ -19,9 +19,6 @@
 
 import UIKit
 import Charts
-import SwiftyJSON
-import WatchConnectivity
-import CoreData
 import HealthKit
 
 //TODO: move this elsewhere.
@@ -97,8 +94,6 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
     let dataManager = DataManager()
     // I need to refactor this and use a map
 
-    
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     // sets the carrier, time, and battery to white
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -524,8 +519,7 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         NSLog("Intercepted Segue")
         if segue.identifier == "unwindSegue2ToMainViewController"{ // no params to pass as of this version
             if let destinationVC = segue.destination as? MainViewController {
-                destinationVC.updateMarkEventCnt()
-                destinationVC.loadMarkEventRows()
+                destinationVC.updateMarkEvent()
                 //NSLog("")
             }
         }else{

@@ -8,6 +8,7 @@
 
 import Foundation
 import Alamofire
+//SwiftyJSON
 
 class HttpManager{
     
@@ -68,21 +69,21 @@ class HttpManager{
     
     func uploadMarkEvent(markEventObj : MarkEventObj){
         
-        var timeStartFillingForm = convertDate(date: markEventObj.timeStartFillingForm)
-        var timeEndFillingForm = convertDate(date: markEventObj.timeEndFillingForm)
-        var timeOfMark = convertDate(date: markEventObj.timeOfMark)
+        let timeStartFillingForm = convertDate(date: markEventObj.timeStartFillingForm)
+        let timeEndFillingForm = convertDate(date: markEventObj.timeEndFillingForm)
+        let timeOfMark = convertDate(date: markEventObj.timeOfMark)
         
         var isReaction = "0"
         if(markEventObj.isReaction){
             isReaction = "1"
         }
         
-        var anticipationStart = convertDate(date: markEventObj.anticipationStart)
-        var timeOfEvent = convertDate(date: markEventObj.timeOfEvent)
-        var reactionEnd = convertDate(date: markEventObj.reactionEnd)
-        var emotionsFelt = markEventObj.emotionsFelt
-        var comments = markEventObj.comments
-        var typeBiometricsViewed = json(from : markEventObj.typeBiometricsViewed) as Any
+        let anticipationStart = convertDate(date: markEventObj.anticipationStart)
+        let timeOfEvent = convertDate(date: markEventObj.timeOfEvent)
+        let reactionEnd = convertDate(date: markEventObj.reactionEnd)
+        let emotionsFelt = markEventObj.emotionsFelt
+        let comments = markEventObj.comments
+        let typeBiometricsViewed = json(from : markEventObj.typeBiometricsViewed) as Any
         
         let parameters: Parameters = [
             "timeStartFillingForm": timeStartFillingForm,
@@ -99,7 +100,7 @@ class HttpManager{
             "typeBiometricsViewed" : typeBiometricsViewed //TODO: add more biometrics to view
         ]
         
-        let ctx = self
+        // let ctx = self
         AF.request(SERVER_IP + "upload_mark_event",
                    method: .post,
                    parameters: parameters,

@@ -6,11 +6,16 @@
 
 
 import UIKit
-import WatchConnectivity
 import HealthKit
 
+
+protocol mainProtocol {
+    func updateLastSync(userInfo : [String : Any])
+    func updateMarkEvent()
+}
+
 //TODO: find a way to show the shared folder and move the healthKitDataPoint to it
-class MainViewController: UIViewController , WCSessionDelegate, UITableViewDelegate{
+class MainViewController: UIViewController, UITableViewDelegate, mainProtocol{
     
     
     @IBOutlet weak var syncToPhoneStateLabel: UILabel!
@@ -26,18 +31,13 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
     
     //MARK: Properties
     
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-
-    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) { }
-    func sessionDidBecomeInactive(_ session: WCSession) { }
-    func sessionDidDeactivate(_ session: WCSession) { }
-    var session: WCSession?
     let appContextFormatter = DateFormatter()
     let displayDateFormatter = DateFormatter()
     let settingsManager = SettingsManager()
     let httpManager = HttpManager()
     let hkManager = HKManager()
     let dataManager = DataManager()
+    let watchNetworkManager = WatchNetworkManager()
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -51,13 +51,8 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
         markEventTable.delegate = self
 
         // update the number of items not synced:
-        if WCSession.isSupported() {
-            session = WCSession.default
-            session?.delegate = self
-            session?.activate()
-        }
-        updateMarkEventCnt()
-        loadMarkEventRows()
+
+        updateMarkEvent()
         NSLog("Main View Loaded")
         
         if(settingsManager.dateLastSyncedWithWatch != nil){
@@ -83,7 +78,7 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
         
         // Used only in testing
         //dataManager.dropAllRows()
-        //updateMarkEventCnt()
+        //updateMarkEvent()
     }
     
     //MARK: Actions
@@ -92,130 +87,38 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
         fillMarkEvent(timeOfMark : dataSource.markEvents[indexPath.row].timeOfMark)
     }
     
-    func loadMarkEventRows(){
+    func updateMarkEvent(){
         let markEvents = dataManager.getAllMarkEvents()
         dataSource.markEvents = markEvents
         markEventTable.dataSource = dataSource
         markEventTable.reloadData()
-
+        
+        if(markEvents.count == 0){
+            // TODO: replace this button with something more useful
+            //uploadBioSamplesButton.isHidden = false
+            uploadBioSamplesButton.isHidden = true
+            markEventTable.isHidden = true
+        }else{
+            uploadBioSamplesButton.isHidden = true
+            markEventTable.isHidden = false
+        }
     }
     
     @IBAction func syncWatchData(_ sender: Any) {
-        if let validSession = session {
-            let iPhoneAppContext = ["event" : "syncData", "TimeOfTransfer" : appContextFormatter.string(from: Date())]
-            
-            do {
-                try validSession.updateApplicationContext(iPhoneAppContext)
-                NSLog("Told watch to sync data")
-                //syncToPhoneStateLabel.text = "told watch sync"
-            } catch let error{
-                
-                //TODO: update a ui element when this happens
-                NSLog("Couldn't tell watch to sync with error: \(error)")
-            }
-        }
-    }
-    
-    func processApplicationContext() {
-        
-    }
-    
-    func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
-        DispatchQueue.main.async(){
-            NSLog("received application context!")
-            self.processApplicationContext()
-        }
-    }
-    
-    
-    // this recieves a dictionary of objects from the watch
-    func session(_ session: WCSession, didReceiveUserInfo userInfo: [String : Any]) {
-        DispatchQueue.main.async(){
-            // in the future I might want to cast each event into a specific struct
-            
-            let eventType = userInfo["event"] as! String
-            
-            if(eventType == "updateLastSync"){
-                self.updateLastSync(userInfo : userInfo)
-            }else if(eventType == "dataStoreMarkEvents"){
-                self.dataStoreMarkEvents(userInfo: userInfo)
-            }else{
-                NSLog("Invalid watchContext event received: \(eventType)")
-            }
-        }
+        watchNetworkManager.syncWatchData()
     }
     
     func updateLastSync(userInfo : [String : Any]){
         self.syncToPhoneStateLabel.text = "Synced"
         dateLastSyncLabel.text = userInfo["selectBeforeTime"] as? String
     }
-    
-    func dataStoreMarkEvents(userInfo : [String : Any]){
-        self.updateMarkEventCnt()
-        self.syncToPhoneStateLabel.text = "Syncing"
-        let endTimeOfQuery = userInfo["endTimeOfQuery"] as! Date
-        self.dateLastSyncLabel.text = self.displayDateFormatter.string(from: endTimeOfQuery)
-        
-        let numItems = userInfo["numItems"] as! Int
-        NSLog("Number of items received: \(numItems)")
-        
-        self.storeMarkEventPhone(timeOfMarks : userInfo["timeOfMarks"] as! [Date], endTimeOfQuery : endTimeOfQuery)
-    }
-    
-    
-    // Stores the received data into the phone's coredata, updates the UI (MarkEvent Table View), and notifies the watch it's done syncing
-    private func storeMarkEventPhone(timeOfMarks : [Date], endTimeOfQuery : Date){
-        if(dataManager.insertMarkEvents(timeOfMarks : timeOfMarks)){
-            self.syncToPhoneStateLabel.text = "Synced"
-            
-            settingsManager.dateLastSyncedWithWatch = endTimeOfQuery
-            settingsManager.saveSettings()
-            
-            // TODO: note: the concerns raised above applies to here too
-            let dataStorePackage = ["event" : "finishedSyncing",
-                                    "syncDataType": "dataStoreMarkEvents",
-                                    "selectBeforeTime": endTimeOfQuery] as [String : Any]
-            
-            session!.transferUserInfo(dataStorePackage)
-            loadMarkEventRows()
-        }
-    }
-    
-    func updateMarkEventCnt(){
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "MarkEventPhone")
-        do{
-            let result = try context.fetch(request)
-            markEventCntPhone.text = String(result.count)
 
-            if(result.count == 0){
-                // TODO: replace this button with something more useful
-                //uploadBioSamplesButton.isHidden = false
-                uploadBioSamplesButton.isHidden = true
-                markEventTable.isHidden = true
-            }else{
-                uploadBioSamplesButton.isHidden = true
-                markEventTable.isHidden = false
-            }
-        } catch let error{
-            NSLog("Couldn't access CoreDataWatch: \(error)")
-        }
-    }
-    
     
     // MARK: - Navigation
         
     @IBAction func markEventButtonPress(_ sender: UIButton) {
-        let entity = NSEntityDescription.entity(forEntityName: "MarkEventPhone", in: context)
-        let curMark = NSManagedObject(entity: entity!, insertInto: context)
-        curMark.setValue(Date(), forKey: "timeOfMark")
-        
-        do {
-            try context.save()
-            self.updateMarkEventCnt()
-            loadMarkEventRows()
-            NSLog("Successfully saved the current MarkEvent")
-        } catch let error{
-            NSLog("Couldn't save: the current MarkEvent with  error: \(error)")
+        if(dataManager.insertMarkEvents(timeOfMarks : [Date()])){
+            updateMarkEvent()
         }
     }
     
@@ -247,10 +150,9 @@ class MainViewController: UIViewController , WCSessionDelegate, UITableViewDeleg
     
     func fillMarkEvent(timeOfMark : Date){
         NSLog("using contextualizeMarkEventSegue with time: \(timeOfMark)")
-         performSegue(withIdentifier: "contextualizeMarkEventSegue", sender: timeOfMark)
+        performSegue(withIdentifier: "contextualizeMarkEventSegue", sender: timeOfMark)
     }
 
-    
 
     private func castHKUnitToDouble(theSample :HKQuantitySample, theUnit : HKUnit) -> Double{
         if(!theSample.quantity.is(compatibleWith: theUnit)){
