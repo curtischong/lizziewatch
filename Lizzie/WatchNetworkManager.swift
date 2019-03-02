@@ -9,7 +9,7 @@
 import Foundation
 import WatchConnectivity
 
-class WatchNetworkManager: WCSessionDelegate{
+class WatchNetworkManager: NSObject, WCSessionDelegate{
     var mainDelegate : mainProtocol?
     let settingsManager = SettingsManager()
     let dataManager = DataManager()
@@ -21,7 +21,8 @@ class WatchNetworkManager: WCSessionDelegate{
     var session: WCSession?
     
     
-    init(){
+    override init(){
+        super.init()
         appContextFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         if WCSession.isSupported() {
             session = WCSession.default
