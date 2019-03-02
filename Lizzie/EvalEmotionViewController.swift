@@ -111,6 +111,7 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
     
     
     @IBAction func goBackToOneButtonTapped(_ sender: Any) {
+        generator.impactOccurred()
         performSegue(withIdentifier: "unwindSegueToMainViewController", sender: self)
     }
 
@@ -179,7 +180,7 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
     }
     
     @IBAction func uploadResponseButtonPressed(_ sender: Any) {
-        
+        generator.impactOccurred()
         var commentsToSend = commentBoxTextView.text
         if(commentsToSend == commentBoxPlaceholder){
             commentsToSend = ""

@@ -158,7 +158,6 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         
         
         view.bringSubviewToFront(isReactionSwitch)
-        NSLog("Finished Setting things up")
     }
     
     // textview functions
@@ -171,6 +170,7 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
     }
     
     func textViewDidBeginEditing(_ textView: UITextView) {
+        generator.impactOccurred()
         if commentBoxTextView.textColor == UIColor.lightGray {
             commentBoxTextView.text = nil
             commentBoxTextView.textColor = UIColor.white
@@ -299,7 +299,6 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         if(bioSamples.count == 0){
             HRPoints.append(chartPoint(endTime : Date(), measurement : -1))
         }else{
-            var HRPoints = Array<chartPoint>()
             for sample in bioSamples{
                 let sampleEndTime = sample.endTime
                 let sampleMeasurement = sample.measurement
@@ -312,9 +311,10 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
                     HRPoints.append(curChartPoint)
                 }
             }
-            self.bioPoints = ["HR" : HRPoints]
-            self.updateGraph()
+            NSLog("\(HRPoints.count)")
         }
+        self.bioPoints = ["HR" : HRPoints]
+        self.updateGraph()
     }
     
     private func checkIfCanUpload(){
@@ -411,6 +411,7 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
     }
     
     @IBAction func goBackToOneButtonTapped(_ sender: Any) {
+        generator.impactOccurred()
         performSegue(withIdentifier: "unwindSegue2ToMainViewController", sender: self)
     }
     @IBAction func isReactionSwitch(_ sender: Any) {
@@ -505,6 +506,7 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
     
     
     @IBAction func deleteEventPressed(_ sender: UIButton) {
+        generator.impactOccurred()
         deleteCurrentMarkEvent()
     }
     
@@ -523,7 +525,7 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
 
     @IBAction func sendBioSnapshot(_ sender: Any) {
         
-        
+        generator.impactOccurred()
         // This says: find the x value of the highlight (which is conveniently the number of seconds away from the timeOfMark)
         // Then add that time from the time of the timeOfMark
         let highlight1Date = markEventDate.addingTimeInterval(TimeInterval(highlight1!.x))

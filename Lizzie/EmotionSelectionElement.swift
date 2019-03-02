@@ -21,7 +21,7 @@ import UIKit
                                   UIColor(red:0.00, green:1.0, blue:1.0, alpha:1.0),
                                   UIColor(red:1.00, green:0.54, blue:0.00, alpha:1.0),
                                   UIColor(red:1.00, green:0.0, blue:0.00, alpha:1.0)]
-    
+    let generator = UIImpactFeedbackGenerator(style: .light)
     //MARK: Initialization
     
     override init(frame: CGRect) {
@@ -37,6 +37,7 @@ import UIKit
     //MARK: Button Action
     
     @objc func ratingButtonTapped(button: UIButton) {
+        generator.impactOccurred()
         guard let index = ratingButtons.index(of: button) else {
             fatalError("The button, \(button), is not in the ratingButtons array: \(ratingButtons)")
         }

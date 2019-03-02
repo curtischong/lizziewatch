@@ -27,6 +27,7 @@ class MainViewController: UIViewController, UITableViewDelegate, mainProtocol{
     @IBOutlet weak var uploadBioSamplesButton: UIButton!
     var syncToPhoneState = false
     private let dataSource = DataSource()
+    let generator = UIImpactFeedbackGenerator(style: .light)
     
     
     //MARK: Properties
@@ -92,6 +93,7 @@ class MainViewController: UIViewController, UITableViewDelegate, mainProtocol{
     }
     
     func updateMarkEvent(){
+        NSLog("markEvent updated")
         let markEvents = dataManager.getAllMarkEvents()
         dataSource.markEvents = markEvents
         markEventTable.dataSource = dataSource
@@ -113,6 +115,7 @@ class MainViewController: UIViewController, UITableViewDelegate, mainProtocol{
     }
     
     func updateLastSync(userInfo : [String : Any]){
+        generator.impactOccurred()
         self.syncToPhoneStateLabel.text = "Synced"
         dateLastSyncLabel.text = userInfo["selectBeforeTime"] as? String
     }
@@ -121,12 +124,14 @@ class MainViewController: UIViewController, UITableViewDelegate, mainProtocol{
     // MARK: - Navigation
         
     @IBAction func markEventButtonPress(_ sender: UIButton) {
+        generator.impactOccurred()
         if(dataManager.insertMarkEvents(timeOfMarks : [Date()])){
             updateMarkEvent()
         }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        generator.impactOccurred()
         if segue.identifier == "evalEmotionSegue"{ // no params to pass as of this version
             if segue.destination is EvalEmotionViewController {
                 

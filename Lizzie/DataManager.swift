@@ -71,9 +71,9 @@ class DataManager{
     }
     
     func getAllMarkEvents() -> [MarkEventObj]{
-        let sortDescriptor = NSSortDescriptor(key: "timeLearned", ascending: false)
+        let sortDescriptor = NSSortDescriptor(key: "timeOfMark", ascending: false)
         
-        let entities = getAllEntities(entityName : "Skill", predicate: nil, sortDescriptors : [sortDescriptor])
+        let entities = getAllEntities(entityName : "MarkEventPhone", predicate: nil, sortDescriptors : [sortDescriptor])
         
         var allEntities : [MarkEventObj] = []
         for entity in entities{

@@ -302,7 +302,7 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
         let entity = NSEntityDescription.entity(forEntityName: "MarkEventWatch", in: context)
         let curMark = NSManagedObject(entity: entity!, insertInto: context)
         curMark.setValue(Date(), forKey: "timeOfMark")
-        
+        WKInterfaceDevice.current().play(.success)
         do {
             try context.save()
             self.updateMarkEventCnt()
