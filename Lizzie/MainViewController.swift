@@ -73,7 +73,11 @@ class MainViewController: UIViewController, UITableViewDelegate, mainProtocol{
             }
             
             let samples = hkManager.queryBioSamples(startDate : startDate, endDate : endDate)
-            self.handleBioSamples(samples : samples, startDate : startDate, endDate : endDate)
+            let bioSamples = hkManager.handleBioSamples(samples : samples, startDate : startDate, endDate : endDate)
+            if(bioSamples.count > 0){
+                NSLog("Sending biopoints to server")
+                self.httpManager.uploadBioSamples(bioSamples : bioSamples)
+            }
         }
         
         // Used only in testing
@@ -152,51 +156,4 @@ class MainViewController: UIViewController, UITableViewDelegate, mainProtocol{
         NSLog("using contextualizeMarkEventSegue with time: \(timeOfMark)")
         performSegue(withIdentifier: "contextualizeMarkEventSegue", sender: timeOfMark)
     }
-
-
-    private func castHKUnitToDouble(theSample :HKQuantitySample, theUnit : HKUnit) -> Double{
-        if(!theSample.quantity.is(compatibleWith: theUnit)){
-            NSLog("measurement value type of %@ isn't compatible with %@" , theSample.quantityType.identifier, theUnit)
-            return -1.0
-        }else{
-            return theSample.quantity.doubleValue(for: theUnit)
-        }
-    }
-    
-    func handleBioSamples(samples : [HKQuantitySample], startDate : Date, endDate : Date){
-        var bioSamples = Array<BioSampleObj>()
-        
-        if(samples.count > 0){
-            for sample in samples{
-                var measurementValue = -1.0
-                var type = "-1"
-                switch sample.quantityType.identifier{
-                case "HKQuantityTypeIdentifierHeartRate":
-                    measurementValue = castHKUnitToDouble(theSample : sample, theUnit: HKUnit.beatsPerMinute())
-                    type = "HR"
-                case "HKQuantityTypeIdentifierVO2Max":
-                    measurementValue = castHKUnitToDouble(theSample : sample, theUnit: HKUnit(from: "ml/kg*min"))
-                    type = "O2"
-                default:
-                    //TODO: find a better way to report this error
-                    NSLog("Can't find a quantity type for: %@", sample.quantityType.identifier)
-                }
-                
-                let sampleEndTime = sample.endDate
-                let sampleStartTime = sample.startDate
-                
-                if(sampleEndTime > startDate && sampleEndTime < endDate){
-                    bioSamples.append(BioSampleObj(
-                        type: type,
-                        startTime : sampleStartTime,
-                        endTime : sampleEndTime,
-                        measurement : measurementValue))
-                }
-            }
-        }
-        if(bioSamples.count == 0){
-            NSLog("No samples found in query. Not sending anything to server")
-        }else{
-            self.httpManager.uploadBioSamples(bioSamples : bioSamples)
-        }    }
 }

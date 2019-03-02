@@ -92,6 +92,7 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
     private let commentBoxPlaceholder = "Comments"
     let httpManager = HttpManager()
     let dataManager = DataManager()
+    let hkManager = HKManager()
     // I need to refactor this and use a map
 
     
@@ -280,66 +281,40 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
     
     
     func queryBioSamples(){
-        let numMinutesGap = 5.0
-        let endTime = markEventDate.addingTimeInterval(TimeInterval(numMinutesGap * 60.0))
-        let startTime = markEventDate.addingTimeInterval(TimeInterval(-numMinutesGap * 60.0))
+        
         // We are selecting all points in the last 60 minutes because the query checks for points that falls
         // within the start and end times of the query. Since we are only displaying the endtimes of the points,
         // we need to select more points because some points can start before the starttime but have an
         // end time that ends after the starttime in the query
-        let predicate = HKQuery.predicateForSamples(withStart: startTime.addingTimeInterval(TimeInterval(-numMinutesGap * 60.0)), end: endTime)
-        let ctx = self
-        let query = HKSampleQuery.init(sampleType: HKSampleType.quantityType(forIdentifier: .heartRate)!,
-                                       predicate: predicate,
-                                       limit: HKObjectQueryNoLimit,
-                                       sortDescriptors: nil) { (query, results, error) in
-                                        
-                                        if(error != nil){
-                                            NSLog("couldn't get healthquery data with error: \(error!)")
-                                        }
-                                        
-                                        guard let samples = results as? [HKQuantitySample] else {
-                                            fatalError("Couldn't cast the HKQuantities into an array with error: \(error!)");
-                                        }
-                                        NSLog("found \(samples.count) health samples")
-                                        
-                                        var HRPoints = Array<chartPoint>()
-                                        if(samples.count > 0){
-                                            for sample in samples{
-                                                var measurementValue = -1.0
-                                                var dataPointName = "-1"
-                                                switch sample.quantityType.identifier{
-                                                case "HKQuantityTypeIdentifierHeartRate":
-                                                    measurementValue = ctx.castHKUnitToDouble(theSample : sample, theUnit: HKUnit.beatsPerMinute())
-                                                    dataPointName = "HR"
-                                                case "HKQuantityTypeIdentifierVO2Max":
-                                                    measurementValue = ctx.castHKUnitToDouble(theSample : sample, theUnit: HKUnit(from: "ml/kg*min"))
-                                                    dataPointName = "O2"
-                                                default:
-                                                    //TODO: find a better way to report this error
-                                                    NSLog("Can't find a quantity type for: %@", sample.quantityType.identifier)
-                                                }
-                                                
-                                                
-                                                let sampleEndTime = sample.endDate
-                                                let sampleMeasurement = measurementValue
-                                                
-                                                if(sampleEndTime > startTime && sampleEndTime < endTime){
-                                                    let curChartPoint = chartPoint(
-                                                        endTime : sampleEndTime,
-                                                        measurement : sampleMeasurement
-                                                    )
-                                                    HRPoints.append(curChartPoint)
-                                                }
-                                            }
-                                        }else{
-                                            HRPoints.append(chartPoint(endTime : Date(), measurement : -1))
-                                        }
-                                        HRPoints = HRPoints.sorted{ $1.endTime > $0.endTime }
-                                        ctx.bioPoints = ["HR" : HRPoints]
-                                        ctx.updateGraph()
+        
+        let numMinutesGap = 5.0
+        let endDate = markEventDate.addingTimeInterval(TimeInterval(numMinutesGap * 60.0))
+        let startDate = markEventDate.addingTimeInterval(TimeInterval(-numMinutesGap * 60.0))
+        
+        
+        let samples = hkManager.queryBioSamples(startDate : startDate, endDate : endDate, descending : true)
+        let bioSamples = hkManager.handleBioSamples(samples : samples, startDate : startDate, endDate : endDate)
+        
+        var HRPoints = Array<chartPoint>()
+        if(bioSamples.count == 0){
+            HRPoints.append(chartPoint(endTime : Date(), measurement : -1))
+        }else{
+            var HRPoints = Array<chartPoint>()
+            for sample in bioSamples{
+                let sampleEndTime = sample.endTime
+                let sampleMeasurement = sample.measurement
+                
+                if(sampleEndTime > startDate && sampleEndTime < endDate){
+                    let curChartPoint = chartPoint(
+                        endTime : sampleEndTime,
+                        measurement : sampleMeasurement
+                    )
+                    HRPoints.append(curChartPoint)
+                }
+            }
+            self.bioPoints = ["HR" : HRPoints]
+            self.updateGraph()
         }
-        healthStore.execute(query)
     }
     
     private func checkIfCanUpload(){
