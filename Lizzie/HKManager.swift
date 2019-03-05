@@ -17,9 +17,11 @@ class HKManager{
     
     
     func queryBioSamples(startDate : Date, endDate : Date, descending : Bool = false) -> [HKQuantitySample]{
+        NSLog("\(startDate)")
+        NSLog("\(endDate)")
         var sortDescriptors : [NSSortDescriptor]?
         if(descending){
-            sortDescriptors = [NSSortDescriptor(key: "endDate", ascending: false)]
+            sortDescriptors = [NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)]
         }
         let predicate = HKQuery.predicateForSamples(withStart: startDate as Date, end: endDate as Date)
         
@@ -27,7 +29,7 @@ class HKManager{
         let query = HKSampleQuery.init(sampleType: HKSampleType.quantityType(forIdentifier: .heartRate)!,
                                        predicate: predicate,
                                        limit: HKObjectQueryNoLimit,
-                                       sortDescriptors: sortDescriptors) { (query, results, error) in
+                                       sortDescriptors: nil) { (query, results, error) in
                                         
                                         if(error != nil){
                                             NSLog("couldn't get healthquery data with error: \(error!)")

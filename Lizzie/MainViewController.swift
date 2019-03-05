@@ -39,6 +39,7 @@ class MainViewController: UIViewController, UITableViewDelegate, mainProtocol{
     let hkManager = HKManager()
     let dataManager = DataManager()
     let watchNetworkManager = WatchNetworkManager()
+    let permissionsManager = PermissionsManager()
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -59,7 +60,8 @@ class MainViewController: UIViewController, UITableViewDelegate, mainProtocol{
         if(settingsManager.dateLastSyncedWithWatch != nil){
             dateLastSyncLabel.text = displayDateFormatter.string(from: settingsManager.dateLastSyncedWithWatch!)
         }
-        if (authenticateForHealthstoreData()){
+        permissionsManager.authenticateForHealthstoreData()
+        if (permissionsManager.authSuccess){
             
             NSLog("Querying for healthkit datapoints")
             let endDate = Date()
@@ -71,6 +73,7 @@ class MainViewController: UIViewController, UITableViewDelegate, mainProtocol{
             }else{
                 // query for points an hour before the last sync bc points may start before the endDate of the query
                 startDate = settingsManager.dateLastSyncedWithServer!.addingTimeInterval(-60 * 60)
+                NSLog("\(startDate)")
             }
             
             let samples = hkManager.queryBioSamples(startDate : startDate, endDate : endDate)

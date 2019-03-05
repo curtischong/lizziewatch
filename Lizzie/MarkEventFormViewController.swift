@@ -288,8 +288,8 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         // end time that ends after the starttime in the query
         
         let numMinutesGap = 5.0
-        let endDate = markEventDate.addingTimeInterval(TimeInterval(numMinutesGap * 60.0))
-        let startDate = markEventDate.addingTimeInterval(TimeInterval(-numMinutesGap * 60.0))
+        let endDate = markEventDate.addingTimeInterval(TimeInterval(numMinutesGap * 120.0 * 24 * 10))
+        let startDate = markEventDate.addingTimeInterval(TimeInterval(-numMinutesGap * 60.0 * 24 * 10))
         
         
         let samples = hkManager.queryBioSamples(startDate : startDate, endDate : endDate, descending : true)
