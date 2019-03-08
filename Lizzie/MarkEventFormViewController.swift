@@ -58,20 +58,20 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
 
     //MARK: Properties
     //@IBOutlet weak var eventTextLabel: UILabel!
-    @IBOutlet weak var eventTextField: UITextField!
+    @IBOutlet var eventTextField: UITextField!
     
-    @IBOutlet weak var eventDurationTextLabel: UILabel!
-    @IBOutlet weak var eventDurationSlider: UISlider!
+    @IBOutlet var eventDurationTextLabel: UILabel!
+    @IBOutlet var eventDurationSlider: UISlider!
     
-    @IBOutlet weak var heartrateChart: LineChartView!
-    @IBOutlet weak var commentBoxTextView: UITextView!
-    @IBOutlet weak var selectPointsButton: UIButton!
-    @IBOutlet weak var timeStartSlider: UISlider!
-    @IBOutlet weak var timeEndSlider: UISlider!
-    @IBOutlet weak var isReactionSwitch: UISwitch!
-    @IBOutlet weak var uploadButton: UIButton!
+    @IBOutlet var heartrateChart: LineChartView!
+    @IBOutlet var commentBoxTextView: UITextView!
+    @IBOutlet var selectPointsButton: UIButton!
+    @IBOutlet var timeStartSlider: UISlider!
+    @IBOutlet var timeEndSlider: UISlider!
+    @IBOutlet var isReactionSwitch: UISwitch!
+    @IBOutlet var uploadButton: UIButton!
     
-    @IBOutlet weak var evaluateEmotionBar: EmotionSelectionElement!
+    @IBOutlet var evaluateEmotionBar: EmotionSelectionElement!
     var markEventDate: Date = Date()
     
     private let displayDateFormatter = DateFormatter()
@@ -229,13 +229,16 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         //ineChartEntry["HR"] = []()
         var tempArr1 : [ChartDataEntry] = []
         //var tempArr2 : [Date] = []
-        for i in 0...(bioPoints["HR"]!.count - 1){
-            //NSLog("Cur Time: \(Double(bioPoints!["HR"]![i].endTime.seconds(from : markEventDate)))")
-            let difference = Double(bioPoints["HR"]![i].endTime.seconds(from : markEventDate))
-            if(abs(difference) < Double(eventDurationSlider.value) * 5.0 * 60.0){
-                let value = ChartDataEntry(x: difference, y: bioPoints["HR"]![i].measurement)
-                tempArr1.append(value)
-                //tempArr2.append(bioPoints["HR"]![i].endTime)
+        
+        if let hrPoints = bioPoints["HR"] {
+            for (index, _) in bioPoints.enumerated() {
+                //NSLog("Cur Time: \(Double(bioPoints!["HR"]![i].endTime.seconds(from : markEventDate)))")
+                let difference = Double(hrPoints[index].endTime.seconds(from : markEventDate))
+                if(abs(difference) < Double(eventDurationSlider.value) * 5.0 * 60.0){
+                    let value = ChartDataEntry(x: difference, y: hrPoints[index].measurement)
+                    tempArr1.append(value)
+                    //tempArr2.append(bioPoints["HR"]![i].endTime)
+                }
             }
         }
         
@@ -288,33 +291,39 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         // end time that ends after the starttime in the query
         
         let numMinutesGap = 5.0
-        let endDate = markEventDate.addingTimeInterval(TimeInterval(numMinutesGap * 120.0 * 24 * 10))
-        let startDate = markEventDate.addingTimeInterval(TimeInterval(-numMinutesGap * 60.0 * 24 * 20*10))
+        let endDate = markEventDate.addingTimeInterval(TimeInterval(numMinutesGap * 60.0 * 60))
+        let startDate = markEventDate.addingTimeInterval(TimeInterval(-numMinutesGap * 60.0 * 60))
         
         
-        let samples = hkManager.queryBioSamples(startDate : startDate, endDate : endDate, descending : true)
-        let bioSamples = hkManager.handleBioSamples(samples : samples, startDate : startDate, endDate : endDate)
-        
-        var HRPoints = Array<chartPoint>()
-        if(bioSamples.count == 0){
-            HRPoints.append(chartPoint(endTime : Date(), measurement : -1))
-        }else{
-            for sample in bioSamples{
-                let sampleEndTime = sample.endTime
-                let sampleMeasurement = sample.measurement
-                
-                if(sampleEndTime > startDate && sampleEndTime < endDate){
-                    let curChartPoint = chartPoint(
-                        endTime : sampleEndTime,
-                        measurement : sampleMeasurement
-                    )
-                    HRPoints.append(curChartPoint)
+        hkManager.queryBioSamples(startDate : startDate, endDate : endDate, descending : true) { samples, error in
+            guard let samples = samples else { return }
+            
+            let bioSamples = self.hkManager.handleBioSamples(samples : samples, startDate : startDate, endDate : endDate)
+            
+            var HRPoints = Array<chartPoint>()
+            if(bioSamples.count == 0){
+                HRPoints.append(chartPoint(endTime : Date(), measurement : -1))
+            }else{
+                for sample in bioSamples{
+                    let sampleEndTime = sample.endTime
+                    let sampleMeasurement = sample.measurement
+                    
+                    if(sampleEndTime > startDate && sampleEndTime < endDate){
+                        let curChartPoint = chartPoint(
+                            endTime : sampleEndTime,
+                            measurement : sampleMeasurement
+                        )
+                        HRPoints.append(curChartPoint)
+                    }
                 }
+                NSLog("\(HRPoints.count)")
             }
-            NSLog("\(HRPoints.count)")
+            self.bioPoints = ["HR" : HRPoints]
+            
+            DispatchQueue.main.async {
+                self.updateGraph()
+            }
         }
-        self.bioPoints = ["HR" : HRPoints]
-        self.updateGraph()
     }
     
     private func checkIfCanUpload(){

@@ -58,7 +58,7 @@ class PermissionsManager{
                 return
             }
             
-            print("Healthstore Auth status: \(authSuccess)")
+            //print("Healthstore Auth status: \(authSuccess)")
         } else {
             NSLog("can't read all healthStore Datapoints. App won't read any healthstore Datapoints")
             // Fallback on earlier versions

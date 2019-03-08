@@ -76,11 +76,14 @@ class MainViewController: UIViewController, UITableViewDelegate, mainProtocol{
                 NSLog("last synced time: \(startDate)")
             }
             
-            let samples = hkManager.queryBioSamples(startDate : startDate, endDate : endDate)
-            let bioSamples = hkManager.handleBioSamples(samples : samples, startDate : startDate, endDate : endDate)
-            if(bioSamples.count > 0){
-                NSLog("Sending biopoints to server")
-                self.httpManager.uploadBioSamples(bioSamples : bioSamples)
+            hkManager.queryBioSamples(startDate : startDate, endDate : endDate) { samples, error in
+                guard let samples = samples else { return }
+                
+                let bioSamples = self.hkManager.handleBioSamples(samples : samples, startDate : startDate, endDate : endDate)
+                if(bioSamples.count > 0){
+                    NSLog("Sending biopoints to server")
+                    self.httpManager.uploadBioSamples(bioSamples : bioSamples)
+                }
             }
         }
         

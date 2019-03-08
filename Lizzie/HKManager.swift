@@ -18,7 +18,7 @@ class HKManager{
     }
     
     
-    func queryBioSamples(startDate : Date, endDate : Date, descending : Bool = false) -> [HKQuantitySample]{
+    func queryBioSamples(startDate : Date, endDate : Date, descending : Bool = false, completionHandler: @escaping (([HKQuantitySample]?, Error?) -> Void)) {
         NSLog("\(startDate)")
         NSLog("\(endDate)")
         var sortDescriptors : [NSSortDescriptor]?
@@ -26,25 +26,17 @@ class HKManager{
             sortDescriptors = [NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)]
         }
         let predicate = HKQuery.predicateForSamples(withStart: startDate as Date, end: endDate as Date)
-        
+         
         var retSamples : [HKQuantitySample] = []
         let query = HKSampleQuery(sampleType: HKSampleType.quantityType(forIdentifier: .heartRate)!,
                                        predicate: predicate,
                                        limit: Int(HKObjectQueryNoLimit),
                                        sortDescriptors: nil) { (query, results, error) in
-                                        
-                                        if(error != nil){
-                                            NSLog("couldn't get healthquery data with error: \(error!)")
-                                        }
-                                        
-                                        guard let samples = results as? [HKQuantitySample] else {
-                                            fatalError("Couldn't cast the HKQuantities into an array with error: \(error!)");
-                                        }
-                                        NSLog("found \(retSamples.count) health samples")
-                                        retSamples = samples
+                                        NSLog("found \(results?.count ?? 0) health samples")
+                                        completionHandler(results as? [HKQuantitySample], error)
         }
+        
         healthStore.execute(query)
-        return retSamples
     }
     
     func handleBioSamples(samples : [HKQuantitySample], startDate : Date, endDate : Date) -> [BioSampleObj]{
