@@ -8,9 +8,11 @@
 
 import Foundation
 import HealthKit
+import CoreData
 
 class HKManager{
     let settingsManager = SettingsManager()
+    let healthStore = HKHealthStore()
     init(){
         
     }
@@ -26,9 +28,9 @@ class HKManager{
         let predicate = HKQuery.predicateForSamples(withStart: startDate as Date, end: endDate as Date)
         
         var retSamples : [HKQuantitySample] = []
-        let query = HKSampleQuery.init(sampleType: HKSampleType.quantityType(forIdentifier: .heartRate)!,
+        let query = HKSampleQuery(sampleType: HKSampleType.quantityType(forIdentifier: .heartRate)!,
                                        predicate: predicate,
-                                       limit: HKObjectQueryNoLimit,
+                                       limit: Int(HKObjectQueryNoLimit),
                                        sortDescriptors: nil) { (query, results, error) in
                                         
                                         if(error != nil){

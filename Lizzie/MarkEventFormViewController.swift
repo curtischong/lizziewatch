@@ -111,7 +111,7 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         
         uploadButton.setTitleColor(UIColor.lightGray, for: .normal)
         uploadButton.isEnabled = false
-        NSLog("Setting things up")
+        //NSLog("Setting things up")
         
         timeStartFillingForm = Date()
         queryBioSamples()
@@ -289,7 +289,7 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         
         let numMinutesGap = 5.0
         let endDate = markEventDate.addingTimeInterval(TimeInterval(numMinutesGap * 120.0 * 24 * 10))
-        let startDate = markEventDate.addingTimeInterval(TimeInterval(-numMinutesGap * 60.0 * 24 * 10))
+        let startDate = markEventDate.addingTimeInterval(TimeInterval(-numMinutesGap * 60.0 * 24 * 20*10))
         
         
         let samples = hkManager.queryBioSamples(startDate : startDate, endDate : endDate, descending : true)

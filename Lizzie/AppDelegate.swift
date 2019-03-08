@@ -28,7 +28,7 @@ import CoreData
     func applicationShouldRequestHealthAuthorization(_ application: UIApplication) {
         // Authorize access to health data for watch.
         healthStore.handleAuthorizationForExtension { success, error in
-            print(success)
+            NSLog("Authentication status for healthkit: \(success)")
         }
     }
     

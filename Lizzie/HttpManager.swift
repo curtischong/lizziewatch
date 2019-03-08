@@ -26,6 +26,10 @@ class HttpManager{
         return String(data: data, encoding: String.Encoding.utf8)
     }
     
+    func convertDate(date : Date) -> String{
+        return String(Double(round(1000*date.timeIntervalSince1970)/1000))
+    }
+    
     func uploadBioSamples(bioSamples : Array<BioSampleObj>){
         var dataPointNames = Array<String>()
         var startTimes = Array<String>()
@@ -35,8 +39,8 @@ class HttpManager{
         
         for sample in bioSamples{
             
-            let sampleStartTimeString = String(Double(round(1000*sample.startTime.timeIntervalSince1970)/1000))
-            let sampleEndTimeString = String(Double(round(1000*sample.endTime.timeIntervalSince1970)/1000))
+            let sampleStartTimeString = convertDate(date: sample.startTime)
+            let sampleEndTimeString = convertDate(date: sample.endTime)
             let measurementString = String(sample.measurement)
             
             dataPointNames.append(sample.type)
@@ -61,10 +65,6 @@ class HttpManager{
                 
                 NSLog("markEventSent! updating dateLastSyncedWithServer")
         }
-    }
-    
-    func convertDate(date : Date) -> String{
-        return String(Double(round(1000*date.timeIntervalSince1970)/1000))
     }
     
     func uploadMarkEvent(markEventObj : MarkEventObj){

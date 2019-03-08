@@ -55,7 +55,7 @@ class MainViewController: UIViewController, UITableViewDelegate, mainProtocol{
         // update the number of items not synced:
 
         updateMarkEvent()
-        NSLog("Main View Loaded")
+        // NSLog("Main View Loaded")
         
         if(settingsManager.dateLastSyncedWithWatch != nil){
             dateLastSyncLabel.text = displayDateFormatter.string(from: settingsManager.dateLastSyncedWithWatch!)
@@ -73,7 +73,7 @@ class MainViewController: UIViewController, UITableViewDelegate, mainProtocol{
             }else{
                 // query for points an hour before the last sync bc points may start before the endDate of the query
                 startDate = settingsManager.dateLastSyncedWithServer!.addingTimeInterval(-60 * 60)
-                NSLog("\(startDate)")
+                NSLog("last synced time: \(startDate)")
             }
             
             let samples = hkManager.queryBioSamples(startDate : startDate, endDate : endDate)

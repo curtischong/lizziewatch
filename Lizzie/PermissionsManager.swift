@@ -45,20 +45,20 @@ class PermissionsManager{
                                 vo2MaxQuantityType,
                                 distanceWalkingRunningQuantityType,
                                 HKObjectType.workoutType()])
-            let ctx = self
             // Request authorization to read heart rate data.
+            //TODO: use this: func authorizationStatus(for type: HKObjectType) -> HKAuthorizationStatus
             healthStore.requestAuthorization(toShare: nil, read: allTypes) { (success, error) in
                 // If there is an error, do nothing.
                 guard error == nil else {
                     print(error ?? "failed during healthkit auth")
-                    ctx.authSuccess = false
                     return
                 }
                 NSLog("HaveAuthentication: \(success)")
                 // Delegate success.
-                ctx.authSuccess = true
+                return
             }
-            print("\(authSuccess)")
+            
+            print("Healthstore Auth status: \(authSuccess)")
         } else {
             NSLog("can't read all healthStore Datapoints. App won't read any healthstore Datapoints")
             // Fallback on earlier versions
