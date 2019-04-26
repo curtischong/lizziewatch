@@ -12,11 +12,14 @@ import Alamofire
 
 class EvalEmotionViewController: UIViewController, UITextViewDelegate {
 
+    
+    
     @IBOutlet weak var accomplishedEvalSliderLabel: UILabel!
     @IBOutlet weak var socialEvalSliderLabel: UILabel!
     @IBOutlet weak var exhaustedEvalSliderLabel: UILabel!
     @IBOutlet weak var tiredEvalSliderLabel: UILabel!
     @IBOutlet weak var happyEvalSliderLabel: UILabel!
+    
     
     @IBOutlet weak var accomplishedEvalSlider: UISlider!
     @IBOutlet weak var socialEvalSlider: UISlider!
@@ -42,18 +45,18 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        accomplishedEvalSliderLabel.text = "How normal do you feel? 0"
-        accomplishedEvalSlider.setValue(0.0, animated: true)
+        accomplishedEvalSliderLabel.text = "How accomplished do you feel? 0"
+        accomplishedEvalSlider.setValue(0.5, animated: true)
         //normalEvalSlider.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
         
         socialEvalSliderLabel.text = "How social do you feel? 0"
-        socialEvalSlider.setValue(0.0, animated: true)
+        socialEvalSlider.setValue(0.5, animated: true)
         
         tiredEvalSliderLabel.text = "How tired do you feel? 0"
-        tiredEvalSlider.setValue(0.0, animated: true)
+        tiredEvalSlider.setValue(0.5, animated: true)
         
         exhaustedEvalSliderLabel.text = "How exhausted do you feel? 0"
-        exhaustedEvalSlider.setValue(0.0, animated: true)
+        exhaustedEvalSlider.setValue(0.5, animated: true)
         
         happyEvalSliderLabel.text = "How happy do you feel? 0"
         happyEvalSlider.setValue(0.5, animated: true)
@@ -115,11 +118,12 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
         performSegue(withIdentifier: "unwindSegueToMainViewController", sender: self)
     }
 
-    @IBAction func normalEvalSliderMoved(_ sender: UISlider) {
+    
+    @IBAction func accomplishedEvalSliderMoved(_ sender: UISlider) {
         let phrase = "How accomplished do you feel? "
         let sliderPos = accomplishedEvalSlider.value
-        let sliderVal = round(sliderPos*5)/5
-        accomplishedSliderRealVal = Int(round(sliderPos*5))
+        let sliderVal = round(sliderPos*10)/10
+        accomplishedSliderRealVal = Int(round(sliderPos*10)) - 5
         sender.setValue(sliderVal, animated: true)
         
         if(accomplishedEvalSliderLabel.text != phrase + "\(accomplishedSliderRealVal)"){
@@ -130,8 +134,8 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
     @IBAction func socialEvalSliderMoved(_ sender: UISlider) {
         let phrase = "How social do you feel? "
         let sliderPos = socialEvalSlider.value
-        let sliderVal = round(sliderPos*5)/5
-        socialSliderRealVal = Int(round(sliderPos*5))
+        let sliderVal = round(sliderPos*10)/10
+        socialSliderRealVal = Int(round(sliderPos*10)) - 5
         sender.setValue(sliderVal, animated: true)
         
         if(socialEvalSliderLabel.text != phrase + "\(socialSliderRealVal)"){
@@ -143,8 +147,8 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
     @IBAction func exhaustedEvalSliderMoved(_ sender: UISlider) {
         let phrase = "How exhausted do you feel? "
         let sliderPos = exhaustedEvalSlider.value
-        let sliderVal = round(sliderPos*5)/5
-        exhaustedSliderRealVal = Int(round(sliderPos*5))
+        let sliderVal = round(sliderPos*10)/10
+        exhaustedSliderRealVal = Int(round(sliderPos*10)) - 5
         sender.setValue(sliderVal, animated: true)
         
         if(exhaustedEvalSliderLabel.text != phrase + "\(exhaustedSliderRealVal)"){
@@ -156,8 +160,8 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
     @IBAction func tiredEvalSliderMoved(_ sender: UISlider) {
         let phrase = "How tired do you feel? "
         let sliderPos = tiredEvalSlider.value
-        let sliderVal = round(sliderPos*5)/5
-        tiredSliderRealVal = Int(round(sliderPos*5))
+        let sliderVal = round(sliderPos*10)/10
+        tiredSliderRealVal = Int(round(sliderPos*10)) - 5
         sender.setValue(sliderVal, animated: true)
         
         if(tiredEvalSliderLabel.text != phrase + "\(tiredSliderRealVal)"){

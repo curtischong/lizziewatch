@@ -48,7 +48,7 @@
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="7" translatesAutoresizingMaskIntoConstraints="NO" id="khQ-Qa-ArG">
                                 <rect key="frame" x="0.0" y="63" width="375" height="57.5"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="How Normal do you feel: " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y42-Kh-UsB">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="How accomplished do you feel: " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y42-Kh-UsB">
                                         <rect key="frame" x="20" y="0.0" width="335" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -58,7 +58,7 @@
                                         <rect key="frame" x="18" y="27.5" width="339" height="31"/>
                                         <color key="minimumTrackTintColor" red="0.0" green="0.99143940210000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <connections>
-                                            <action selector="normalEvalSliderMoved:" destination="XhB-HF-MDQ" eventType="valueChanged" id="8RJ-46-8en"/>
+                                            <action selector="accomplishedEvalSliderMoved:" destination="XhB-HF-MDQ" eventType="valueChanged" id="Oa1-Uf-1pD"/>
                                         </connections>
                                     </slider>
                                 </subviews>
@@ -125,7 +125,7 @@
                                     </label>
                                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="qSc-b6-wnW">
                                         <rect key="frame" x="18" y="28.5" width="339" height="31"/>
-                                        <color key="minimumTrackTintColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="minimumTrackTintColor" red="0.0" green="0.99143940210000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <color key="maximumTrackTintColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <connections>
                                             <action selector="happyEvalSliderMoved:" destination="XhB-HF-MDQ" eventType="valueChanged" id="yxb-3u-a1c"/>
@@ -197,13 +197,13 @@
                         <viewLayoutGuide key="safeArea" id="Fpg-VO-ljY"/>
                     </view>
                     <connections>
+                        <outlet property="accomplishedEvalSlider" destination="TRW-6a-7yk" id="UFs-4w-qXQ"/>
+                        <outlet property="accomplishedEvalSliderLabel" destination="y42-Kh-UsB" id="zKM-G2-l2T"/>
                         <outlet property="commentBoxTextView" destination="Y9p-Fb-k4h" id="cSF-F5-KVA"/>
                         <outlet property="exhaustedEvalSlider" destination="sM2-6p-S4P" id="P3n-mb-cqx"/>
                         <outlet property="exhaustedEvalSliderLabel" destination="gLa-6m-PVl" id="qMJ-V2-64F"/>
                         <outlet property="happyEvalSlider" destination="qSc-b6-wnW" id="zez-t9-HO6"/>
                         <outlet property="happyEvalSliderLabel" destination="qBX-vs-aJ8" id="zri-rL-WEM"/>
-                        <outlet property="normalEvalSlider" destination="TRW-6a-7yk" id="2JN-Qp-trt"/>
-                        <outlet property="normalEvalSliderLabel" destination="y42-Kh-UsB" id="f72-IP-OgC"/>
                         <outlet property="socialEvalSlider" destination="Qb4-u9-j1b" id="wQY-sh-MZw"/>
                         <outlet property="socialEvalSliderLabel" destination="owJ-lA-tOP" id="9Yu-Dm-fo9"/>
                         <outlet property="tiredEvalSlider" destination="DNt-Xq-FOm" id="orc-xm-kCO"/>
