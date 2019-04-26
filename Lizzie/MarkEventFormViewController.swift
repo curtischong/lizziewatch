@@ -87,7 +87,7 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
     private var highlight3 : Highlight?
     private let typesOfBiometrics = ["HR"]
 
-    private var timeStartFillingForm : Date?
+
     let generator = UIImpactFeedbackGenerator(style: .light)
     private let commentBoxPlaceholder = "Comments"
     let httpManager = HttpManager()
@@ -113,7 +113,6 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         uploadButton.isEnabled = false
         //NSLog("Setting things up")
         
-        timeStartFillingForm = Date()
         queryBioSamples()
         // Colors:
         commentBoxTextView.layer.borderColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1.0).cgColor
@@ -557,17 +556,15 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         
         print("\(json(from : evaluateEmotionBar.getButtonStates())!)")
         
+        let buttonStates : [Int] = evaluateEmotionBar.getButtonStates()
         
         
-        
-        let markEventObj = MarkEventObj(timeStartFillingForm: timeStartFillingForm!,
-                                        timeEndFillingForm: Date(),
-                                        timeOfMark: markEventDate,
+        let markEventObj = MarkEventObj(timeOfMark: markEventDate,
                                         isReaction: isReaction,
                                         anticipationStart: highlight1Date,
                                         timeOfEvent: timeOfEvent,
                                         reactionEnd: highlight2Date,
-                                        emotionsFelt: evaluateEmotionBar.getButtonStates(),
+                                        emotionsFelt: buttonStates,
                                         comments: commentsToSend!,
                                         typeBiometricsViewed: [0])
         httpManager.uploadMarkEvent(markEventObj: markEventObj)

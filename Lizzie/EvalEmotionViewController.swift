@@ -26,7 +26,6 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
     
     @IBOutlet weak var commentBoxTextView: UITextView!
     
-    private var timeStartFillingForm : Date?
     private var accomplishedSliderRealVal = 0
     private var socialSliderRealVal = 0
     private var exhaustedSliderRealVal = 0
@@ -43,7 +42,6 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        timeStartFillingForm = Date()
         accomplishedEvalSliderLabel.text = "How normal do you feel? 0"
         accomplishedEvalSlider.setValue(0.0, animated: true)
         //normalEvalSlider.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)

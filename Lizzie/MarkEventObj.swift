@@ -18,9 +18,7 @@ class MarkEventObj{
     var comments : String
     var typeBiometricsViewed : [Int]
     
-    init(timeStartFillingForm : Date,
-    timeEndFillingForm : Date,
-    timeOfMark : Date,
+    init(timeOfMark : Date,
     isReaction : Bool,
     anticipationStart : Date,
     timeOfEvent : Date,
