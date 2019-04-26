@@ -69,8 +69,6 @@ class HttpManager{
     
     func uploadMarkEvent(markEventObj : MarkEventObj){
         
-        let timeStartFillingForm = convertDate(date: markEventObj.timeStartFillingForm)
-        let timeEndFillingForm = convertDate(date: markEventObj.timeEndFillingForm)
         let timeOfMark = convertDate(date: markEventObj.timeOfMark)
         
         var isReaction = "0"
@@ -86,8 +84,6 @@ class HttpManager{
         let typeBiometricsViewed = json(from : markEventObj.typeBiometricsViewed) as Any
         
         let parameters: Parameters = [
-            "timeStartFillingForm": timeStartFillingForm,
-            "timeEndFillingForm": timeEndFillingForm,
             "timeOfMark": timeOfMark,
             "isReaction": isReaction,
             // The server only uses anticipationStart if isReaction = false
@@ -127,9 +123,8 @@ class HttpManager{
     func uploadEmotionEvaluation(emotionEvalObj : EmotionEvalObj){
         
         let parameters: Parameters = [
-            "timeStartFillingForm": appContextFormatter.string(from: emotionEvalObj.timeStartFillingForm),
             "timeEndFillingForm": appContextFormatter.string(from: emotionEvalObj.timeEndFillingForm),
-            "normalEval": String(emotionEvalObj.normalEval),
+            "accomplishedEval": String(emotionEvalObj.accomplishedEval),
             "socialEval": String(emotionEvalObj.socialEval),
             "exhaustedEval": String(emotionEvalObj.exhaustedEval),
             "tiredEval": String(emotionEvalObj.tiredEval),

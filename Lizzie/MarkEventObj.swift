@@ -9,8 +9,6 @@
 import Foundation
 
 class MarkEventObj{
-    var timeStartFillingForm : Date
-    var timeEndFillingForm : Date
     var timeOfMark : Date
     var isReaction : Bool
     var anticipationStart : Date
@@ -31,8 +29,6 @@ class MarkEventObj{
     comments : String,
     typeBiometricsViewed : [Int]){
         
-        self.timeStartFillingForm = timeStartFillingForm
-        self.timeEndFillingForm = timeEndFillingForm
         self.timeOfMark = timeOfMark
         self.isReaction = isReaction
         self.anticipationStart = anticipationStart
@@ -46,8 +42,6 @@ class MarkEventObj{
     init(timeOfMark : Date){
         let curDate = Date()
         
-        self.timeStartFillingForm = curDate
-        self.timeEndFillingForm = curDate
         self.timeOfMark = timeOfMark
         self.isReaction = true
         self.anticipationStart = curDate

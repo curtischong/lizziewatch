@@ -9,26 +9,24 @@
 import Foundation
 
 class EmotionEvalObj{
-    var timeStartFillingForm : Date
     var timeEndFillingForm : Date
-    var normalEval : Int
+    var accomplishedEval : Int
     var socialEval : Int
     var exhaustedEval : Int
     var tiredEval : Int
     var happyEval : Int
     var comments : String
     
-    init(timeStartFillingForm : Date,
+    init(
     timeEndFillingForm : Date,
-    normalEval : Int,
+    accomplishedEval : Int,
     socialEval : Int,
     exhaustedEval : Int,
     tiredEval : Int,
     happyEval : Int,
     comments : String){
-        self.timeStartFillingForm = timeStartFillingForm
         self.timeEndFillingForm = timeEndFillingForm
-        self.normalEval = normalEval
+        self.accomplishedEval = accomplishedEval
         self.socialEval = socialEval
         self.exhaustedEval = exhaustedEval
         self.tiredEval = tiredEval
