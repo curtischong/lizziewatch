@@ -377,7 +377,7 @@
 				TargetAttributes = {
 					BE25AFE61D4F33B000DAF094 = {
 						CreatedOnToolsVersion = 8.0;
-						DevelopmentTeam = 995HVW2DL6;
+						DevelopmentTeam = PSYBSPRPAP;
 						DevelopmentTeamName = "Thomas Mann";
 						LastSwiftMigration = 1010;
 						ProvisioningStyle = Automatic;
@@ -389,13 +389,13 @@
 					};
 					BE25AFF81D4F33B100DAF094 = {
 						CreatedOnToolsVersion = 8.0;
-						DevelopmentTeam = 995HVW2DL6;
+						DevelopmentTeam = PSYBSPRPAP;
 						DevelopmentTeamName = "Thomas Mann";
 						ProvisioningStyle = Automatic;
 					};
 					BE25B0071D4F33B100DAF094 = {
 						CreatedOnToolsVersion = 8.0;
-						DevelopmentTeam = 995HVW2DL6;
+						DevelopmentTeam = PSYBSPRPAP;
 						DevelopmentTeamName = "Thomas Mann";
 						LastSwiftMigration = 1010;
 						ProvisioningStyle = Automatic;
@@ -410,11 +410,12 @@
 					};
 				};
 			};
-			buildConfigurationList = BE25AFE21D4F33B000DAF094 /* Build configuration list for PBXProject "Lizzie" */;
+			buildConfigurationList = BE25AFE21D4F33B000DAF094 /* Build configuration list for PBXProject "LizzieApp" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -755,10 +756,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CODE_SIGN_ENTITLEMENTS = "Lizzie WatchKit Extension/Lizzie WatchKit Extension.entitlements";
-				DEVELOPMENT_TEAM = 995HVW2DL6;
+				DEVELOPMENT_TEAM = PSYBSPRPAP;
 				INFOPLIST_FILE = "$(SRCROOT)/Lizzie WatchKit Extension/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.curtischong.Lizzie.watchkitapp.watchkitextension;
+				PRODUCT_BUNDLE_IDENTIFIER = com.curtischong.LizzieApp.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "${TARGET_NAME}";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -775,10 +776,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CODE_SIGN_ENTITLEMENTS = "Lizzie WatchKit Extension/Lizzie WatchKit Extension.entitlements";
-				DEVELOPMENT_TEAM = 995HVW2DL6;
+				DEVELOPMENT_TEAM = PSYBSPRPAP;
 				INFOPLIST_FILE = "$(SRCROOT)/Lizzie WatchKit Extension/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.curtischong.Lizzie.watchkitapp.watchkitextension;
+				PRODUCT_BUNDLE_IDENTIFIER = com.curtischong.LizzieApp.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "${TARGET_NAME}";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -795,10 +796,10 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 995HVW2DL6;
+				DEVELOPMENT_TEAM = PSYBSPRPAP;
 				IBSC_MODULE = Heart_Control_WatchKit_Extension;
 				INFOPLIST_FILE = "$(SRCROOT)/Lizzie WatchKit App/Info.plist";
-				PRODUCT_BUNDLE_IDENTIFIER = com.curtischong.Lizzie.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.curtischong.LizzieApp.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -814,10 +815,10 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 995HVW2DL6;
+				DEVELOPMENT_TEAM = PSYBSPRPAP;
 				IBSC_MODULE = Heart_Control_WatchKit_Extension;
 				INFOPLIST_FILE = "$(SRCROOT)/Lizzie WatchKit App/Info.plist";
-				PRODUCT_BUNDLE_IDENTIFIER = com.curtischong.Lizzie.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.curtischong.LizzieApp.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -833,10 +834,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Lizzie/Lizzie.entitlements;
-				DEVELOPMENT_TEAM = 995HVW2DL6;
+				DEVELOPMENT_TEAM = PSYBSPRPAP;
 				INFOPLIST_FILE = "$(SRCROOT)/Lizzie/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.curtischong.Lizzie;
+				PRODUCT_BUNDLE_IDENTIFIER = com.curtischong.LizzieApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.2;
@@ -849,10 +850,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Lizzie/Lizzie.entitlements;
-				DEVELOPMENT_TEAM = 995HVW2DL6;
+				DEVELOPMENT_TEAM = PSYBSPRPAP;
 				INFOPLIST_FILE = "$(SRCROOT)/Lizzie/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.curtischong.Lizzie;
+				PRODUCT_BUNDLE_IDENTIFIER = com.curtischong.LizzieApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.2;
@@ -862,7 +863,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		BE25AFE21D4F33B000DAF094 /* Build configuration list for PBXProject "Lizzie" */ = {
+		BE25AFE21D4F33B000DAF094 /* Build configuration list for PBXProject "LizzieApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				BE25B0141D4F33B100DAF094 /* Debug */,

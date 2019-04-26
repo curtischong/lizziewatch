@@ -23,7 +23,7 @@
       location = "group:Lizzie/BioSamplePhone+CoreDataProperties.swift">
    </FileRef>
    <FileRef
-      location = "group:Lizzie.xcodeproj">
+      location = "group:/Users/curtis/Desktop/dev/lizziewatch/LizzieApp.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Pods/Pods.xcodeproj">

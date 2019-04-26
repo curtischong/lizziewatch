@@ -28,7 +28,7 @@
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
 	<key>WKCompanionAppBundleIdentifier</key>
-	<string>com.curtischong.Lizzie</string>
+	<string>com.curtischong.LizzieApp</string>
 	<key>WKWatchKitApp</key>
 	<true/>
 </dict>
