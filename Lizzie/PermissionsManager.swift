@@ -9,10 +9,13 @@
 import Foundation
 import HealthKit
 
+
 class PermissionsManager{
+
     let healthStore = HKHealthStore()
     var authSuccess = false
-    func authenticateForHealthstoreData(){
+
+    func authenticateForHealthstoreData(successFunc : () ){
         // Create health store.
         if #available(iOS 11.0, *) {
             NSLog("can read all healthStore Datapoints!")
@@ -55,6 +58,7 @@ class PermissionsManager{
                 }
                 NSLog("HaveAuthentication: \(success)")
                 // Delegate success.
+                successFunc
                 return
             }
             
