@@ -82,6 +82,7 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
     }
     
     func textViewDidBeginEditing(_ textView: UITextView) {
+        generator.impactOccurred()
         if commentBoxTextView.textColor == UIColor.lightGray {
             commentBoxTextView.text = nil
             commentBoxTextView.textColor = UIColor.white
@@ -89,6 +90,7 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
+        generator.impactOccurred()
         if commentBoxTextView.text.isEmpty {
             commentBoxTextView.text = commentBoxPlaceholder
             commentBoxTextView.textColor = UIColor.lightGray
