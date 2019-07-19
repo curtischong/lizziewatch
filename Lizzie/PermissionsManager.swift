@@ -18,7 +18,6 @@ class PermissionsManager{
     func authenticateForHealthstoreData(successFunc : () ){
         // Create health store.
         if #available(iOS 11.0, *) {
-            NSLog("can read all healthStore Datapoints!")
             // Check if there is health data available.
             if (!HKHealthStore.isHealthDataAvailable()) {
                 print("No health data is available.")
@@ -56,7 +55,6 @@ class PermissionsManager{
                     print(error ?? "failed during healthkit auth")
                     return
                 }
-                NSLog("HaveAuthentication: \(success)")
                 // Delegate success.
                 successFunc
                 return

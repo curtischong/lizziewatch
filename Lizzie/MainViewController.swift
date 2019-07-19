@@ -46,6 +46,31 @@ class MainViewController: UIViewController, UITableViewDelegate, mainProtocol{
         return .lightContent
     }
     
+    func uploadToServer(){
+        NSLog("Querying for healthkit datapoints")
+        let endDate = Date()
+        var startDate = Date()
+        if(settingsManager.dateLastSyncedWithServer == nil){
+            NSLog("The app has never synced with the server. Sending all the biopoints from the last week")
+            // select all the data from the past week for good measure
+            startDate = endDate.addingTimeInterval(-24 * 60 * 60 * 7)
+        }else{
+            // query for points an hour before the last sync bc points may start before the endDate of the query
+            startDate = settingsManager.dateLastSyncedWithServer!.addingTimeInterval(-60 * 60)
+            NSLog("last synced time: \(startDate)")
+        }
+        
+        hkManager.queryBioSamples(startDate : startDate, endDate : endDate) { samples, error in
+            guard let samples = samples else { return }
+            
+            let bioSamples = self.hkManager.handleBioSamples(samples : samples, startDate : startDate, endDate : endDate)
+            if(bioSamples.count > 0){
+                NSLog("Sending biopoints to server")
+                self.httpManager.uploadBioSamples(bioSamples : bioSamples)
+            }
+        }
+    }
+    
     // MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -61,32 +86,7 @@ class MainViewController: UIViewController, UITableViewDelegate, mainProtocol{
         if(settingsManager.dateLastSyncedWithWatch != nil){
             dateLastSyncLabel.text = displayDateFormatter.string(from: settingsManager.dateLastSyncedWithWatch!)
         }
-        //permissionsManager.authenticateForHealthstoreData()
-        if (permissionsManager.authSuccess){
-            
-            NSLog("Querying for healthkit datapoints")
-            let endDate = Date()
-            var startDate = Date()
-            if(settingsManager.dateLastSyncedWithServer == nil){
-                NSLog("The app has never synced with the server. Sending all the biopoints from the last week")
-                // select all the data from the past week for good measure
-                startDate = endDate.addingTimeInterval(-24 * 60 * 60 * 7)
-            }else{
-                // query for points an hour before the last sync bc points may start before the endDate of the query
-                startDate = settingsManager.dateLastSyncedWithServer!.addingTimeInterval(-60 * 60)
-                NSLog("last synced time: \(startDate)")
-            }
-            
-            hkManager.queryBioSamples(startDate : startDate, endDate : endDate) { samples, error in
-                guard let samples = samples else { return }
-                
-                let bioSamples = self.hkManager.handleBioSamples(samples : samples, startDate : startDate, endDate : endDate)
-                if(bioSamples.count > 0){
-                    NSLog("Sending biopoints to server")
-                    self.httpManager.uploadBioSamples(bioSamples : bioSamples)
-                }
-            }
-        }
+        permissionsManager.authenticateForHealthstoreData(successFunc: uploadToServer())
         
         // Used only in testing
         //dataManager.dropAllRows()
@@ -100,7 +100,6 @@ class MainViewController: UIViewController, UITableViewDelegate, mainProtocol{
     }
     
     func updateMarkEvent(){
-        NSLog("markEvent updated")
         let markEvents = dataManager.getAllMarkEvents()
         dataSource.markEvents = markEvents
         markEventTable.dataSource = dataSource
