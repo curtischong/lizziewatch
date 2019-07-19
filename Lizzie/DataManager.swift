@@ -18,11 +18,11 @@ class DataManager{
         //markEventEntity = NSEntityDescription.entity(forEntityName: "MarkEventPhone", in: context)
     }
     
-    func insertMarkEvents(timeOfMarks : [Date]) -> Bool{
+    func insertMarkEvents(markTimes : [Date]) -> Bool{
         let entity = NSEntityDescription.entity(forEntityName: "MarkEventPhone", in: context)
-        for eventMark in timeOfMarks {
+        for eventMark in markTimes {
             let curMark = NSManagedObject(entity: entity!, insertInto: context)
-            curMark.setValue(eventMark, forKey: "timeOfMark")
+            curMark.setValue(eventMark, forKey: "markTime")
         }
         do {
             try context.save()
@@ -34,18 +34,18 @@ class DataManager{
         }
     }
     
-    func deleteMarkEvent(timeOfMark : Date) -> Bool{
+    func deleteMarkEvent(markTime : Date) -> Bool{
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "MarkEventPhone")
-        fetchRequest.predicate = NSPredicate(format: "timeOfMark == %@", timeOfMark as NSDate)
+        fetchRequest.predicate = NSPredicate(format: "markTime == %@", markTime as NSDate)
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
         
         do{
             try context.execute(deleteRequest)
             try context.save()
-            NSLog("Deleted MarkEventPhone with time: \(timeOfMark)")
+            NSLog("Deleted MarkEventPhone with time: \(markTime)")
             return true
         }catch let error{
-            NSLog("Couldn't Delete MarkEventPhone with time \(timeOfMark) with error: \(error)")
+            NSLog("Couldn't Delete MarkEventPhone with time \(markTime) with error: \(error)")
             return false
         }
     }
@@ -71,13 +71,13 @@ class DataManager{
     }
     
     func getAllMarkEvents() -> [MarkEventObj]{
-        let sortDescriptor = NSSortDescriptor(key: "timeOfMark", ascending: false)
+        let sortDescriptor = NSSortDescriptor(key: "markTime", ascending: false)
         
         let entities = getAllEntities(entityName : "MarkEventPhone", predicate: nil, sortDescriptors : [sortDescriptor])
         
         var allEntities : [MarkEventObj] = []
         for entity in entities{
-            allEntities.append(MarkEventObj(timeOfMark : entity.value(forKey: "timeOfMark") as! Date))
+            allEntities.append(MarkEventObj(markTime : entity.value(forKey: "markTime") as! Date))
             
         }
         return allEntities

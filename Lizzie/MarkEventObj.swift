@@ -8,45 +8,42 @@
 
 import Foundation
 
+    //TODO: set startTime to "" if anticipate is false
 class MarkEventObj{
-    var timeOfMark : Date
-    var isReaction : Bool
-    var anticipationStart : Date
-    var timeOfEvent : Date
-    var reactionEnd : Date
+    var markTime : Date
+    var anticipate : Bool
+    var startTime : Date
+    var eventTime : Date
+    var endTime : Date
     var emotionsFelt : [Int]
-    var comments : String
-    var typeBiometricsViewed : [Int]
+    var comment : String
     
-    init(timeOfMark : Date,
-    isReaction : Bool,
-    anticipationStart : Date,
-    timeOfEvent : Date,
-    reactionEnd : Date,
+    init(markTime : Date,
+    anticipate : Bool,
+    startTime : Date,
+    eventTime : Date,
+    endTime : Date,
     emotionsFelt : [Int],
-    comments : String,
-    typeBiometricsViewed : [Int]){
+    comment : String){
         
-        self.timeOfMark = timeOfMark
-        self.isReaction = isReaction
-        self.anticipationStart = anticipationStart
-        self.timeOfEvent = timeOfEvent
-        self.reactionEnd = reactionEnd
+        self.markTime = markTime
+        self.anticipate = anticipate
+        self.startTime = startTime
+        self.eventTime = eventTime
+        self.endTime = endTime
         self.emotionsFelt = emotionsFelt
-        self.comments = comments
-        self.typeBiometricsViewed = typeBiometricsViewed
+        self.comment = comment
     }
     
-    init(timeOfMark : Date){
+    init(markTime : Date){
         let curDate = Date()
         
-        self.timeOfMark = timeOfMark
-        self.isReaction = true
-        self.anticipationStart = curDate
-        self.timeOfEvent = curDate
-        self.reactionEnd = curDate
+        self.markTime = markTime
+        self.anticipate = true
+        self.startTime = curDate
+        self.eventTime = curDate
+        self.endTime = curDate
         self.emotionsFelt = [0,0,0,0,0,0,0,0]
-        self.comments = ""
-        self.typeBiometricsViewed = [0]
+        self.comment = ""
     }
 }

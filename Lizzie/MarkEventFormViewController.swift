@@ -68,7 +68,7 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
     @IBOutlet var selectPointsButton: UIButton!
     @IBOutlet var timeStartSlider: UISlider!
     @IBOutlet var timeEndSlider: UISlider!
-    @IBOutlet var isReactionSwitch: UISwitch!
+    @IBOutlet var anticipateSwitch: UISwitch!
     @IBOutlet var uploadButton: UIButton!
     
     @IBOutlet var evaluateEmotionBar: EmotionSelectionElement!
@@ -78,7 +78,7 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
     private var selectedEmotions = Array(repeating: false, count: 8)
     private var bioPoints = [String : [chartPoint]]()
     private var selectedPoints = false
-    private var isReaction = false
+    private var anticipate = false
     private var activeTypingField = ""
     private var lineChartEntry = [String : [ChartDataEntry]]()
     //private var lineChartEntryDates = [String : [Date]]()
@@ -156,7 +156,7 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         timeEndSlider.setValue(1.0, animated: true)
         
         
-        view.bringSubviewToFront(isReactionSwitch)
+        view.bringSubviewToFront(anticipateSwitch)
     }
     
     // textview functions
@@ -224,21 +224,35 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         //eventTextLabel.text = textField.text
     }
     
+    func pointsNotInOrder(points: [ChartDataEntry])  -> Bool {
+        var last_val = -9999.0
+        for point in points {
+            if point.x < last_val {
+                return true
+            }
+            last_val = point.x
+        }
+        return false
+    }
+    
     func updateGraph(){
         //ineChartEntry["HR"] = []()
         var tempArr1 : [ChartDataEntry] = []
         //var tempArr2 : [Date] = []
         
         if let hrPoints = self.bioPoints["HR"] {
-            for (index, _) in hrPoints.enumerated() {
+            for point in hrPoints {
                 //NSLog("Cur Time: \(Double(bioPoints!["HR"]![i].endTime.seconds(from : markEventDate)))")
-                let difference = Double(hrPoints[index].endTime.seconds(from : markEventDate))
+                let difference = Double(point.endTime.seconds(from : markEventDate))
                 if(abs(difference) < Double(eventDurationSlider.value) * 60.0 * 5.0){
-                    let value = ChartDataEntry(x: difference, y: hrPoints[index].measurement)
+                    let value = ChartDataEntry(x: difference, y: point.measurement)
                     tempArr1.append(value)
                     //tempArr2.append(bioPoints["HR"]![i].endTime)
                 }
             }
+        }
+        if pointsNotInOrder(points: tempArr1){
+            fatalError("points on graph need to be chronologically ordered!")
         }
         
         lineChartEntry["HR"] = tempArr1
@@ -343,7 +357,7 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         if(bioPoints["HR"]!.count > 0){
             sender.isEnabled = false
             uploadButton.isEnabled = true
-            if(isReaction){
+            if(anticipate){
                 
                 eventDurationSlider.isEnabled = false
             }else{
@@ -408,7 +422,7 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
             let closestIdx = getNewXForHightlight3()
             highlight3 = Highlight(x: Double(lineChartEntry["HR"]![closestIdx].x), y: lineChartEntry["HR"]![closestIdx].y, dataSetIndex: 0)
             heartrateChart.highlightValues(getAllHighlights())
-            if(!isReaction){
+            if(!anticipate){
                 checkIfCanUpload()
             }
         }else{
@@ -421,20 +435,20 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         generator.impactOccurred()
         performSegue(withIdentifier: "unwindSegue2ToMainViewController", sender: self)
     }
-    @IBAction func isReactionSwitch(_ sender: Any) {
-        if(isReaction){
+    @IBAction func anticipateSwitch(_ sender: Any) {
+        if(anticipate){
             let closestIdx = getNewXForHightlight3()
             highlight3 = Highlight(x: Double(lineChartEntry["HR"]![closestIdx].x), y: lineChartEntry["HR"]![closestIdx].y, dataSetIndex: 0)
             heartrateChart.highlightValues(getAllHighlights())
             checkIfCanUpload()
-            isReaction = false
+            anticipate = false
         }else{
             highlight3 = nil
             heartrateChart.highlightValues(getAllHighlights())
-            isReaction = true
+            anticipate = true
         }
         if(selectedPoints){
-            if(isReaction){
+            if(anticipate){
                 eventDurationSlider.isEnabled = false
             }else{
                 eventDurationSlider.isEnabled = true
@@ -450,7 +464,7 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
             sender.setValue(timeEndSliderPos, animated: true)
         }else{
             
-            if(!isReaction){
+            if(!anticipate){
                 checkIfCanUpload()
             }
             
@@ -478,7 +492,7 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
             sender.setValue(timeStartSliderPos, animated: true)
         }else{
             
-            if(!isReaction){
+            if(!anticipate){
                 checkIfCanUpload()
             }
             
@@ -518,7 +532,7 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
     }
     
     func deleteCurrentMarkEvent(){
-        if(dataManager.deleteMarkEvent(timeOfMark: markEventDate)){
+        if(dataManager.deleteMarkEvent(markTime: markEventDate)){
             performSegue(withIdentifier: "unwindSegue2ToMainViewController", sender: self)
         }
     }
@@ -542,15 +556,15 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         
         
         var timeOfEvent = highlight3Date
-        if(isReaction){
+        if(anticipate){
             timeOfEvent = highlight1Date
         }else{
             highlight3Date = markEventDate.addingTimeInterval(TimeInterval(highlight3!.x))
         }
         
-        var commentsToSend = commentBoxTextView.text
-        if(commentsToSend == commentBoxPlaceholder){
-            commentsToSend = ""
+        var commentToSend = commentBoxTextView.text
+        if(commentToSend == commentBoxPlaceholder){
+            commentToSend = ""
         }
         
         print("\(json(from : evaluateEmotionBar.getButtonStates())!)")
@@ -558,14 +572,13 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         let buttonStates : [Int] = evaluateEmotionBar.getButtonStates()
         
         
-        let markEventObj = MarkEventObj(timeOfMark: markEventDate,
-                                        isReaction: isReaction,
-                                        anticipationStart: highlight1Date,
-                                        timeOfEvent: timeOfEvent,
-                                        reactionEnd: highlight2Date,
+        let markEventObj = MarkEventObj(markTime: markEventDate,
+                                        anticipate: anticipate,
+                                        startTime: highlight1Date,
+                                        eventTime: timeOfEvent,
+                                        endTime: highlight2Date,
                                         emotionsFelt: buttonStates,
-                                        comments: commentsToSend!,
-                                        typeBiometricsViewed: [0])
+                                        comment: commentToSend!)
         httpManager.uploadMarkEvent(markEventObj: markEventObj)
         self.deleteCurrentMarkEvent()
         self.performSegue(withIdentifier: "unwindSegue2ToMainViewController", sender: self)

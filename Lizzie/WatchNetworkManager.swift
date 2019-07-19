@@ -90,7 +90,7 @@ class WatchNetworkManager: NSObject, WCSessionDelegate{
     
     // Stores the received data into the phone's coredata, updates the UI (MarkEvent Table View), and notifies the watch it's done syncing
     private func storeMarkEventPhone(timeOfMarks : [Date], endTimeOfQuery : Date){
-        if(dataManager.insertMarkEvents(timeOfMarks : timeOfMarks)){
+        if(dataManager.insertMarkEvents(markTimes : timeOfMarks)){
             
             settingsManager.dateLastSyncedWithWatch = endTimeOfQuery
             settingsManager.saveSettings()

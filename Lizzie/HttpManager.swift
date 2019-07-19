@@ -69,31 +69,45 @@ class HttpManager{
     
     func uploadMarkEvent(markEventObj : MarkEventObj){
         
-        let timeOfMark = convertDate(date: markEventObj.timeOfMark)
+        let markTime = convertDate(date: markEventObj.markTime)
         
-        var isReaction = "0"
-        if(markEventObj.isReaction){
-            isReaction = "1"
+        var anticipate = "0"
+        if(markEventObj.anticipate){
+            anticipate = "1"
         }
         
-        let anticipationStart = convertDate(date: markEventObj.anticipationStart)
-        let timeOfEvent = convertDate(date: markEventObj.timeOfEvent)
-        let reactionEnd = convertDate(date: markEventObj.reactionEnd)
+        let startTime = convertDate(date: markEventObj.startTime)
+        let eventTime = convertDate(date: markEventObj.eventTime)
+        let endTime = convertDate(date: markEventObj.endTime)
         let emotionsFelt = markEventObj.emotionsFelt
-        let comments = markEventObj.comments
-        let typeBiometricsViewed = json(from : markEventObj.typeBiometricsViewed) as Any
+        let comment = markEventObj.comment
+        
+        
+        let fear = emotionsFelt[0]
+        let joy = emotionsFelt[1]
+        let anger = emotionsFelt[2]
+        let sad = emotionsFelt[3]
+        let disgust = emotionsFelt[4]
+        let surprise = emotionsFelt[5]
+        let contempt = emotionsFelt[6]
+        let interest = emotionsFelt[7]
+        
         
         let parameters: Parameters = [
-            "timeOfMark": timeOfMark,
-            "isReaction": isReaction,
-            // The server only uses anticipationStart if isReaction = false
-            "anticipationStart": anticipationStart,
-            "timeOfEvent": timeOfEvent,
-            "reactionEnd": reactionEnd,
-            "emotionsFelt" : emotionsFelt,
-            "comments" : comments,
-            // for future reference we need to define what each index means: for now 0 means HR
-            "typeBiometricsViewed" : typeBiometricsViewed //TODO: add more biometrics to view
+            "markTime": markTime,
+            "anticipate": anticipate,
+            "startTime": startTime, // The server only uses this if anticipate=false
+            "eventTime": eventTime,
+            "endTime": endTime,
+            "fear": fear,
+            "joy": joy,
+            "anger": anger,
+            "sad": sad,
+            "disgust": disgust,
+            "surprise": surprise,
+            "contempt": contempt,
+            "interest": interest,
+            "comment" : comment
         ]
         
         // let ctx = self

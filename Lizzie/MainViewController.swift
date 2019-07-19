@@ -19,7 +19,8 @@ class MainViewController: UIViewController, UITableViewDelegate, mainProtocol{
     
     
     @IBOutlet weak var syncToPhoneStateLabel: UILabel!
-    @IBOutlet weak var markEventCntPhone: UILabel!
+    @IBOutlet weak var uploadEventsBtn: UIButton!
+    
     
     @IBOutlet weak var markEventTable: UITableView!
     @IBOutlet weak var dateLastSyncLabel: UILabel!
@@ -95,7 +96,7 @@ class MainViewController: UIViewController, UITableViewDelegate, mainProtocol{
     //MARK: Actions
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        fillMarkEvent(timeOfMark : dataSource.markEvents[indexPath.row].timeOfMark)
+        fillMarkEvent(timeOfMark : dataSource.markEvents[indexPath.row].markTime)
     }
     
     func updateMarkEvent(){
@@ -131,7 +132,7 @@ class MainViewController: UIViewController, UITableViewDelegate, mainProtocol{
         
     @IBAction func markEventButtonPress(_ sender: UIButton) {
         generator.impactOccurred()
-        if(dataManager.insertMarkEvents(timeOfMarks : [Date()])){
+        if(dataManager.insertMarkEvents(markTimes : [Date()])){
             updateMarkEvent()
         }
     }

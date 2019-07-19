@@ -20,7 +20,7 @@ class DataSource: NSObject, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cellIdentifier") as! MarkEventTableViewCell
         displayDateFormatter.dateFormat = "MMM d, h:mm a"
-        cell.textLabel?.text = displayDateFormatter.string(from: markEvents[indexPath.row].timeOfMark)
+        cell.textLabel?.text = displayDateFormatter.string(from: markEvents[indexPath.row].markTime)
         cell.textLabel?.textColor = UIColor.white
         cell.backgroundColor = UIColor.black
         cell.selectionStyle = UITableViewCell.SelectionStyle.none 
