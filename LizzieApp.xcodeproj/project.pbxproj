@@ -36,7 +36,6 @@
 		E98FBA3421D430FC00BF0784 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E98FBA3321D430FC00BF0784 /* MainViewController.swift */; };
 		E98FBA4521D45D4200BF0784 /* BioSamplePhone.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E98FBA4321D45D4200BF0784 /* BioSamplePhone.xcdatamodeld */; };
 		E98FBA4821D45DE000BF0784 /* BioSampleWatch.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E98FBA4621D45DE000BF0784 /* BioSampleWatch.xcdatamodeld */; };
-		E9AC88E821D72D96008E2D55 /* MarkEventDataPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9AC88E721D72D96008E2D55 /* MarkEventDataPoint.swift */; };
 		E9AC88EA21D7555B008E2D55 /* HttpManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9AC88E921D7555B008E2D55 /* HttpManager.swift */; };
 		E9AC88EC21D75C30008E2D55 /* EvalEmotionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9AC88EB21D75C30008E2D55 /* EvalEmotionViewController.swift */; };
 		E9FA28D32229CA740018213B /* BioSampleObj.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9FA28D22229CA740018213B /* BioSampleObj.swift */; };
@@ -130,7 +129,6 @@
 		E98FBA3321D430FC00BF0784 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MainViewController.swift; path = /Users/curtis/Desktop/dev/lizziewatch/Lizzie/MainViewController.swift; sourceTree = "<absolute>"; };
 		E98FBA4421D45D4200BF0784 /* BioSamplePhone.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BioSamplePhone.xcdatamodel; sourceTree = "<group>"; };
 		E98FBA4721D45DE000BF0784 /* BioSampleWatch.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BioSampleWatch.xcdatamodel; sourceTree = "<group>"; };
-		E9AC88E721D72D96008E2D55 /* MarkEventDataPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkEventDataPoint.swift; sourceTree = "<group>"; };
 		E9AC88E921D7555B008E2D55 /* HttpManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpManager.swift; sourceTree = "<group>"; };
 		E9AC88EB21D75C30008E2D55 /* EvalEmotionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvalEmotionViewController.swift; sourceTree = "<group>"; };
 		E9FA28D22229CA740018213B /* BioSampleObj.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BioSampleObj.swift; sourceTree = "<group>"; };
@@ -229,7 +227,6 @@
 				E9FA28D22229CA740018213B /* BioSampleObj.swift */,
 				E9FA28D62229D37F0018213B /* MarkEventObj.swift */,
 				E959E3AD21D603AC003B370E /* DataSource.swift */,
-				E9AC88E721D72D96008E2D55 /* MarkEventDataPoint.swift */,
 				E959E3AF21D6064D003B370E /* MarkEventTableViewCell.swift */,
 				BE25AFF31D4F33B100DAF094 /* LaunchScreen.storyboard */,
 				BE25AFEE1D4F33B100DAF094 /* Main.storyboard */,
@@ -576,7 +573,6 @@
 				E9FA28E32229F7900018213B /* WatchNetworkManager.swift in Sources */,
 				E959E3B021D6064D003B370E /* MarkEventTableViewCell.swift in Sources */,
 				E97008C121D2F5D2009E4463 /* WatchSessionManager.swift in Sources */,
-				E9AC88E821D72D96008E2D55 /* MarkEventDataPoint.swift in Sources */,
 				BE25AFEB1D4F33B100DAF094 /* AppDelegate.swift in Sources */,
 				E959E3AE21D603AC003B370E /* DataSource.swift in Sources */,
 				E9FA28D92229D4FB0018213B /* EmotionSelectionElement.swift in Sources */,

@@ -9,6 +9,7 @@ import Foundation
 import CoreData
 import UIKit
 
+@available(iOS 11.0, *)
 class DataManager{
     let context : NSManagedObjectContext!
     //let markEventEntity : NSEntityDescription!
@@ -47,6 +48,45 @@ class DataManager{
         }catch let error{
             NSLog("Couldn't Delete MarkEventPhone with time \(markTime) with error: \(error)")
             return false
+        }
+    }
+    
+    func markEventToNSManagedObject(eventReference : NSManagedObject, markEvent : MarkEventObj){
+        do {
+            let emotionsFelt = try NSKeyedArchiver.archivedData(withRootObject: markEvent.emotionsFelt, requiringSecureCoding: false)
+            
+            eventReference.setValue(markEvent.markTime, forKey: "markTime")
+            eventReference.setValue(markEvent.anticipate, forKey: "anticipate")
+            eventReference.setValue(markEvent.startTime, forKey: "startTime")
+            eventReference.setValue(markEvent.eventTime, forKey: "eventTime")
+            eventReference.setValue(markEvent.endTime, forKey: "endTime")
+            eventReference.setValue(emotionsFelt, forKey: "emotionsFelt")
+            eventReference.setValue(markEvent.comment, forKey: "comment")
+            NSLog("Successfully converted markEvent to coredata entities")
+        } catch let error {
+            NSLog("Couldn't convert markEvent reviews to binary: \(error)")
+        }
+    }
+    
+    func updateMarkEvent(markEvent : MarkEventObj){
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "MarkEventPhone")
+        
+        fetchRequest.predicate = NSPredicate(format: "markTime = %@",
+                                             argumentArray: [markEvent.markTime])
+        do {
+            let results = try context.fetch(fetchRequest) as? [NSManagedObject]
+            if results?.count != 0 {
+                markEventToNSManagedObject(eventReference: results![0], markEvent : markEvent)
+            }
+        } catch {
+            print("Fetch past skills for update Failed: \(error)")
+        }
+        
+        do {
+            try context.save()
+        }
+        catch {
+            print("Saving past skills for update Failed: \(error)")
         }
     }
     

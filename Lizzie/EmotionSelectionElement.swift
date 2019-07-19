@@ -86,7 +86,14 @@ import UIKit
             ratingButtons.append(button)
         }
     }
-    func getButtonStates() -> [Int]{
-        return selectedEmotions
+    func getButtonStates() -> [String : Int]{
+        return ["fear": selectedEmotions[0],
+                          "joy": selectedEmotions[1],
+                          "anger": selectedEmotions[2],
+                          "sad": selectedEmotions[3],
+                          "disgust": selectedEmotions[4],
+                          "surprise": selectedEmotions[5],
+                          "contempt": selectedEmotions[6],
+                          "interest": selectedEmotions[7]]
     }
 }

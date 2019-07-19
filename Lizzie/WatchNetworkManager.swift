@@ -9,6 +9,7 @@
 import Foundation
 import WatchConnectivity
 
+@available(iOS 11.0, *)
 class WatchNetworkManager: NSObject, WCSessionDelegate{
     var mainDelegate : mainProtocol?
     let settingsManager = SettingsManager()

@@ -54,6 +54,7 @@ extension Date {
 }
 
 
+@available(iOS 11.0, *)
 class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
 
     //MARK: Properties
@@ -566,10 +567,9 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         if(commentToSend == commentBoxPlaceholder){
             commentToSend = ""
         }
+    
         
-        print("\(json(from : evaluateEmotionBar.getButtonStates())!)")
-        
-        let buttonStates : [Int] = evaluateEmotionBar.getButtonStates()
+        let buttonStates = evaluateEmotionBar.getButtonStates()
         
         
         let markEventObj = MarkEventObj(markTime: markEventDate,

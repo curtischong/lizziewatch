@@ -68,45 +68,30 @@ class HttpManager{
     }
     
     func uploadMarkEvent(markEventObj : MarkEventObj){
-        
-        let markTime = convertDate(date: markEventObj.markTime)
-        
+
         var anticipate = "0"
         if(markEventObj.anticipate){
             anticipate = "1"
         }
         
-        let startTime = convertDate(date: markEventObj.startTime)
-        let eventTime = convertDate(date: markEventObj.eventTime)
-        let endTime = convertDate(date: markEventObj.endTime)
         let emotionsFelt = markEventObj.emotionsFelt
         let comment = markEventObj.comment
         
         
-        let fear = emotionsFelt[0]
-        let joy = emotionsFelt[1]
-        let anger = emotionsFelt[2]
-        let sad = emotionsFelt[3]
-        let disgust = emotionsFelt[4]
-        let surprise = emotionsFelt[5]
-        let contempt = emotionsFelt[6]
-        let interest = emotionsFelt[7]
-        
-        
         let parameters: Parameters = [
-            "markTime": markTime,
+            "markTime": convertDate(date: markEventObj.markTime),
             "anticipate": anticipate,
-            "startTime": startTime, // The server only uses this if anticipate=false
-            "eventTime": eventTime,
-            "endTime": endTime,
-            "fear": fear,
-            "joy": joy,
-            "anger": anger,
-            "sad": sad,
-            "disgust": disgust,
-            "surprise": surprise,
-            "contempt": contempt,
-            "interest": interest,
+            "startTime": convertDate(date: markEventObj.startTime), // The server only uses this if anticipate=false
+            "eventTime": convertDate(date: markEventObj.eventTime),
+            "endTime": convertDate(date: markEventObj.endTime),
+            "fear": String(emotionsFelt["fear"]!),
+            "joy": String(emotionsFelt["joy"]!),
+            "anger": String(emotionsFelt["anger"]!),
+            "sad": String(emotionsFelt["sad"]!),
+            "disgust": String(emotionsFelt["disgust"]!),
+            "surprise": String(emotionsFelt["surprise"]!),
+            "contempt": String(emotionsFelt["contempt"]!),
+            "interest": String(emotionsFelt["interest"]!),
             "comment" : comment
         ]
         

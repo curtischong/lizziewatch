@@ -15,6 +15,7 @@ protocol mainProtocol {
 }
 
 //TODO: find a way to show the shared folder and move the healthKitDataPoint to it
+@available(iOS 11.0, *)
 class MainViewController: UIViewController, UITableViewDelegate, mainProtocol{
     
     
