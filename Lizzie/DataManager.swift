@@ -12,25 +12,50 @@ import UIKit
 @available(iOS 11.0, *)
 class DataManager{
     let context : NSManagedObjectContext!
+    let MarkEventPhoneEntity :  NSEntityDescription!
     //let markEventEntity : NSEntityDescription!
     
     init(){
         context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        MarkEventPhoneEntity = NSEntityDescription.entity(forEntityName: "MarkEventPhone", in: context)
         //markEventEntity = NSEntityDescription.entity(forEntityName: "MarkEventPhone", in: context)
     }
     
-    func insertMarkEvents(markTimes : [Date]) -> Bool{
-        let entity = NSEntityDescription.entity(forEntityName: "MarkEventPhone", in: context)
-        for eventMark in markTimes {
-            let curMark = NSManagedObject(entity: entity!, insertInto: context)
-            curMark.setValue(eventMark, forKey: "markTime")
+    func markEventToNSManagedObject(eventReference : NSManagedObject, markEvent : MarkEventObj){
+        do {
+            let emotionsFelt = try NSKeyedArchiver.archivedData(withRootObject: markEvent.emotionsFelt, requiringSecureCoding: false)
+            
+            eventReference.setValue(markEvent.markTime, forKey: "markTime")
+            eventReference.setValue(markEvent.anticipate, forKey: "anticipate")
+            eventReference.setValue(markEvent.startTime, forKey: "startTime")
+            eventReference.setValue(markEvent.eventTime, forKey: "eventTime")
+            eventReference.setValue(markEvent.endTime, forKey: "endTime")
+            eventReference.setValue(emotionsFelt, forKey: "emotionsFelt")
+            eventReference.setValue(markEvent.comment, forKey: "comment")
+            NSLog("Successfully converted markEvent to coredata entities")
+        } catch let error {
+            NSLog("Couldn't convert markEvent reviews to binary: \(error)")
         }
+    }
+    
+    func insertMarkEvents(markEvents : [MarkEventObj]) -> Bool{
+        for markEvent in markEvents{
+            if insertMarkEvent(markEvent: markEvent) == false{
+                return false
+            }
+        }
+        return true
+    }
+    
+    func insertMarkEvent(markEvent : MarkEventObj) -> Bool{
+        let eventReference = NSManagedObject(entity: MarkEventPhoneEntity!, insertInto: context)
+        markEventToNSManagedObject(eventReference : eventReference, markEvent : markEvent)
         do {
             try context.save()
             NSLog("Successfully saved the current MarkEvent")
             return true
         } catch let error{
-            NSLog("Couldn't save: the current EventMark with  error: \(error)")
+            NSLog("Couldn't save: the current markEvent with  error: \(error)")
             return false
         }
     }
@@ -48,23 +73,6 @@ class DataManager{
         }catch let error{
             NSLog("Couldn't Delete MarkEventPhone with time \(markTime) with error: \(error)")
             return false
-        }
-    }
-    
-    func markEventToNSManagedObject(eventReference : NSManagedObject, markEvent : MarkEventObj){
-        do {
-            let emotionsFelt = try NSKeyedArchiver.archivedData(withRootObject: markEvent.emotionsFelt, requiringSecureCoding: false)
-            
-            eventReference.setValue(markEvent.markTime, forKey: "markTime")
-            eventReference.setValue(markEvent.anticipate, forKey: "anticipate")
-            eventReference.setValue(markEvent.startTime, forKey: "startTime")
-            eventReference.setValue(markEvent.eventTime, forKey: "eventTime")
-            eventReference.setValue(markEvent.endTime, forKey: "endTime")
-            eventReference.setValue(emotionsFelt, forKey: "emotionsFelt")
-            eventReference.setValue(markEvent.comment, forKey: "comment")
-            NSLog("Successfully converted markEvent to coredata entities")
-        } catch let error {
-            NSLog("Couldn't convert markEvent reviews to binary: \(error)")
         }
     }
     

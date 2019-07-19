@@ -132,7 +132,8 @@ class MainViewController: UIViewController, UITableViewDelegate, mainProtocol{
         
     @IBAction func markEventButtonPress(_ sender: UIButton) {
         generator.impactOccurred()
-        if(dataManager.insertMarkEvents(markTimes : [Date()])){
+        let newMarkEvent = MarkEventObj(markTime: Date())
+        if(dataManager.insertMarkEvent(markEvent: newMarkEvent)){
             updateMarkEvent()
         }
     }

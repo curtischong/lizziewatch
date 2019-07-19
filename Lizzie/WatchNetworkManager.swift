@@ -85,13 +85,17 @@ class WatchNetworkManager: NSObject, WCSessionDelegate{
         let numItems = userInfo["numItems"] as! Int
         NSLog("Number of items received: \(numItems)")
         
-        self.storeMarkEventPhone(timeOfMarks : userInfo["timeOfMarks"] as! [Date], endTimeOfQuery : endTimeOfQuery)
+        self.storeMarkEventPhone(markTimes : userInfo["markTimes"] as! [Date], endTimeOfQuery : endTimeOfQuery)
     }
     
     
     // Stores the received data into the phone's coredata, updates the UI (MarkEvent Table View), and notifies the watch it's done syncing
-    private func storeMarkEventPhone(timeOfMarks : [Date], endTimeOfQuery : Date){
-        if(dataManager.insertMarkEvents(markTimes : timeOfMarks)){
+    private func storeMarkEventPhone(markTimes : [Date], endTimeOfQuery : Date){
+        var markEventObjs : [MarkEventObj] = []
+        for markTime in markTimes{
+            markEventObjs.append(MarkEventObj(markTime: markTime))
+        }
+        if(dataManager.insertMarkEvents(markEvents : markEventObjs)){
             
             settingsManager.dateLastSyncedWithWatch = endTimeOfQuery
             settingsManager.saveSettings()

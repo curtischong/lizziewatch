@@ -193,14 +193,14 @@ class InterfaceController: WKInterfaceController , WCSessionDelegate{
                     let numItems = result2.count
                     if(numItems > 0 ){
                         bothEmpty = false
-                        var timeOfMarks = Array<Date>()
+                        var markTimes = Array<Date>()
                         for sample in result2 as! [NSManagedObject] {
-                            timeOfMarks.append(sample.value(forKey: "timeOfMark") as! Date)
+                            markTimes.append(sample.value(forKey: "timeOfMark") as! Date)
                         }
 
 
                         let dataStorePackage2 = ["event" : "dataStoreMarkEvents",
-                                                 "timeOfMarks": timeOfMarks,
+                                                 "markTimes": markTimes,
                                                  "endTimeOfQuery" : selectBeforeTime,
                                                  "numItems" : result2.count] as [String : Any]
                         NSLog("Syncing \(result2.count) items")
