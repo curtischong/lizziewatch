@@ -229,11 +229,11 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         var tempArr1 : [ChartDataEntry] = []
         //var tempArr2 : [Date] = []
         
-        if let hrPoints = bioPoints["HR"] {
-            for (index, _) in bioPoints.enumerated() {
+        if let hrPoints = self.bioPoints["HR"] {
+            for (index, _) in hrPoints.enumerated() {
                 //NSLog("Cur Time: \(Double(bioPoints!["HR"]![i].endTime.seconds(from : markEventDate)))")
                 let difference = Double(hrPoints[index].endTime.seconds(from : markEventDate))
-                if(abs(difference) < Double(eventDurationSlider.value) * 5.0 * 60.0){
+                if(abs(difference) < Double(eventDurationSlider.value) * 60.0 * 5.0){
                     let value = ChartDataEntry(x: difference, y: hrPoints[index].measurement)
                     tempArr1.append(value)
                     //tempArr2.append(bioPoints["HR"]![i].endTime)
@@ -294,8 +294,8 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         let startDate = markEventDate.addingTimeInterval(TimeInterval(-numMinutesGap * 60.0 * 60))
         
         
-        hkManager.queryBioSamples(startDate : startDate, endDate : endDate, descending : true) { samples, error in
-            guard let samples = samples else { return }
+        hkManager.queryBioSamples(startDate : startDate, endDate : endDate, descending : false) { samples, error in
+            guard let samples = samples else {return}
             
             let bioSamples = self.hkManager.handleBioSamples(samples : samples, startDate : startDate, endDate : endDate)
             
@@ -306,8 +306,7 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
                 for sample in bioSamples{
                     let sampleEndTime = sample.endTime
                     let sampleMeasurement = sample.measurement
-                    
-                    if(sampleEndTime > startDate && sampleEndTime < endDate){
+                    if(sampleEndTime > startDate){
                         let curChartPoint = chartPoint(
                             endTime : sampleEndTime,
                             measurement : sampleMeasurement

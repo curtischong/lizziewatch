@@ -127,14 +127,14 @@
 		E959E3AF21D6064D003B370E /* MarkEventTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkEventTableViewCell.swift; sourceTree = "<group>"; };
 		E97008C021D2F5D2009E4463 /* WatchSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchSessionManager.swift; sourceTree = "<group>"; };
 		E97008C221D321B1009E4463 /* HealthKitDataPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitDataPoint.swift; sourceTree = "<group>"; };
-		E98FBA3321D430FC00BF0784 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MainViewController.swift; path = /Users/curtis/Desktop/Lizzie/Lizzie/MainViewController.swift; sourceTree = "<absolute>"; };
+		E98FBA3321D430FC00BF0784 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MainViewController.swift; path = /Users/curtis/Desktop/dev/lizziewatch/Lizzie/MainViewController.swift; sourceTree = "<absolute>"; };
 		E98FBA4421D45D4200BF0784 /* BioSamplePhone.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BioSamplePhone.xcdatamodel; sourceTree = "<group>"; };
 		E98FBA4721D45DE000BF0784 /* BioSampleWatch.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BioSampleWatch.xcdatamodel; sourceTree = "<group>"; };
 		E9AC88E721D72D96008E2D55 /* MarkEventDataPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkEventDataPoint.swift; sourceTree = "<group>"; };
 		E9AC88E921D7555B008E2D55 /* HttpManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpManager.swift; sourceTree = "<group>"; };
 		E9AC88EB21D75C30008E2D55 /* EvalEmotionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvalEmotionViewController.swift; sourceTree = "<group>"; };
 		E9FA28D22229CA740018213B /* BioSampleObj.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BioSampleObj.swift; sourceTree = "<group>"; };
-		E9FA28D42229CAF70018213B /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DataManager.swift; path = /Users/curtis/Desktop/Lizzie/Lizzie/DataManager.swift; sourceTree = "<absolute>"; };
+		E9FA28D42229CAF70018213B /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DataManager.swift; path = /Users/curtis/Desktop/dev/lizziewatch/Lizzie/DataManager.swift; sourceTree = "<absolute>"; };
 		E9FA28D62229D37F0018213B /* MarkEventObj.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkEventObj.swift; sourceTree = "<group>"; };
 		E9FA28D82229D4FB0018213B /* EmotionSelectionElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmotionSelectionElement.swift; sourceTree = "<group>"; };
 		E9FA28DA2229D5760018213B /* SettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManager.swift; sourceTree = "<group>"; };

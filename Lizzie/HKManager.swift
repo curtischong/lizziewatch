@@ -19,19 +19,14 @@ class HKManager{
     
     
     func queryBioSamples(startDate : Date, endDate : Date, descending : Bool = false, completionHandler: @escaping (([HKQuantitySample]?, Error?) -> Void)) {
-        NSLog("\(startDate)")
-        NSLog("\(endDate)")
-        var sortDescriptors : [NSSortDescriptor]?
-        if(descending){
-            sortDescriptors = [NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)]
-        }
+        let sortDescriptors = descending ? [NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)] : [NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: true)]
+
         let predicate = HKQuery.predicateForSamples(withStart: startDate as Date, end: endDate as Date)
-         
-        var retSamples : [HKQuantitySample] = []
+        
         let query = HKSampleQuery(sampleType: HKSampleType.quantityType(forIdentifier: .heartRate)!,
                                        predicate: predicate,
                                        limit: Int(HKObjectQueryNoLimit),
-                                       sortDescriptors: nil) { (query, results, error) in
+                                       sortDescriptors: sortDescriptors) { (query, results, error) in
                                         NSLog("found \(results?.count ?? 0) health samples")
                                         completionHandler(results as? [HKQuantitySample], error)
         }
@@ -59,7 +54,6 @@ class HKManager{
             
             let sampleEndTime = sample.endDate
             let sampleStartTime = sample.startDate
-            
             if(sampleEndTime > startDate && sampleEndTime < endDate){
                 bioSamples.append(BioSampleObj(
                     type: type,

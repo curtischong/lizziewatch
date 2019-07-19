@@ -123,13 +123,14 @@ class HttpManager{
     func uploadEmotionEvaluation(emotionEvalObj : EmotionEvalObj){
         
         let parameters: Parameters = [
-            "timeEndFillingForm": appContextFormatter.string(from: emotionEvalObj.timeEndFillingForm),
+            "evalDatetime": appContextFormatter.string(from: emotionEvalObj.timeEndFillingForm),
             "accomplishedEval": String(emotionEvalObj.accomplishedEval),
             "socialEval": String(emotionEvalObj.socialEval),
             "exhaustedEval": String(emotionEvalObj.exhaustedEval),
             "tiredEval": String(emotionEvalObj.tiredEval),
             "happyEval": String(emotionEvalObj.happyEval),
-            "comments" : emotionEvalObj.comments
+            "comments" : emotionEvalObj.comments,
+            "evalLocation": "mobile"
         ]
         //let config = readConfig()
         //print(config["ip"])

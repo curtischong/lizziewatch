@@ -60,7 +60,7 @@ class MainViewController: UIViewController, UITableViewDelegate, mainProtocol{
         if(settingsManager.dateLastSyncedWithWatch != nil){
             dateLastSyncLabel.text = displayDateFormatter.string(from: settingsManager.dateLastSyncedWithWatch!)
         }
-        permissionsManager.authenticateForHealthstoreData()
+        //permissionsManager.authenticateForHealthstoreData()
         if (permissionsManager.authSuccess){
             
             NSLog("Querying for healthkit datapoints")
