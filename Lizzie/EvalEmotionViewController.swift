@@ -36,6 +36,7 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
     private var happySliderRealVal = 0
     private let commentBoxPlaceholder = "Comments"
     let httpManager = HttpManager()
+    var toolbar : UIToolbar!
     
     
     let generator = UIImpactFeedbackGenerator(style: .light)
@@ -69,16 +70,31 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
         commentBoxTextView.delegate = self
         commentBoxTextView.text = commentBoxPlaceholder
         commentBoxTextView.textColor = UIColor.lightGray
+        
+        
+        // keyboard
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
+        //init toolbar
+        toolbar = UIToolbar(frame: CGRect(x: 0, y: 0,  width: self.view.frame.size.width, height: 30))
+        //create left side empty space so that done button set on right side
+        let flexSpace = UIBarButtonItem(barButtonSystemItem:    .flexibleSpace, target: nil, action: nil)
+        let doneBtn: UIBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(doneButtonAction))
+        toolbar.setItems([flexSpace, doneBtn], animated: false)
+        toolbar.sizeToFit()
+        //setting toolbar as inputAccessoryView
+        self.commentBoxTextView.inputAccessoryView = toolbar
     }
     
-    // textview functions
+    // Keyboard Functions
+    
+    @objc func doneButtonAction() {
+        generator.impactOccurred()
+        self.view.endEditing(true)
+    }
+    
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        if(text == "\n") {
-            textView.resignFirstResponder()
-            return false
-        }
         return true
     }
     

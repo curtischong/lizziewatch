@@ -148,10 +148,11 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         evaluateEmotionBar.delegate = self
         if(markEventObj.comment == ""){
             commentBoxTextView.text = commentBoxPlaceholder
+            commentBoxTextView.textColor = UIColor.lightGray
         }else{
             commentBoxTextView.text = markEventObj.comment
+            commentBoxTextView.textColor = UIColor.white
         }
-        commentBoxTextView.textColor = UIColor.lightGray
         
         // keyboard
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -229,7 +230,7 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         if(commentBoxTextView.isFirstResponder){
             if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
                 if self.view.frame.origin.y == 0 {
-                    self.view.frame.origin.y -= keyboardSize.height
+                    self.view.frame.origin.y -= (keyboardSize.height + 30) // 30 is the size of the toolbar
                 }
             }
         }
@@ -287,9 +288,7 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
     }
     
     func updateGraph(){
-        //ineChartEntry["HR"] = []()
         var tempArr1 : [ChartDataEntry] = []
-        //var tempArr2 : [Date] = []
         
         if let hrPoints = self.bioPoints["HR"] {
             for point in hrPoints {
