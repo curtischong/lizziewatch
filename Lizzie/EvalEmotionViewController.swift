@@ -207,14 +207,14 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
         }
         
         let emotionEvalObj = EmotionEvalObj(
-                                            timeEndFillingForm: Date(),
-                                            accomplishedEval: accomplishedSliderRealVal,
-                                            socialEval: socialSliderRealVal,
-                                            exhaustedEval: exhaustedSliderRealVal,
-                                            tiredEval: tiredSliderRealVal,
-                                            happyEval: happySliderRealVal,
-                                            comments: commentsToSend! as String)
-        httpManager.uploadEmotionEvaluation(emotionEvalObj : emotionEvalObj)
+                                            ts: Date(),
+                                            accomplished: accomplishedSliderRealVal,
+                                            social: socialSliderRealVal,
+                                            exhausted: exhaustedSliderRealVal,
+                                            tired: tiredSliderRealVal,
+                                            happy: happySliderRealVal,
+                                            comment: commentsToSend! as String)
+        // httpManager.uploadEmotionEvaluation(emotionEvalObj : emotionEvalObj)
         self.performSegue(withIdentifier: "unwindSegueToMainViewController", sender: self)
     }
 }

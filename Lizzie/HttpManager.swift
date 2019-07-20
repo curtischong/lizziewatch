@@ -12,7 +12,15 @@ import Alamofire
 
 class HttpManager{
     
-    let SERVER_IP = "http://10.8.0.1:9000/"
+    let SERVER_IP_PROD = "http://10.8.0.1:9000/"
+    let SERVER_IP_DEV = "http://localhost:9000/"
+    let ISDEV = true
+    func getIp() -> String{
+        if(ISDEV){
+            return SERVER_IP_PROD
+        }
+        return SERVER_IP_DEV
+    }
     let appContextFormatter = DateFormatter()
     
     init(){
@@ -57,12 +65,11 @@ class HttpManager{
             "measurements": json(from : measurements) as Any,
             ]
         // let ctx = self
-        AF.request("http://10.8.0.1:9000/upload_bio_samples",
+        AF.request(getIp() + "upload_bio_samples",
                    method: .post,
                    parameters: parameters,
                    encoding: JSONEncoding()
             ).responseJSON { response in
-                
                 NSLog("markEventSent! updating dateLastSyncedWithServer")
         }
     }
@@ -96,7 +103,7 @@ class HttpManager{
         ]
         
         // let ctx = self
-        AF.request(SERVER_IP + "upload_mark_event",
+        AF.request(getIp() + "upload_mark_event",
                    method: .post,
                    parameters: parameters,
                    encoding: JSONEncoding()
@@ -122,13 +129,13 @@ class HttpManager{
     func uploadEmotionEvaluation(emotionEvalObj : EmotionEvalObj){
         
         let parameters: Parameters = [
-            "evalDatetime": appContextFormatter.string(from: emotionEvalObj.timeEndFillingForm),
-            "accomplishedEval": String(emotionEvalObj.accomplishedEval),
-            "socialEval": String(emotionEvalObj.socialEval),
-            "exhaustedEval": String(emotionEvalObj.exhaustedEval),
-            "tiredEval": String(emotionEvalObj.tiredEval),
-            "happyEval": String(emotionEvalObj.happyEval),
-            "comments" : emotionEvalObj.comments,
+            "ts": appContextFormatter.string(from: emotionEvalObj.ts),
+            "accomplishedEval": String(emotionEvalObj.accomplished),
+            "socialEval": String(emotionEvalObj.social),
+            "exhaustedEval": String(emotionEvalObj.exhausted),
+            "tiredEval": String(emotionEvalObj.tired),
+            "happyEval": String(emotionEvalObj.happy),
+            "comments" : emotionEvalObj.comment,
             "evalLocation": "mobile"
         ]
         //let config = readConfig()
