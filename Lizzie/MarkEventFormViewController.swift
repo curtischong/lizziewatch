@@ -93,6 +93,7 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
     let httpManager = HttpManager()
     let dataManager = DataManager()
     let hkManager = HKManager()
+    var toolbar : UIToolbar!
     
     var markEventObj : MarkEventObj!
     // I need to refactor this and use a map
@@ -151,8 +152,22 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
             commentBoxTextView.text = markEventObj.comment
         }
         commentBoxTextView.textColor = UIColor.lightGray
+        
+        // keyboard
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
+        //init toolbar
+        toolbar = UIToolbar(frame: CGRect(x: 0, y: 0,  width: self.view.frame.size.width, height: 30))
+        //create left side empty space so that done button set on right side
+        let flexSpace = UIBarButtonItem(barButtonSystemItem:    .flexibleSpace, target: nil, action: nil)
+        let doneBtn: UIBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(doneButtonAction))
+        toolbar.setItems([flexSpace, doneBtn], animated: false)
+        toolbar.sizeToFit()
+        //setting toolbar as inputAccessoryView
+        self.commentBoxTextView.inputAccessoryView = toolbar
+        
+        
         
         eventDurationTextLabel.text = "1.0 min"
         eventDurationSlider.setValue(0.2, animated: true)
@@ -170,9 +185,11 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
     
     // textview functions
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        if(text == "\n") {
-            textView.resignFirstResponder()
-            return false
+        if(eventTextField.isFirstResponder){
+            if(text == "\n") {
+                textView.resignFirstResponder()
+                return false
+            }
         }
         return true
     }
@@ -198,6 +215,14 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
     
     func textViewDidBeginEditing(textField: UITextView) {
         activeTypingField = "commentBoxTextView"
+    }
+    
+    // Keyboard Functions
+    
+    @objc func doneButtonAction() {
+        generator.impactOccurred()
+        checkFormComplete()
+        self.view.endEditing(true)
     }
     
     @objc func keyboardWillShow(notification: NSNotification) {
@@ -255,6 +280,10 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
             last_val = point.x
         }
         return false
+    }
+    
+    func checkFormComplete(){
+        
     }
     
     func updateGraph(){
