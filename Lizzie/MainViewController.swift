@@ -11,7 +11,7 @@ import HealthKit
 
 protocol mainProtocol {
     func updateLastSync(userInfo : [String : Any])
-    func updateMarkEvent()
+    func reloadMarkEventTable()
 }
 
 //TODO: find a way to show the shared folder and move the healthKitDataPoint to it
@@ -81,7 +81,7 @@ class MainViewController: UIViewController, UITableViewDelegate, mainProtocol{
 
         // update the number of items not synced:
 
-        updateMarkEvent()
+        reloadMarkEventTable()
         // NSLog("Main View Loaded")
         
         if(settingsManager.dateLastSyncedWithWatch != nil){
@@ -97,10 +97,10 @@ class MainViewController: UIViewController, UITableViewDelegate, mainProtocol{
     //MARK: Actions
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        fillMarkEvent(timeOfMark : dataSource.markEvents[indexPath.row].markTime)
+        fillMarkEvent(markEventObj: dataSource.markEvents[indexPath.row])
     }
     
-    func updateMarkEvent(){
+    func reloadMarkEventTable(){
         let markEvents = dataManager.getAllMarkEvents()
         dataSource.markEvents = markEvents
         markEventTable.dataSource = dataSource
@@ -134,7 +134,7 @@ class MainViewController: UIViewController, UITableViewDelegate, mainProtocol{
         generator.impactOccurred()
         let newMarkEvent = MarkEventObj(markTime: Date())
         if(dataManager.insertMarkEvent(markEvent: newMarkEvent)){
-            updateMarkEvent()
+            reloadMarkEventTable()
         }
     }
     
@@ -146,8 +146,8 @@ class MainViewController: UIViewController, UITableViewDelegate, mainProtocol{
             }
         }else if(segue.identifier == "contextualizeMarkEventSegue"){
             if let destinationVC = segue.destination as? MarkEventFormViewController {
-                destinationVC.markEventDate = sender as! Date
-                NSLog("sending this date: \( sender as! Date)")
+                destinationVC.markEventObj = (sender as! MarkEventObj)
+                NSLog("sending MarkEventObj: \(sender as! MarkEventObj)")
             }
         }else{
             NSLog("Using unidentified segue: \(String(describing: segue.identifier))")
@@ -165,8 +165,7 @@ class MainViewController: UIViewController, UITableViewDelegate, mainProtocol{
         NSLog("using evalEmotionSegue")
     }
     
-    func fillMarkEvent(timeOfMark : Date){
-        NSLog("using contextualizeMarkEventSegue with time: \(timeOfMark)")
-        performSegue(withIdentifier: "contextualizeMarkEventSegue", sender: timeOfMark)
+    func fillMarkEvent(markEventObj : MarkEventObj){
+        performSegue(withIdentifier: "contextualizeMarkEventSegue", sender: markEventObj)
     }
 }

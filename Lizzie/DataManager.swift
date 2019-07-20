@@ -123,10 +123,33 @@ class DataManager{
         
         let entities = getAllEntities(entityName : "MarkEventPhone", predicate: nil, sortDescriptors : [sortDescriptor])
         
+        
         var allEntities : [MarkEventObj] = []
         for entity in entities{
-            allEntities.append(MarkEventObj(markTime : entity.value(forKey: "markTime") as! Date))
+            let emotionsFeltNSData = entity.value(forKey: "emotionsFelt") as! NSData
+            let emotionsFeltData = Data(referencing:emotionsFeltNSData)
             
+            do{
+                let emotionsFelt = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(emotionsFeltData) as? [String: Int]
+                
+                allEntities.append(MarkEventObj(markTime : entity.value(forKey: "markTime") as! Date,
+                                                name: entity.value(forKey: "name") as! String,
+                                                anticipate : entity.value(forKey: "anticipate") as! Bool,
+                                                startTime : entity.value(forKey: "startTime") as! Date,
+                                                eventTime : entity.value(forKey: "eventTime") as! Date,
+                                                endTime : entity.value(forKey: "endTime") as! Date,
+                                                emotionsFelt : emotionsFelt ?? ["anger": -999,
+                                                                                "contempt": -999,
+                                                                                "disgust": -999,
+                                                                                "fear": -999,
+                                                                                "interest": -999,
+                                                                                "joy": -999,
+                                                                                "sad": -999,
+                                                                                "surprise": -999],
+                                                comment: entity.value(forKey: "comment") as! String))
+            }catch let error{
+                NSLog("couldn't load binary from coredata: \(error)")
+            }
         }
         return allEntities
     }

@@ -106,7 +106,7 @@ class WatchNetworkManager: NSObject, WCSessionDelegate{
                                     "selectBeforeTime": endTimeOfQuery] as [String : Any]
             
             session!.transferUserInfo(dataStorePackage)
-            self.mainDelegate?.updateMarkEvent()
+            self.mainDelegate?.reloadMarkEventTable()
         }
     }
 }

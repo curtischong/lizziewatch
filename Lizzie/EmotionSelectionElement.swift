@@ -23,9 +23,11 @@ import UIKit
                                   UIColor(red:1.00, green:0.0, blue:0.00, alpha:1.0)]
     let generator = UIImpactFeedbackGenerator(style: .light)
     //MARK: Initialization
+    var updateMarkEvent: (() -> Void)?
     
-    override init(frame: CGRect) {
+    init(frame: CGRect, updateMarkEventFunc : @escaping (() -> Void)) {
         super.init(frame: frame)
+        self.updateMarkEvent = updateMarkEventFunc
         setupButtons()
     }
     
@@ -35,7 +37,6 @@ import UIKit
     }
     
     //MARK: Button Action
-    
     @objc func ratingButtonTapped(button: UIButton) {
         generator.impactOccurred()
         guard let index = ratingButtons.firstIndex(of: button) else {
@@ -47,7 +48,7 @@ import UIKit
             selectedEmotions[index] = 0
         }
         ratingButtons[index].setTitleColor(selectedColors[selectedEmotions[index]], for: .normal)
-        
+        updateMarkEvent!()
     }
     
     private func setupButtons() {

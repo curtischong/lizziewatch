@@ -87,13 +87,14 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
     private var highlight2 : Highlight?
     private var highlight3 : Highlight?
     private let typesOfBiometrics = ["HR"]
-
-
+    
     let generator = UIImpactFeedbackGenerator(style: .light)
     private let commentBoxPlaceholder = "Comments"
     let httpManager = HttpManager()
     let dataManager = DataManager()
     let hkManager = HKManager()
+    
+    var markEventObj : MarkEventObj!
     // I need to refactor this and use a map
 
     
@@ -207,6 +208,13 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
             self.view.frame.origin.y = 0
             activeTypingField = ""
         }
+        if(eventTextField.isFirstResponder){
+            markEventObj.name = eventTextField.text!
+            dataManager.updateMarkEvent(markEvent: markEventObj)
+        }else if(commentBoxTextView.isFirstResponder){
+            markEventObj.comment = commentBoxTextView.text!
+            dataManager.updateMarkEvent(markEvent: markEventObj)
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -223,6 +231,10 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         //eventTextLabel.text = textField.text
+    }
+    
+    func updateMarkEvent(){
+        
     }
     
     func pointsNotInOrder(points: [ChartDataEntry])  -> Bool {
@@ -282,9 +294,6 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
     }
     
     
-    
-    
-    
     private func castHKUnitToDouble(theSample :HKQuantitySample, theUnit : HKUnit) -> Double{
         /*if(!theSample.quantity.is(compatibleWith: theUnit)){
          NSLog("measurement value type of %@ isn't compatible with %@" , theSample.quantityType.identifier, theUnit)
@@ -293,8 +302,6 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         return theSample.quantity.doubleValue(for: theUnit)
         //}
     }
-    
-    
     
     
     func queryBioSamples(){
@@ -517,7 +524,7 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         NSLog("Intercepted Segue")
         if segue.identifier == "unwindSegue2ToMainViewController"{ // no params to pass as of this version
             if let destinationVC = segue.destination as? MainViewController {
-                destinationVC.updateMarkEvent()
+                destinationVC.reloadMarkEventTable()
                 //NSLog("")
             }
         }else{
@@ -571,7 +578,7 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         
         let buttonStates = evaluateEmotionBar.getButtonStates()
         
-        
+        /*
         let markEventObj = MarkEventObj(markTime: markEventDate,
                                         anticipate: anticipate,
                                         startTime: highlight1Date,
@@ -579,6 +586,7 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
                                         endTime: highlight2Date,
                                         emotionsFelt: buttonStates,
                                         comment: commentToSend!)
+        */
         httpManager.uploadMarkEvent(markEventObj: markEventObj)
         self.deleteCurrentMarkEvent()
         self.performSegue(withIdentifier: "unwindSegue2ToMainViewController", sender: self)

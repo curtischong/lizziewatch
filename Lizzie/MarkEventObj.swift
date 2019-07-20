@@ -8,13 +8,16 @@
 
 import Foundation
 
-    //TODO: set startTime to "" if anticipate is false
+//TODO: set startTime to "" if anticipate is false
+
+    
 class MarkEventObj{
-    var markTime : Date
+    var markTime : Date = Date.from(year: 1970, month: 1, day: 1)!
+    var name: String = ""
     var anticipate : Bool = true
-    var startTime : Date
-    var eventTime : Date
-    var endTime : Date
+    var startTime : Date = Date.from(year: 1970, month: 1, day: 1)!
+    var eventTime : Date = Date.from(year: 1970, month: 1, day: 1)!
+    var endTime : Date = Date.from(year: 1970, month: 1, day: 1)!
     var emotionsFelt : [String : Int] = ["anger": -999,
                                          "contempt": -999,
                                          "disgust": -999,
@@ -26,14 +29,16 @@ class MarkEventObj{
     var comment : String = ""
     
     init(markTime : Date,
-    anticipate : Bool,
-    startTime : Date,
-    eventTime : Date,
-    endTime : Date,
-    emotionsFelt : [String : Int],
-    comment : String){
+         name: String,
+         anticipate : Bool,
+         startTime : Date,
+         eventTime : Date,
+         endTime : Date,
+         emotionsFelt : [String : Int],
+         comment : String){
         
         self.markTime = markTime
+        self.name = name
         self.anticipate = anticipate
         self.startTime = startTime
         self.eventTime = eventTime
@@ -43,11 +48,6 @@ class MarkEventObj{
     }
     
     init(markTime : Date){
-        let curDate = Date()
-        
         self.markTime = markTime
-        self.startTime = curDate
-        self.eventTime = curDate
-        self.endTime = curDate
     }
 }

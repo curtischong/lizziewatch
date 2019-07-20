@@ -15,7 +15,7 @@ class PermissionsManager{
     let healthStore = HKHealthStore()
     var authSuccess = false
 
-    func authenticateForHealthstoreData(successFunc : () ){
+    func authenticateForHealthstoreData(successFunc : ()){
         // Create health store.
         if #available(iOS 11.0, *) {
             // Check if there is health data available.
