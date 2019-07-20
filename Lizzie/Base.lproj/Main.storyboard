@@ -547,13 +547,13 @@
                         <outlet property="anticipateSwitch" destination="13v-EW-hl3" id="mrU-Lb-hdM"/>
                         <outlet property="commentBoxTextView" destination="HSJ-Vm-MaH" id="vIC-J5-DAB"/>
                         <outlet property="evaluateEmotionBar" destination="kOb-B6-Xlc" id="zQc-Qq-Wqw"/>
-                        <outlet property="eventDurationSlider" destination="zoF-KU-7vC" id="sWX-uN-vHj"/>
                         <outlet property="eventDurationTextLabel" destination="egH-qb-5gY" id="gn0-Bx-Zfo"/>
                         <outlet property="eventTextField" destination="N7K-nA-gcy" id="mwl-FC-srO"/>
                         <outlet property="heartrateChart" destination="QWu-G5-gRf" id="uqe-E7-8hp"/>
+                        <outlet property="lcrop" destination="vZV-EL-HuV" id="WfQ-3c-BdO"/>
+                        <outlet property="mcrop" destination="zoF-KU-7vC" id="sWX-uN-vHj"/>
+                        <outlet property="rcrop" destination="sEI-Vs-Te1" id="abg-qW-rrj"/>
                         <outlet property="selectPointsButton" destination="wtN-h9-zdS" id="G4S-4c-cOF"/>
-                        <outlet property="timeEndSlider" destination="sEI-Vs-Te1" id="abg-qW-rrj"/>
-                        <outlet property="timeStartSlider" destination="vZV-EL-HuV" id="WfQ-3c-BdO"/>
                         <outlet property="uploadButton" destination="Xmk-99-zLM" id="CrP-VD-4so"/>
                         <segue destination="trF-OB-Kz1" kind="unwind" identifier="unwindSegue2ToMainViewController" unwindAction="unwindEmotionViewWithSegue:" id="MVC-zg-mi5"/>
                     </connections>

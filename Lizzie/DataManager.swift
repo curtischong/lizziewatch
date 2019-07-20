@@ -33,6 +33,11 @@ class DataManager{
             eventRef.setValue(markEvent.eventTime, forKey: "eventTime")
             eventRef.setValue(markEvent.endTime, forKey: "endTime")
             eventRef.setValue(emotionsFelt, forKey: "emotionsFelt")
+            eventRef.setValue(markEvent.pointsSelected, forKey: "pointsSelected")
+            eventRef.setValue(markEvent.selectionRange, forKey: "selectionRange")
+            eventRef.setValue(markEvent.lcrop, forKey: "lcrop")
+            eventRef.setValue(markEvent.mcrop, forKey: "mcrop")
+            eventRef.setValue(markEvent.rcrop, forKey: "rcrop")
             eventRef.setValue(markEvent.comment, forKey: "comment")
             NSLog("Successfully converted markEvent to coredata entities")
         } catch let error {
@@ -172,7 +177,13 @@ class DataManager{
                                                                                 "joy": -999,
                                                                                 "sad": -999,
                                                                                 "surprise": -999],
+                                                selectionRange: entity.value(forKey: "selectionRange") as! Double,
+                                                lcrop: entity.value(forKey: "lcrop") as! Double,
+                                                mcrop: entity.value(forKey: "mcrop") as! Double,
+                                                rcrop: entity.value(forKey: "rcrop") as! Double,
+                                                pointsSelected: entity.value(forKey: "pointsSelected") as! Bool,
                                                 comment: entity.value(forKey: "comment") as! String))
+                
             }catch let error{
                 NSLog("couldn't load binary from coredata: \(error)")
             }
@@ -180,38 +191,21 @@ class DataManager{
         return allEntities
     }
     
-    func getAllMarkEvents() -> [MarkEventObj]{
-        let sortDescriptor = NSSortDescriptor(key: "markTime", ascending: false)
+    func getEmotionEvals() -> [EmotionEvalObj]{
+        let sortDescriptor = NSSortDescriptor(key: "ts", ascending: false)
+        let entities = getAllEntities(entityName : "EmotionEval", predicate: nil, sortDescriptors : [sortDescriptor])
         
-        let entities = getAllEntities(entityName : "MarkEventPhone", predicate: nil, sortDescriptors : [sortDescriptor])
         
-        
-        var allEntities : [MarkEventObj] = []
+        var allEntities : [EmotionEvalObj] = []
         for entity in entities{
-            let emotionsFeltNSData = entity.value(forKey: "emotionsFelt") as! NSData
-            let emotionsFeltData = Data(referencing:emotionsFeltNSData)
-            
-            do{
-                let emotionsFelt = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(emotionsFeltData) as? [String: Int]
-                
-                allEntities.append(MarkEventObj(markTime : entity.value(forKey: "markTime") as! Date,
-                                                name: entity.value(forKey: "name") as! String,
-                                                anticipate : entity.value(forKey: "anticipate") as! Bool,
-                                                startTime : entity.value(forKey: "startTime") as! Date,
-                                                eventTime : entity.value(forKey: "eventTime") as! Date,
-                                                endTime : entity.value(forKey: "endTime") as! Date,
-                                                emotionsFelt : emotionsFelt ?? ["anger": -999,
-                                                                                "contempt": -999,
-                                                                                "disgust": -999,
-                                                                                "fear": -999,
-                                                                                "interest": -999,
-                                                                                "joy": -999,
-                                                                                "sad": -999,
-                                                                                "surprise": -999],
+            allEntities.append(EmotionEvalObj(uploaded : entity.value(forKey: "uploaded") as! Bool,
+                                                ts : entity.value(forKey: "ts") as! Date,
+                                                accomplished: entity.value(forKey: "accomplished") as! Int,
+                                                social : entity.value(forKey: "social") as! Int,
+                                                exhausted : entity.value(forKey: "exhausted") as! Int,
+                                                tired : entity.value(forKey: "tired") as! Int,
+                                                happy : entity.value(forKey: "happy") as! Int,
                                                 comment: entity.value(forKey: "comment") as! String))
-            }catch let error{
-                NSLog("couldn't load binary from coredata: \(error)")
-            }
         }
         return allEntities
     }
@@ -222,7 +216,7 @@ class DataManager{
         let deleteRequest1 = NSBatchDeleteRequest(fetchRequest: fetchRequest1)
         
         do{
-            try context.execute(deleteRequest2)
+            try context.execute(deleteRequest1)
             try context.save()
             NSLog("Deleted EmotionEval rows")
         }catch let error{

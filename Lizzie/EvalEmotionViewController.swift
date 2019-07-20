@@ -207,6 +207,7 @@ class EvalEmotionViewController: UIViewController, UITextViewDelegate {
         }
         
         let emotionEvalObj = EmotionEvalObj(
+            uploaded: false,
                                             ts: Date(),
                                             accomplished: accomplishedSliderRealVal,
                                             social: socialSliderRealVal,

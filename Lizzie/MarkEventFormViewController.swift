@@ -62,13 +62,13 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
     @IBOutlet var eventTextField: UITextField!
     
     @IBOutlet var eventDurationTextLabel: UILabel!
-    @IBOutlet var eventDurationSlider: UISlider!
+    @IBOutlet var mcrop: UISlider!
     
     @IBOutlet var heartrateChart: LineChartView!
     @IBOutlet var commentBoxTextView: UITextView!
     @IBOutlet var selectPointsButton: UIButton!
-    @IBOutlet var timeStartSlider: UISlider!
-    @IBOutlet var timeEndSlider: UISlider!
+    @IBOutlet var lcrop: UISlider!
+    @IBOutlet var rcrop: UISlider!
     @IBOutlet var anticipateSwitch: UISwitch!
     @IBOutlet var uploadButton: UIButton!
     
@@ -78,8 +78,6 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
     private let displayDateFormatter = DateFormatter()
     private var selectedEmotions = Array(repeating: false, count: 8)
     private var bioPoints = [String : [chartPoint]]()
-    private var selectedPoints = false
-    private var anticipate = false
     private var activeTypingField = ""
     private var lineChartEntry = [String : [ChartDataEntry]]()
     //private var lineChartEntryDates = [String : [Date]]()
@@ -96,8 +94,6 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
     var toolbar : UIToolbar!
     
     var markEventObj : MarkEventObj!
-    // I need to refactor this and use a map
-
     
     // sets the carrier, time, and battery to white
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -106,20 +102,19 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        /*// setting it to negative 100 weeks so we notice if something's wrong
-        highlight1Date = Date().addingTimeInterval(-700 * 24 * 60 * 60)
-        highlight2Date = Date().addingTimeInterval(-700 * 24 * 60 * 60)
-        highlight3Date = Date().addingTimeInterval(-700 * 24 * 60 * 60)*/
+        
+        // uploadButton
         
         uploadButton.setTitleColor(UIColor.lightGray, for: .normal)
         uploadButton.isEnabled = false
-        //NSLog("Setting things up")
         
-        queryBioSamples()
-        // Colors:
+        // Comment Box
+        
         commentBoxTextView.layer.borderColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1.0).cgColor
         commentBoxTextView.layer.borderWidth = 1.0
         commentBoxTextView.layer.cornerRadius = 5
+        
+        // Chart
         
         heartrateChart.legend.textColor = UIColor.white
         heartrateChart.xAxis.labelTextColor = UIColor.white
@@ -132,27 +127,6 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         heartrateChart.drawBordersEnabled = true
         heartrateChart.minOffset = 0
         
-        //heartrateChart.isDragEnabled(false)
-        //heartrateChart.setHighlightPerDragEnabled(false)
-        //heartrateChart!.setHighlightPerTapEnabled(false)
-        
-        displayDateFormatter.dateFormat = "MMM d, h:mm a"
-        
-        // IOS Setup
-        eventTextField.delegate = self
-        eventTextField.placeholder = self.displayDateFormatter.string(from: markEventDate)
-        eventTextField.text = markEventObj.name
-        
-        // Textview
-        commentBoxTextView.delegate = self
-        evaluateEmotionBar.delegate = self
-        if(markEventObj.comment == ""){
-            commentBoxTextView.text = commentBoxPlaceholder
-            commentBoxTextView.textColor = UIColor.lightGray
-        }else{
-            commentBoxTextView.text = markEventObj.comment
-            commentBoxTextView.textColor = UIColor.white
-        }
         
         // keyboard
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -161,26 +135,50 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         //init toolbar
         toolbar = UIToolbar(frame: CGRect(x: 0, y: 0,  width: self.view.frame.size.width, height: 30))
         //create left side empty space so that done button set on right side
-        let flexSpace = UIBarButtonItem(barButtonSystemItem:    .flexibleSpace, target: nil, action: nil)
+        let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         let doneBtn: UIBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(doneButtonAction))
         toolbar.setItems([flexSpace, doneBtn], animated: false)
         toolbar.sizeToFit()
         //setting toolbar as inputAccessoryView
         self.commentBoxTextView.inputAccessoryView = toolbar
         
+        // variable Setup
+        queryBioSamples()
         
+        // Title box
+    
+        commentBoxTextView.delegate = self
+        evaluateEmotionBar.delegate = self
+        eventTextField.delegate = self
         
-        eventDurationTextLabel.text = "1.0 min"
-        eventDurationSlider.setValue(0.2, animated: true)
+        eventTextField.placeholder = self.displayDateFormatter.string(from: markEventDate)
+        eventTextField.text = markEventObj.name
         
-        timeStartSlider.isEnabled = false
-        timeEndSlider.isEnabled = false
-        timeStartSlider.setValue(0.0, animated: true)
-        timeEndSlider.setValue(1.0, animated: true)
+        displayDateFormatter.dateFormat = "MMM d, h:mm a"
+        
+        // Textview
+        if(markEventObj.comment == ""){
+            commentBoxTextView.text = commentBoxPlaceholder
+            commentBoxTextView.textColor = UIColor.lightGray
+        }else{
+            commentBoxTextView.text = markEventObj.comment
+            commentBoxTextView.textColor = UIColor.white
+        }
+        
+        if(markEventObj.pointsSelected){
+            selectPointsButton.isEnabled = false
+        }else{
+            lcrop.isEnabled = false
+            rcrop.isEnabled = false
+        }
+        
+        lcrop.setValue(Float(markEventObj.lcrop), animated: true)
+        mcrop.setValue(Float(markEventObj.mcrop), animated: true)
+        rcrop.setValue(Float(markEventObj.rcrop), animated: true)
+        
         
         evaluateEmotionBar.setButtonStates(buttonStates: markEventObj.emotionsFelt)
-        
-        
+        setupEventDurationString()
         view.bringSubviewToFront(anticipateSwitch)
     }
     
@@ -294,7 +292,7 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
             for point in hrPoints {
                 //NSLog("Cur Time: \(Double(bioPoints!["HR"]![i].endTime.seconds(from : markEventDate)))")
                 let difference = Double(point.endTime.seconds(from : markEventDate))
-                if(abs(difference) < Double(eventDurationSlider.value) * 60.0 * 5.0){
+                if(abs(difference) < Double(mcrop.value) * 60.0 * 5.0){
                     let value = ChartDataEntry(x: difference, y: point.measurement)
                     tempArr1.append(value)
                     //tempArr2.append(bioPoints["HR"]![i].endTime)
@@ -384,7 +382,7 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
     }
     
     private func checkIfCanUpload(){
-        if(eventDurationSlider.value > timeStartSlider.value && eventDurationSlider.value < timeEndSlider.value){
+        if(mcrop.value > lcrop.value && mcrop.value < rcrop.value){
             uploadButton.isEnabled = true
             uploadButton.setTitleColor(UIColor.cyan, for: .normal)
         }else{
@@ -396,27 +394,28 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
     
     // Mark: Actions
     @IBAction func selectPointsClicked(_ sender: UIButton) {
+        sender.isEnabled = false
+        freezePoints()
+    }
+    
+    func freezePoints(){
         // since heartrate is the most frequent datapoint we can safely assume that if
         // there are no heartrate samples, then there are no other samples
-        
         if(bioPoints["HR"]!.count > 0){
-            sender.isEnabled = false
             uploadButton.isEnabled = true
-            if(anticipate){
-                
-                eventDurationSlider.isEnabled = false
+            if(markEventObj.anticipate){
+                mcrop.isEnabled = false
             }else{
                 
                 let closestIdx = getNewXForHightlight3()
                 highlight3 = Highlight(x: Double(lineChartEntry["HR"]![closestIdx].x), y: lineChartEntry["HR"]![closestIdx].y, dataSetIndex: 0)
                 heartrateChart.highlightValues(getAllHighlights())
                 
-                eventDurationSlider.minimumTrackTintColor = UIColor.lightGray
-                eventDurationSlider.isEnabled = true
+                mcrop.minimumTrackTintColor = UIColor.lightGray
+                mcrop.isEnabled = true
             }
-            timeStartSlider.isEnabled = true
-            timeEndSlider.isEnabled = true
-            selectedPoints = true
+            lcrop.isEnabled = true
+            rcrop.isEnabled = true
         }else{
             NSLog("No Heartrate data! Can't select points")
         }
@@ -447,13 +446,11 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
             allHighlights.append(highlight3!)
         }
         
-        
-        
         return allHighlights
     }
     
     func getNewXForHightlight3() -> Int{
-        let sliderPos = eventDurationSlider.value
+        let sliderPos = mcrop.value
         let numEntries = lineChartEntry["HR"]!.count
         var closestIdx = Int((Double(sliderPos) * Double(numEntries)))
         if(closestIdx == numEntries){
@@ -462,16 +459,20 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         return closestIdx
     }
     
+    func setupEventDurationString(){
+        eventDurationTextLabel.text = String(format: "%.2f", mcrop.value * 5.0) + " min"
+    }
+    
     @IBAction func eventDurationSliderChanged(_ sender: UISlider) {
-        if(selectedPoints){
+        if(markEventObj.pointsSelected){
             let closestIdx = getNewXForHightlight3()
             highlight3 = Highlight(x: Double(lineChartEntry["HR"]![closestIdx].x), y: lineChartEntry["HR"]![closestIdx].y, dataSetIndex: 0)
             heartrateChart.highlightValues(getAllHighlights())
-            if(!anticipate){
+            if(!markEventObj.anticipate){
                 checkIfCanUpload()
             }
         }else{
-            eventDurationTextLabel.text = String(format: "%.2f", eventDurationSlider.value * 5.0) + " min"
+            setupEventDurationString()
             updateGraph()
         }
     }
@@ -481,35 +482,35 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         performSegue(withIdentifier: "unwindSegue2ToMainViewController", sender: self)
     }
     @IBAction func anticipateSwitch(_ sender: Any) {
-        if(anticipate){
+        if(markEventObj.anticipate){
             let closestIdx = getNewXForHightlight3()
             highlight3 = Highlight(x: Double(lineChartEntry["HR"]![closestIdx].x), y: lineChartEntry["HR"]![closestIdx].y, dataSetIndex: 0)
             heartrateChart.highlightValues(getAllHighlights())
             checkIfCanUpload()
-            anticipate = false
+            markEventObj.anticipate = false
         }else{
             highlight3 = nil
             heartrateChart.highlightValues(getAllHighlights())
-            anticipate = true
+            markEventObj.anticipate = true
         }
-        if(selectedPoints){
-            if(anticipate){
-                eventDurationSlider.isEnabled = false
+        if(markEventObj.pointsSelected){
+            if(markEventObj.anticipate){
+                mcrop.isEnabled = false
             }else{
-                eventDurationSlider.isEnabled = true
+                mcrop.isEnabled = true
             }
         }
     }
     
     
     @IBAction func timeStartSliderMoved(_ sender: UISlider) {
-        let timeStartSliderPos = timeStartSlider.value
-        let timeEndSliderPos = timeEndSlider.value
+        let timeStartSliderPos = lcrop.value
+        let timeEndSliderPos = rcrop.value
         if(timeStartSliderPos > timeEndSliderPos){
             sender.setValue(timeEndSliderPos, animated: true)
         }else{
             
-            if(!anticipate){
+            if(!markEventObj.anticipate){
                 checkIfCanUpload()
             }
             
@@ -531,13 +532,13 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
     }
     
     @IBAction func timeEndSliderMoved(_ sender: UISlider) {
-        let timeStartSliderPos = timeStartSlider.value
-        let timeEndSliderPos = timeEndSlider.value
+        let timeStartSliderPos = lcrop.value
+        let timeEndSliderPos = rcrop.value
         if(timeEndSliderPos < timeStartSliderPos){
             sender.setValue(timeStartSliderPos, animated: true)
         }else{
             
-            if(!anticipate){
+            if(!markEventObj.anticipate){
                 checkIfCanUpload()
             }
             
@@ -601,7 +602,7 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         
         
         var timeOfEvent = highlight3Date
-        if(anticipate){
+        if(markEventObj.anticipate){
             timeOfEvent = highlight1Date
         }else{
             highlight3Date = markEventDate.addingTimeInterval(TimeInterval(highlight3!.x))
@@ -624,8 +625,8 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
                                         emotionsFelt: buttonStates,
                                         comment: commentToSend!)
         */
-        httpManager.uploadMarkEvent(markEventObj: markEventObj)
-        self.deleteCurrentMarkEvent()
+        //httpManager.uploadMarkEvent(markEventObj: markEventObj)
+        //self.deleteCurrentMarkEvent()
         self.performSegue(withIdentifier: "unwindSegue2ToMainViewController", sender: self)
         
     }

@@ -2,27 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:/Users/curtis/Desktop/Lizzie/Lizzie/DataManager.swift">
-   </FileRef>
-   <FileRef
-      location = "group:Lizzie/MarkEventPhone+CoreDataClass.swift">
-   </FileRef>
-   <FileRef
-      location = "group:Lizzie/MarkEventPhone+CoreDataProperties.swift">
-   </FileRef>
-   <FileRef
-      location = "group:Lizzie WatchKit Extension/MarkEventWatch+CoreDataClass.swift">
-   </FileRef>
-   <FileRef
-      location = "group:Lizzie WatchKit Extension/MarkEventWatch+CoreDataProperties.swift">
-   </FileRef>
-   <FileRef
-      location = "group:Lizzie/BioSamplePhone+CoreDataClass.swift">
-   </FileRef>
-   <FileRef
-      location = "group:Lizzie/BioSamplePhone+CoreDataProperties.swift">
-   </FileRef>
-   <FileRef
       location = "group:/Users/curtis/Desktop/dev/lizziewatch/LizzieApp.xcodeproj">
    </FileRef>
    <FileRef

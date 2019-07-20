@@ -19,6 +19,7 @@ class EmotionEvalObj{
     var comment : String = ""
     
     init(
+    uploaded : Bool,
     ts : Date,
     accomplished : Int,
     social : Int,
@@ -26,6 +27,7 @@ class EmotionEvalObj{
     tired : Int,
     happy : Int,
     comment : String){
+        self.uploaded = uploaded
         self.ts = ts
         self.accomplished = accomplished
         self.social = social
