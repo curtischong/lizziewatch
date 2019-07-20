@@ -2,7 +2,7 @@ import UIKit
 
 
 
-class DataSource: NSObject, UITableViewDataSource {
+class MarkEventTableDataSource: NSObject, UITableViewDataSource {
     let displayDateFormatter = DateFormatter()
 
     var markEvents = [MarkEventObj]()

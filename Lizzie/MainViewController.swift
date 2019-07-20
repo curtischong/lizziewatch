@@ -28,7 +28,7 @@ class MainViewController: UIViewController, UITableViewDelegate, mainProtocol{
     
     @IBOutlet weak var uploadBioSamplesButton: UIButton!
     var syncToPhoneState = false
-    private let dataSource = DataSource()
+    private let dataSource = MarkEventTableDataSource()
     let generator = UIImpactFeedbackGenerator(style: .light)
     
     
@@ -147,6 +147,8 @@ class MainViewController: UIViewController, UITableViewDelegate, mainProtocol{
         }else if(segue.identifier == "contextualizeMarkEventSegue"){
             if let destinationVC = segue.destination as? MarkEventFormViewController {
                 destinationVC.markEventObj = (sender as! MarkEventObj)
+                print("\(destinationVC.markEventObj.emotionsFelt)")
+                print("\(destinationVC.markEventObj.name)")
                 NSLog("sending MarkEventObj: \(sender as! MarkEventObj)")
             }
         }else{

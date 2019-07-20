@@ -26,6 +26,7 @@ class DataManager{
             let emotionsFelt = try NSKeyedArchiver.archivedData(withRootObject: markEvent.emotionsFelt, requiringSecureCoding: false)
             
             eventReference.setValue(markEvent.markTime, forKey: "markTime")
+            eventReference.setValue(markEvent.name, forKey: "name")
             eventReference.setValue(markEvent.anticipate, forKey: "anticipate")
             eventReference.setValue(markEvent.startTime, forKey: "startTime")
             eventReference.setValue(markEvent.eventTime, forKey: "eventTime")

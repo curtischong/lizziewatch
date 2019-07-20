@@ -8,26 +8,27 @@
 
 import UIKit
 
+protocol emotionSelectionElementDelegate: class {
+    func updateEmotionsFelt(emotionsFelt: [String : Int])
+}
 
 @IBDesignable class EmotionSelectionElement: UIStackView {
     private var buttonEmotions = ["Fear","Joy","Anger","Sad","Disgust","Suprise","Contempt","Interest"]
-    lazy var numEmotions = 8
+    var numEmotions = 8
     private var ratingButtons = [UIButton]()
-    private var selectedEmotions = Array(repeating: 0, count: 8) // TODO: use numEmotions instead of 8
+    var selectedEmotions = Array(repeating: 0, count: 8) // TODO: use numEmotions instead of 8
     
     
-    
+    weak var delegate: emotionSelectionElementDelegate?
     private var selectedColors = [UIColor.white,
                                   UIColor(red:0.00, green:1.0, blue:1.0, alpha:1.0),
                                   UIColor(red:1.00, green:0.54, blue:0.00, alpha:1.0),
                                   UIColor(red:1.00, green:0.0, blue:0.00, alpha:1.0)]
     let generator = UIImpactFeedbackGenerator(style: .light)
     //MARK: Initialization
-    var updateMarkEvent: (() -> Void)?
     
-    init(frame: CGRect, updateMarkEventFunc : @escaping (() -> Void)) {
+    override init(frame: CGRect) {
         super.init(frame: frame)
-        self.updateMarkEvent = updateMarkEventFunc
         setupButtons()
     }
     
@@ -48,7 +49,9 @@ import UIKit
             selectedEmotions[index] = 0
         }
         ratingButtons[index].setTitleColor(selectedColors[selectedEmotions[index]], for: .normal)
-        updateMarkEvent!()
+        delegate?.updateEmotionsFelt(emotionsFelt: getButtonStates())
+        NSLog("asdsad")
+        NSLog("\(getButtonStates())")
     }
     
     private func setupButtons() {
@@ -96,5 +99,21 @@ import UIKit
                           "surprise": selectedEmotions[5],
                           "contempt": selectedEmotions[6],
                           "interest": selectedEmotions[7]]
+    }
+    
+    func setButtonStates(buttonStates : [String : Int]){
+        selectedEmotions[0] = buttonStates["fear"]!
+        selectedEmotions[1] = buttonStates["joy"]!
+        selectedEmotions[2] = buttonStates["anger"]!
+        selectedEmotions[3] = buttonStates["sad"]!
+        selectedEmotions[4] = buttonStates["disgust"]!
+        selectedEmotions[5] = buttonStates["surprise"]!
+        selectedEmotions[6] = buttonStates["contempt"]!
+        selectedEmotions[7] = buttonStates["interest"]!
+        
+        for index in 0..<numEmotions{
+            ratingButtons[index].setTitleColor(selectedColors[selectedEmotions[index]], for: .normal)
+        }
+        NSLog("\(selectedEmotions)")
     }
 }

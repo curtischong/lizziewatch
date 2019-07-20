@@ -18,14 +18,14 @@ class MarkEventObj{
     var startTime : Date = Date.from(year: 1970, month: 1, day: 1)!
     var eventTime : Date = Date.from(year: 1970, month: 1, day: 1)!
     var endTime : Date = Date.from(year: 1970, month: 1, day: 1)!
-    var emotionsFelt : [String : Int] = ["anger": -999,
-                                         "contempt": -999,
-                                         "disgust": -999,
-                                         "fear": -999,
-                                         "interest": -999,
-                                         "joy": -999,
-                                         "sad": -999,
-                                         "surprise": -999]
+    var emotionsFelt : [String : Int] = ["anger": 0,
+                                         "contempt": 0,
+                                         "disgust": 0,
+                                         "fear": 0,
+                                         "interest": 0,
+                                         "joy": 0,
+                                         "sad": 0,
+                                         "surprise": 0]
     var comment : String = ""
     
     init(markTime : Date,

@@ -55,7 +55,7 @@ extension Date {
 
 
 @available(iOS 11.0, *)
-class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate{
+class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate, emotionSelectionElementDelegate{
 
     //MARK: Properties
     //@IBOutlet weak var eventTextLabel: UILabel!
@@ -105,7 +105,6 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         /*// setting it to negative 100 weeks so we notice if something's wrong
         highlight1Date = Date().addingTimeInterval(-700 * 24 * 60 * 60)
         highlight2Date = Date().addingTimeInterval(-700 * 24 * 60 * 60)
@@ -141,10 +140,16 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         // IOS Setup
         eventTextField.delegate = self
         eventTextField.placeholder = self.displayDateFormatter.string(from: markEventDate)
+        eventTextField.text = markEventObj.name
         
         // Textview
         commentBoxTextView.delegate = self
-        commentBoxTextView.text = commentBoxPlaceholder
+        evaluateEmotionBar.delegate = self
+        if(markEventObj.comment == ""){
+            commentBoxTextView.text = commentBoxPlaceholder
+        }else{
+            commentBoxTextView.text = markEventObj.comment
+        }
         commentBoxTextView.textColor = UIColor.lightGray
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -156,6 +161,8 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         timeEndSlider.isEnabled = false
         timeStartSlider.setValue(0.0, animated: true)
         timeEndSlider.setValue(1.0, animated: true)
+        
+        evaluateEmotionBar.setButtonStates(buttonStates: markEventObj.emotionsFelt)
         
         
         view.bringSubviewToFront(anticipateSwitch)
@@ -233,8 +240,10 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         //eventTextLabel.text = textField.text
     }
     
-    func updateMarkEvent(){
-        
+    func updateEmotionsFelt(emotionsFelt : [String : Int]) -> (Void){
+        markEventObj.emotionsFelt = emotionsFelt
+        NSLog("\(emotionsFelt)")
+        dataManager.updateMarkEvent(markEvent: markEventObj)
     }
     
     func pointsNotInOrder(points: [ChartDataEntry])  -> Bool {
