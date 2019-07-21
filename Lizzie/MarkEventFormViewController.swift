@@ -92,6 +92,8 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
     let hkManager = HKManager()
     var toolbar : UIToolbar!
     
+    let numMinutesGap = 5.0
+    
     var markEventObj : MarkEventObj!
     
     // sets the carrier, time, and battery to white
@@ -236,7 +238,6 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
     
     @objc func doneButtonAction() {
         generator.impactOccurred()
-        checkFormComplete()
         self.view.endEditing(true)
     }
     
@@ -298,6 +299,7 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         return false
     }
     
+    // TODO: impliment this
     func checkFormComplete(){
         
     }
@@ -309,7 +311,7 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
             for point in hrPoints {
                 //NSLog("Cur Time: \(Double(bioPoints!["HR"]![i].endTime.seconds(from : markEventObj.markTime)))")
                 let difference = Double(point.endTime.seconds(from : markEventObj.markTime))
-                if(abs(difference) < Double(mcrop.value) * 60.0 * 5.0){
+                if(abs(difference) < Double(markEventObj.selectionRange) * numMinutesGap * 60.0){
                     let value = ChartDataEntry(x: difference, y: point.measurement)
                     tempArr1.append(value)
                 }
@@ -347,7 +349,6 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         // we need to select more points because some points can start before the starttime but have an
         // end time that ends after the starttime in the query
         
-        let numMinutesGap = 5.0
         let endDate = markEventObj.markTime.addingTimeInterval(TimeInterval(numMinutesGap * 60.0))
         let startDate = markEventObj.markTime.addingTimeInterval(TimeInterval(-numMinutesGap * 60.0))
         
@@ -390,12 +391,17 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
     
     // A function called when we are anticipating an event
     private func checkIfCanUpload(){
-        if(mcrop.value > lcrop.value && mcrop.value < rcrop.value){
-            uploadButton.isEnabled = true
-            uploadButton.setTitleColor(UIColor.cyan, for: .normal)
-        }else{
-            uploadButton.isEnabled = false
-            uploadButton.setTitleColor(UIColor.lightGray, for: .normal)
+        if(!markEventObj.anticipate){
+            fatalError("You can only call checkIfCanUpload if you are anticipating!")
+        }
+        if(mhighlight != nil && lhighlight != nil && rhighlight != nil){
+            if(mhighlight!.x > lhighlight!.x && mhighlight!.x < rhighlight!.x){
+                uploadButton.isEnabled = true
+                uploadButton.setTitleColor(UIColor.cyan, for: .normal)
+            }else{
+                uploadButton.isEnabled = false
+                uploadButton.setTitleColor(UIColor.lightGray, for: .normal)
+            }
         }
     }
     
@@ -410,13 +416,16 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         
         // displays
 
-        if(bioPoints["HR"]!.count > 0){
+        let numGraphPoints = lineChartEntry["HR"]!.count
+        if(numGraphPoints > 0){
             uploadButton.isEnabled = true // we know the middle slider is always in between the l and r sliders
             lcrop.isEnabled = true
             rcrop.isEnabled = true
             
             let closestIdx = getNewXForHightlight3()
             mhighlight = Highlight(x: Double(lineChartEntry["HR"]![closestIdx].x), y: lineChartEntry["HR"]![closestIdx].y, dataSetIndex: 0)
+            lhighlight = Highlight(x: Double(lineChartEntry["HR"]![0].x), y: lineChartEntry["HR"]![0].y, dataSetIndex: 0)
+            rhighlight = Highlight(x: Double(lineChartEntry["HR"]![numGraphPoints - 1].x), y: lineChartEntry["HR"]![numGraphPoints - 1].y, dataSetIndex: 0)
             heartrateChart.highlightValues(getAllHighlights())
             
             mcrop.minimumTrackTintColor = UIColor.lightGray
@@ -465,7 +474,7 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
     }
     
     func setupEventDurationString(){
-        eventDurationTextLabel.text = String(format: "%.2f", mcrop.value * 5.0) + " min"
+        eventDurationTextLabel.text = String(format: "%.2f", markEventObj.selectionRange * 5.0) + " min"
     }
     
 
@@ -490,23 +499,25 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
     func setlSlider(){
         let timeStartSliderPos = lcrop.value
         let timeEndSliderPos = rcrop.value
+        // this case stops the slider
         if(timeStartSliderPos > timeEndSliderPos){
             lcrop.setValue(timeEndSliderPos, animated: true)
         }else{
-            
-            if(markEventObj.anticipate){
-                checkIfCanUpload()
-            }
             
             let closestIdx = getClosestIdx(sliderPos : timeStartSliderPos)
             
             //NSLog("Index of the point closest to timeStartSlider: \(closestIdx)")
             let newX = Double(lineChartEntry["HR"]![closestIdx].x)
-            if(rhighlight != nil && newX == rhighlight!.x){
+            
+            if(rhighlight != nil && newX == rhighlight!.x){ // we don't want the left and right sliders to be on the same point
                 heartrateChart.highlightValues(getAllHighlights())
             }else{
                 lhighlight = Highlight(x: Double(lineChartEntry["HR"]![closestIdx].x), y: lineChartEntry["HR"]![closestIdx].y, dataSetIndex: 0)
                 heartrateChart.highlightValues(getAllHighlights())
+            }
+            
+            if(markEventObj.anticipate){
+                checkIfCanUpload()
             }
         }
     }
@@ -518,19 +529,22 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
             rcrop.setValue(timeStartSliderPos, animated: true)
         }else{
             
-            if(markEventObj.anticipate){
-                checkIfCanUpload()
-            }
+            
             
             let closestIdx = getClosestIdx(sliderPos : timeEndSliderPos)
 
             //NSLog("Index of the point closest to timeEndSlider: \(closestIdx)")
             let newX = Double(lineChartEntry["HR"]![closestIdx].x)
-            if(lhighlight != nil && newX == lhighlight!.x){
+            
+            if(lhighlight != nil && newX == lhighlight!.x){ // we don't want the left and right sliders to be on the same point
                 heartrateChart.highlightValues(getAllHighlights())
             }else{
                 rhighlight = Highlight(x: Double(lineChartEntry["HR"]![closestIdx].x), y: lineChartEntry["HR"]![closestIdx].y, dataSetIndex: 0)
                 heartrateChart.highlightValues(getAllHighlights())
+            }
+            
+            if(markEventObj.anticipate){
+                checkIfCanUpload()
             }
         }
     }
@@ -540,11 +554,11 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
     
     func setmSlider(){
         if(markEventObj.pointsSelected){
-            updateMHighlight()
-            heartrateChart.highlightValues(getAllHighlights())
-            if(markEventObj.anticipate){ // TODO: check if this is legit
+            if(markEventObj.anticipate){
+                updateMHighlight()
                 checkIfCanUpload()
             }
+            heartrateChart.highlightValues(getAllHighlights())
         }else{
             setupEventDurationString()
             updateGraph()
@@ -561,12 +575,13 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
             markEventObj.anticipate = false
             mcrop.isEnabled = false
             mhighlight = nil
+            mlastHighlight = nil // to prevent vibration spam
             
             heartrateChart.highlightValues(getAllHighlights())
             
         }else{ // turn switch on
-            checkIfCanUpload()
             markEventObj.anticipate = true
+            checkIfCanUpload()
             mcrop.isEnabled = true
             updateMHighlight()
             heartrateChart.highlightValues(getAllHighlights())
