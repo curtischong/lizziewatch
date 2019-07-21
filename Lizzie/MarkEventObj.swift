@@ -26,9 +26,9 @@ class MarkEventObj{
                                          "joy": 0,
                                          "sad": 0,
                                          "surprise": 0]
-    var selectionRange: Double = 0.0
+    var selectionRange: Double = 0.2
     var lcrop: Double = 0.0
-    var mcrop: Double = 0.2
+    var mcrop: Double = 0.5
     var rcrop: Double = 1.0
     var pointsSelected: Bool = false
     var comment : String = ""
