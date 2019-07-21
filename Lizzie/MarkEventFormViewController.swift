@@ -7,7 +7,6 @@
 // TODO: Add a button that switches between minutes and seconds... or have it automatically switch
 // TODO: improve the quering thing. Since we at most query for times 5 min on each side,
 // We can query for the 10 minute interval then crop. we don't need to requery each time
-// TODO: when we upload the markevents we also want to upload when we made the mark event. (so we can see it's relation to the crop
 // TODO: add the fill color for the bottom of the chart slider: datset.fill = ChartFill.fill(withColor: color.withAlphaComponent(0.8))
 //NOTE: when we send the dates to the server, the range between the crops is INCLUSIVE.
 
@@ -20,16 +19,6 @@
 import UIKit
 import Charts
 import HealthKit
-
-//TODO: move this elsewhere.
-// I'm really press on time rn
-extension HKUnit {
-    
-    static func beatsPerMinute() -> HKUnit {
-        return HKUnit.count().unitDivided(by: HKUnit.minute())
-    }
-    
-}
 
 struct chartPoint{
     let endTime : Date
@@ -62,11 +51,11 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
     @IBOutlet var eventTextField: UITextField!
     
     @IBOutlet var eventDurationTextLabel: UILabel!
-    @IBOutlet var mcrop: UISlider!
     
     @IBOutlet var heartrateChart: LineChartView!
     @IBOutlet var commentBoxTextView: UITextView!
     @IBOutlet var selectPointsButton: UIButton!
+    @IBOutlet var mcrop: UISlider!
     @IBOutlet var lcrop: UISlider!
     @IBOutlet var rcrop: UISlider!
     @IBOutlet var anticipateSwitch: UISwitch!
@@ -101,9 +90,9 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         return .lightContent
     }
     
-    // TODO: I need to store 2 values: the time look back duration and the third highlight location
     override func viewDidLoad() {
         super.viewDidLoad()
+        displayDateFormatter.dateFormat = "MMM d, h:mm a"
         
         // uploadButton
         
@@ -129,6 +118,10 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         heartrateChart.drawBordersEnabled = true
         heartrateChart.minOffset = 0
         
+        //slider finished sliding
+        lcrop.addTarget(self, action: #selector(self.saveMarkEvent), for: .touchUpInside)
+        mcrop.addTarget(self, action: #selector(self.saveMarkEvent), for: .touchUpInside)
+        rcrop.addTarget(self, action: #selector(self.saveMarkEvent), for: .touchUpInside)
         
         // keyboard
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -155,8 +148,6 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         
         eventTextField.placeholder = self.displayDateFormatter.string(from: markEventObj.markTime)
         eventTextField.text = markEventObj.name
-        
-        displayDateFormatter.dateFormat = "MMM d, h:mm a"
         
         // Textview
         if(markEventObj.comment == ""){
@@ -200,6 +191,10 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         evaluateEmotionBar.setButtonStates(buttonStates: markEventObj.emotionsFelt)
         setupEventDurationString()
         view.bringSubviewToFront(anticipateSwitch)
+    }
+    
+    @objc func saveMarkEvent(){
+        dataManager.updateMarkEvent(markEvent: markEventObj)
     }
     
     // textview functions
@@ -258,18 +253,12 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         }
         if(eventTextField.isFirstResponder){
             markEventObj.name = eventTextField.text!
-            dataManager.updateMarkEvent(markEvent: markEventObj)
         }else if(commentBoxTextView.isFirstResponder){
             markEventObj.comment = commentBoxTextView.text!
-            dataManager.updateMarkEvent(markEvent: markEventObj)
         }
+        saveMarkEvent()
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-        NSLog("Received Memory Warning. I need to quickly save everything")
-    }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         // Hide the keyboard.
@@ -278,14 +267,9 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         return true
     }
     
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        //eventTextLabel.text = textField.text
-    }
-    
     func updateEmotionsFelt(emotionsFelt : [String : Int]) -> (Void){
         markEventObj.emotionsFelt = emotionsFelt
-        NSLog("\(emotionsFelt)")
-        dataManager.updateMarkEvent(markEvent: markEventObj)
+        saveMarkEvent()
     }
     
     func pointsNotInOrder(points: [ChartDataEntry])  -> Bool {
@@ -412,7 +396,7 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         sender.isEnabled = false
         anticipateSwitch.isEnabled = true
         markEventObj.pointsSelected = true
-        dataManager.updateMarkEvent(markEvent: markEventObj)
+        saveMarkEvent()
         
         // displays
 
@@ -586,7 +570,7 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
             updateMHighlight()
             heartrateChart.highlightValues(getAllHighlights())
         }
-        dataManager.updateMarkEvent(markEvent: markEventObj)
+        saveMarkEvent()
     }
     
     
@@ -596,7 +580,6 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         if(lineChartEntry["HR"]!.count > 1){
             setlSlider()
             markEventObj.lcrop = Double(sender.value)
-            dataManager.updateMarkEvent(markEvent: markEventObj)
         }
     }
     
@@ -612,14 +595,12 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
             markEventObj.selectionRange = Double(sender.value)
         }
         setmSlider()
-        dataManager.updateMarkEvent(markEvent: markEventObj)
     }
     
     @IBAction func timeEndSliderMoved(_ sender: UISlider) {
         if(lineChartEntry["HR"]!.count > 1){
             setrSlider()
             markEventObj.rcrop = Double(sender.value)
-            dataManager.updateMarkEvent(markEvent: markEventObj)
         }
     }
     
@@ -659,7 +640,6 @@ class MarkEventFormViewController: UIViewController, UITextFieldDelegate, UIText
         generator.impactOccurred()
         // This says: find the x value of the highlight (which is conveniently the number of seconds away from the timeOfMark)
         // Then add that time from the time of the timeOfMark
-        //TODO: fix bug that crashes when highlight1 or highlight2 is nil
         let highlight1Date = markEventObj.markTime.addingTimeInterval(TimeInterval(lhighlight!.x))
         let highlight2Date = markEventObj.markTime.addingTimeInterval(TimeInterval(rhighlight!.x))
         var highlight3Date = Date()
